@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="../../sakura.css" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.6.5/dist/vue-router.js"></script>
+
+</head>
+
+<body>
+
+  <H1>Hello</H1>
+  <div id="app">
+    <router-link to="/" replace>Home</router-link> // Will replace history
+    <router-link to="/about">About</router-link>
+    <router-link to="/privacy">Privacy</router-link>
+
+    <router-view></router-view>
+  </div>
+
+
+  <script src="app.js"></script>
+</body>
+
+</html>

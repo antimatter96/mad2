@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+</head>
+
+<body>
+  <style>
+    .dark {
+      background-color: black;
+      color: aliceblue;
+    }
+    .light {
+      background-color: wheat;
+      color: black;
+    }
+  </style>
+  <div id="app">
+    <div v-bind:class="{ dark: dark, light: !dark}">
+      <button @click="toggleTheme">THEME</button>
+      <p>{{ message }}</p>
+      <!-- {{ other }} -->
+
+      <p v-if="count == 0">ZERO {{ count }}</p>
+      <p v-else-if="count > 5">POP {{ count }}</p>
+      <p v-else>{{ count }}</p>
+
+      <button v-on:click="sayHi">Say Hi</button>
+
+      <br>
+      {{ vistorName }}
+      <br>
+      <input type="text" v-model="vistorName">
+
+      <hr>
+      All
+      <p v-if="count_2 == 0">ZERO {{ count_2 }}</p>
+      <p v-else-if="count_2 > 5">POP {{ count_2 }}</p>
+      <p v-else>{{ count_2 }}</p>
+      <br>
+
+      <ul v-bind:style="styleObject3">
+        <li v-for="name in visitors"> {{ name }} </li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

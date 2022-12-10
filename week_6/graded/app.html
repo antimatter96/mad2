@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="../../sakura.css" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+</head>
+
+<body>
+
+  <div id="app">
+    // Expose slotProp => is actually filled inside slot
+    <something v-slot:header="slotProp">
+      [{{ slotProp.user.name }}]
+    </something>
+
+
+    <br>
+    <hr>
+    <hr>
+    <br>
+    <something>
+      <template v-slot:slot_name_1>
+        "slot_name_1" ka content <br>
+
+      </template>
+      Ye bina named teamplte ke he
+      <template v-slot:slot_name_2="some_thing_exposed">
+        "slot_name_2" ka content <br>
+        is slot ne andar se kuch expose kiya he <br>
+        jo mene <code>some_thing_exposed</code> me access kiya
+
+        <br>
+        {{ some_thing_exposed }} <br>
+        <br>
+        <== ye ek object ke andar usne expose kiya hoga <code>:key1="'value_1'"</code>
+          And mene <code>{{ some_thing_exposed.key_1} }</code> karke access kuiya
+      </template>
+
+
+      <template v-slot:slot_name_3="some_thing_exposed">
+        "slot_name_3" ka content <br>
+        agar is slot ne expose nahi kiya
+
+        {{ some_thing_exposed }}
+      </template>
+
+      Ye BHI bina named teamplte ke he
+
+    </something>
+
+
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

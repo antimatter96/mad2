@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="../../../sakura.css" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.6.5/dist/vue-router.js"></script>
+
+</head>
+
+<body>
+
+  <div id="app">
+   <div>
+
+    <router-link to="/profile" replace>Prof</router-link>
+    <router-link to="/post">Post</router-link>
+
+   </div>
+
+   <div>
+
+    <router-view></router-view>
+   </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="../../sakura.css" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+</head>
+
+<body>
+  <style>
+    .test_class {
+      background-color: seashell;
+      color: red;
+    }
+
+    .valid {
+      background-color: aquamarine;
+    }
+    .invalid {
+      background-color: lightsalmon;
+    }
+  </style>
+  <div id="app">
+    <hr>
+    <div> Message: {{ message }} </div> // Make sure to define in date
+    <div>
+      <input v-model="message"> // Make sure to define in date
+    </div>
+    <hr>
+
+    <p v-bind:title="message">HEllo // Message on Hover [title]</p>
+    <button @click="resetMessage">Reset Message</button>
+
+    <hr>
+    <p v-bind:class="message">
+      Some class
+      Or Object { class1: 'true/false', class2 }
+      <br>// Updates class to `message` [try test_class]
+    </p>
+
+
+    <hr>
+    <div> Password: Min 10 chars {{ password }} &deg;C </div>
+    <div v-bind:class="validPassword">
+      Will update according to password
+      [Try `secret`]
+      <input v-model="password">
+    </div>
+
+    <div v-show="password==='secret'">
+      Password is secret
+    </div>
+
+    <div v-bind:style="{fontSize: pwdLength}">WOWOWO</div>
+    <hr>
+
+    <ul>
+      <li v-for="(x,i) in message">{{ x }} => {{ i }}</li>
+    </ul>
+
+
+    <ul>
+      <li v-for="(x,i) in extra['f']">{{ x }} => {{ i }}</li>
+    </ul>
+
+    <hr>
+
+    <hr>
+    <div> Combined {{ combined }} </div>
+
+    <hr>
+    // 'H' gets added in <!-- <slot></slot> -->
+    <my-tag size="50">H</my-tag>
+    <my-tag size="100">E</my-tag>
+    <my-tag size="150">L</my-tag>
+    <my-tag></my-tag>
+  </div>
+
+
+  // => Whichever is initilized first is displayed
+  <div id="app1">
+    <div id="app2">
+      <div id="app3">
+        {{ message }}
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+
+</html>
