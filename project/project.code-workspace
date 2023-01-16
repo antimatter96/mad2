@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.formatting.provider": "yapf",
+		"files.eol": "\n",
+		"files.insertFinalNewline": true,
+		"editor.fontSize": 14,
+		"debug.javascript.defaultRuntimeExecutable": {
+			"pwa-node": "/home/arpitjain/.nvm/versions/node/v18.12.1/bin/node"
+		},
+	}
+}
