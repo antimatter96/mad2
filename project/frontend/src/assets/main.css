@@ -1,0 +1,105 @@
+@import './bootstrap.css';
+
+
+#app {
+  padding: 0 2rem;
+}
+
+html {
+  background: #fff;
+  height: 100%;
+}
+
+body {
+  font-family: "Fira Code", "Monaco", "JetBrains Mono";
+
+  position: relative;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+
+  max-width: 85em;
+  margin-left: auto;
+  margin-right: auto;
+
+  min-height: 98vh;
+  max-height: 100vh;
+  
+  background: rgb(250, 250, 250);
+
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+nav h1 {
+  font-family: "Noto Sans";
+  font-weight: 900;
+}
+
+header > h2 {
+  font-family: "Noto Sans";
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+#main-alert {
+  position: fixed;
+  width: 30%;
+  left: 35%;
+  top: 1em;
+  z-index: 99999;
+}
+
+#main {
+  min-height: 81vh;
+}
+
+#new_list {
+  min-height: 80vh;
+}
+
+.hover-danger:hover {
+  background-color: #b9171c !important;
+}
+
+.custom-checkbox {
+  border: 1px solid #ced4da;
+}
+
+.dropdown-item:hover label,
+.dropdown-item label:hover,
+.dropdown-item:focus label,
+.dropdown-item label:focus {
+  color: #fff;
+}
+
+.py-half {
+  padding-top: 0.125rem !important;
+  padding-bottom: 0.125rem !important;
+}
+
+.w-35 {
+  width: 35% !important;
+}
+
+.w-40 {
+  width: 40% !important;
+}
+
+.w-45 {
+  width: 45% !important;
+}
+
+.w-60 {
+  width: 60% !important;
+}
+
+.btn, .form-check-label {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+@media (min-width: 768px) {
+  .col-md-2_half {
+    flex: 0 0 auto;
+    width: 19.66666667%;
+  }
+}

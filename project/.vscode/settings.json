@@ -1,4 +1,8 @@
 {
   "python.formatting.provider": "yapf",
-  "editor.fontFamily": "\"JetBrains Mono\", Consolas, 'Courier New', monospace"
+  "editor.fontFamily": "\"JetBrains Mono\", Consolas, 'Courier New', monospace",
+  "python.analysis.typeCheckingMode": "off",
+  "python.analysis.extraPaths": [
+    "./app"
+  ]
 }
