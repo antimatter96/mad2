@@ -20,13 +20,9 @@ export default {
     console.log("Register.vue", "BEFORECREATE START")
     this.loading = true;
 
-    await this.checkUserState()
-
-    console.log("DONE async");
-
-    this.loading = false;
-
-    console.log("Register.vue", "CREATE END")
+    if (this.loggedIn) {
+      await this.checkUserState();
+    }
 
     if (this.loggedIn) {
       console.log("LOGIN PAGE")
@@ -36,6 +32,10 @@ export default {
 
       return;
     }
+
+    this.loading = false;
+    console.log("Register.vue", "CREATE END")
+
   },
   async beforeMount() {
     console.log("Register.vue", "BEFORE MOUNT START")

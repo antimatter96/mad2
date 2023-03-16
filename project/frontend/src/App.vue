@@ -18,12 +18,15 @@ export default {
   async beforeMount() {
     console.log("App.vue", "BEFORE MOUNTED START")
 
-    await this.checkUserState()
-
+    this.loading = true;
     console.log("DONE async");
 
-
     if (!this.loggedIn) {
+      await this.checkUserState();
+    }
+    if (!this.loggedIn) {
+      await this.checkUserState();
+
       console.log("LOGIN PAGE")
       this.loading = false;
       this.$router.push('/login');

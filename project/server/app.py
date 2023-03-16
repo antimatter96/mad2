@@ -34,6 +34,7 @@ def create_app():
 
   csrf = CSRFProtect()
   csrf.init_app(app)
+
   # api.decorators.append(csrf.exempt)
 
   CORS(app)

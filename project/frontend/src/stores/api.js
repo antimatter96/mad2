@@ -1,14 +1,16 @@
-// stores/userAuth.js
+import { mapActions, mapState } from 'pinia'
 import { defineStore } from 'pinia'
 
-const API_BASE = "http://localhost:8080/api/accounts"
+import { userAuthStore } from '../stores/userAuth'
 
-export const userAuthStore = defineStore('userAuth', {
+const API_BASE = "http://localhost:8080/api/post"
+
+export const postStore = defineStore('post', {
   state: () => {
     return {
       _loginToken: window.localStorage.getItem("auth_token"),
       _userInfo: null,
-      _csrfToken: null,
+      _authStore: userAuthStore()
     }
   },
   getters: {
@@ -16,18 +18,39 @@ export const userAuthStore = defineStore('userAuth', {
       console.log(state._loginToken, state._loginToken != null, state._userInfo, state._userInfo != null)
       return state._loginToken != null || state._userInfo != null;
     },
-    userInfo(state) {
-      return ""
-    },
     authToken(state) {
-      return state._loginToken;
-    }
+      return state._authStore.authToken
+    },
   },
 
   actions: {
-    increment() {
-      this.count++
+    async getPost(id) {
+      try {
+        let response = await fetch(API_BASE + "/" + id, {
+          mode: 'cors', // no-cors, *cors, same-origin
+          credentials: 'same-origin', // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json',
+            'Authentication-Token': this.authToken,
+          }
+        });
+
+        if (response.status == 200) {
+          let r = await response.json();
+
+          console.log(r)
+
+          return r;
+        } else {
+          return null;
+        }
+
+      } catch (error) {
+        console.error(error, "getLoginToken");
+        return null;
+      }
     },
+
 
     setAuthToken(token) {
       this._loginToken = token;
@@ -58,7 +81,6 @@ export const userAuthStore = defineStore('userAuth', {
 
     async getLoginToken() {
       try {
-
         let response = await fetch(API_BASE + "/login", {
           mode: 'cors', // no-cors, *cors, same-origin
           credentials: 'same-origin', // include, *same-origin, omit

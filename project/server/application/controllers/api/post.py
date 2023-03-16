@@ -8,8 +8,10 @@ from application.models.post import Post
 from application.models.list import List
 
 from application.database.index import db
-from application.controllers.api.utils import token_required, min_length
+from application.controllers.api.utils import min_length
 from application.controllers.api.errors import NotFoundError, BusinessValidationError, InternalServerError, common_errors
+
+from flask_security import auth_required, current_user
 
 class SimpleDateTime(fields.Raw):
 
@@ -41,17 +43,23 @@ post_update_parser.add_argument('image', type=werkzeug.datastructures.FileStorag
 post_create_parser = post_update_parser.copy()
 
 class PostsAPI(Resource):
-  method_decorators = [token_required]
+  method_decorators = [auth_required("token")]
 
   @marshal_with(post_fields)
-  def get(self, current_user, post_id):
-    post = db.session.query(Post).filter(Post.post_id == post_id).first()
+  def get(self, post_id):
+    print(current_user)
+    post = db.session.query(Post)\
+      .filter(Post.post_id == post_id)\
+      .filter(Post.creator_id == current_user.user_id or Post.hidden == False)\
+      .first()
+
     if post is None:
       raise NotFoundError(error_code='post_009', error_message=post_errors['post_009'])
 
     return post, 200
 
-  def delete(self, current_user, post_id):
+  def delete(self, post_id):
+    print(current_user)
     post = db.session.query(Post).filter(Post.post_id == post_id and Post.creator_id == current_user.user_id).first()
     if post is None:
       raise NotFoundError(error_code='post_009', error_message=post_errors['post_009'])
@@ -67,7 +75,8 @@ class PostsAPI(Resource):
     return '', 200
 
   @marshal_with(post_fields)
-  def put(self, current_user, post_id):
+  def put(self, post_id):
+    print(current_user)
     post = db.session.query(Post).filter(Post.post_id == post_id and Post.creator_id == current_user.user_id).first()
     if post is None:
       raise NotFoundError(error_code='post_009', error_message=post_errors['post_009'])
@@ -83,7 +92,7 @@ class PostsAPI(Resource):
       post.title = title
       post.content = content
       post.hidden = hidden
-      post.image_url = image_url
+      post.img_url = image_url
       db.session.commit()
     except Exception as e:
       app.log_exception(e)
@@ -93,7 +102,8 @@ class PostsAPI(Resource):
     return post
 
   @marshal_with(post_fields)
-  def post(self, current_user):
+  def post(self):
+    print(current_user)
     args = post_create_parser.parse_args()
 
     title = args.get('title')
@@ -101,9 +111,8 @@ class PostsAPI(Resource):
     hidden = args.get('hidden', False)
     image_url = args.get('image', None)
 
-
     try:
-      new_post = Post(title=title, content=content, hidden=hidden, creator=current_user, image_url=image_url)
+      new_post = Post(title=title, content=content, hidden=hidden, creator=current_user, img_url=image_url)
       db.session.add(new_post)
       db.session.commit()
     except Exception as e:

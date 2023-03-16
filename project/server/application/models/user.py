@@ -51,3 +51,26 @@ class User(db.Model, UserMixin):
   )
 
   posts = relationship("Post", back_populates="creator")
+
+  def public_view_as_dict(self):
+    return {
+        'post_id': getattr(self, 'post_id'),
+        'title': getattr(self, 'title'),
+        'content': getattr(self, 'content'),
+        'creator': {
+            'user_id': getattr(self.creator, 'user_id'),
+            'email': getattr(self.creator, 'email')
+        },
+        'created_at': getattr(self, 'created_at'),
+        'updated_at': getattr(self, 'updated_at'),
+        'img_url': getattr(self, 'img_url'),
+    }
+
+  def public_view_wrt(self, current_user, with_posts=False):
+    return {
+        'user_id': getattr(self, 'user_id'),
+        'email': getattr(self, 'email'),
+        'follows_user': self in current_user.followers,
+        'user_follows': self in current_user.following,
+        #'posts': self.posts
+    }
