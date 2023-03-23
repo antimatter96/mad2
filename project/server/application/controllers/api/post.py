@@ -8,7 +8,6 @@ from flask_restful import current_app as app
 from flask_restful import Resource, fields, marshal_with, reqparse, inputs
 
 from application.models.post import Post
-from application.models.list import List
 
 from application.database.index import db
 from application.controllers.api.utils import min_length
@@ -65,7 +64,10 @@ class PostsAPI(Resource):
 
   def delete(self, post_id):
     print(current_user)
-    post = db.session.query(Post).filter(Post.post_id == post_id and Post.creator_id == current_user.user_id).first()
+    post = db.session.query(Post)\
+      .filter(Post.post_id == post_id and Post.creator_id == current_user.user_id)\
+      .first()
+
     if post is None:
       raise NotFoundError(error_code='post_009', error_message=post_errors['post_009'])
 
@@ -82,7 +84,10 @@ class PostsAPI(Resource):
   @marshal_with(post_fields)
   def put(self, post_id):
     print(current_user)
-    post = db.session.query(Post).filter(Post.post_id == post_id and Post.creator_id == current_user.user_id).first()
+    post = db.session.query(Post)\
+      .filter(Post.post_id == post_id and Post.creator_id == current_user.user_id)\
+      .first()
+
     if post is None:
       raise NotFoundError(error_code='post_009', error_message=post_errors['post_009'])
 

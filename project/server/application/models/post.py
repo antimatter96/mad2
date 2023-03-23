@@ -44,5 +44,4 @@ class Post(db.Model):
     return {
         **self.public_view_as_dict(),
         'hidden': getattr(self, 'hidden'),
-        'img_url': getattr(self, 'img_url'),
     }
