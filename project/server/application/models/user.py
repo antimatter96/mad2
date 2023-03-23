@@ -52,25 +52,41 @@ class User(db.Model, UserMixin):
 
   posts = relationship("Post", back_populates="creator")
 
-  def public_view_as_dict(self):
+  def public_view_as_dict(self, with_posts=False):
     return {
-        'post_id': getattr(self, 'post_id'),
-        'title': getattr(self, 'title'),
-        'content': getattr(self, 'content'),
-        'creator': {
-            'user_id': getattr(self.creator, 'user_id'),
-            'email': getattr(self.creator, 'email')
-        },
+        'user_id': getattr(self, 'user_id'),
+        'email': getattr(self, 'email'),
         'created_at': getattr(self, 'created_at'),
-        'updated_at': getattr(self, 'updated_at'),
-        'img_url': getattr(self, 'img_url'),
+        'followers': { 'length': len(self.followers)},
+        'following': { 'length': len(self.following)},
+        **({ 'posts': [post.simplified_public_view() for post in self.posts if post.hidden == False]} if with_posts else {}),
     }
 
   def public_view_wrt(self, current_user, with_posts=False):
     return {
-        'user_id': getattr(self, 'user_id'),
-        'email': getattr(self, 'email'),
+        **self.public_view_as_dict(with_posts=with_posts),
         'follows_user': self in current_user.followers,
         'user_follows': self in current_user.following,
-        #'posts': self.posts
+        'is_actually_user': self.user_id == current_user.user_id,
+    }
+
+  def private_view(self, with_posts=False, with_followers_list=False, with_following_list=False):
+    return {
+        **self.public_view_as_dict(with_posts=with_posts),
+        **({
+            'posts': [post.simplified_private_view() for post in self.posts]
+        } if with_posts else {}),
+        **({
+            'following': {
+                'length': len(self.following),
+                'list': [user_follows.public_view_wrt(self) for user_follows in self.following],
+            },
+        } if with_followers_list else {}),
+        **({
+            'followers': {
+                'length': len(self.followers),
+                'list': [user_following.public_view_wrt(self) for user_following in self.followers],
+            },
+        } if with_following_list else {}),
+        'is_actually_user': True,
     }

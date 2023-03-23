@@ -102,7 +102,7 @@ export default {
         <input type="submit" value="Login" class="btn btn-primary btn-lg w-100">
       </div>
 
-      <div class="mt-2 danger" v-if="display_error != null" >
+      <div class="mt-2 text-danger" v-if="display_error != null" >
         <span class="fw-bold">Error : {{ display_error }}</span>
       </div>
 

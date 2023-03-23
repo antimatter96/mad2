@@ -3,9 +3,12 @@ import { defineStore } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
 
-const API_BASE = "http://localhost:8080/api/post"
+const POST_API_BASE = "http://localhost:8080/api/post"
+const USER_API_BASE = "http://localhost:8080/api/users"
+const FOLLOWERS_API_BASE = "http://localhost:8080/api/followers"
 
-export const postStore = defineStore('post', {
+
+export const apiStore = defineStore('post', {
   state: () => {
     return {
       _loginToken: window.localStorage.getItem("auth_token"),
@@ -26,7 +29,7 @@ export const postStore = defineStore('post', {
   actions: {
     async getPost(id) {
       try {
-        let response = await fetch(API_BASE + "/" + id, {
+        let response = await fetch(POST_API_BASE + "/" + id, {
           mode: 'cors', // no-cors, *cors, same-origin
           credentials: 'same-origin', // include, *same-origin, omit
           headers: {
@@ -51,144 +54,159 @@ export const postStore = defineStore('post', {
       }
     },
 
+    async createPost(body) {
+      try {
+        let response = await fetch(POST_API_BASE, {
+          method: 'POST',
+          mode: 'cors', // no-cors, *cors, same-origin
+          credentials: 'same-origin', // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json',
+            'Authentication-Token': this.authToken,
+          },
+          body: JSON.stringify(body),
+        });
+
+        if (response.status == 200) {
+          let r = await response.json();
+
+          console.log(r)
+
+          return r;
+        } else {
+          return null;
+        }
+
+      } catch (error) {
+        console.error(error, "getLoginToken");
+        return null;
+      }
+    },
+
+    async follow(user_id) {
+      try {
+        let response = await fetch(FOLLOWERS_API_BASE + '/' + user_id, {
+          method: 'POST',
+          mode: 'cors', // no-cors, *cors, same-origin
+          credentials: 'same-origin', // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json',
+            'Authentication-Token': this.authToken,
+          },
+        });
+
+        if (response.status == 200) {
+          let r = await response.json();
+
+          console.log(r)
+
+          return r;
+        } else {
+          return null;
+        }
+
+      } catch (error) {
+        console.error(error, "getLoginToken");
+        return null;
+      }
+    },
+
+    async unfollow(user_id) {
+      try {
+        let response = await fetch(FOLLOWERS_API_BASE + '/' + user_id, {
+          method: 'DELETE',
+          mode: 'cors', // no-cors, *cors, same-origin
+          credentials: 'same-origin', // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json',
+            'Authentication-Token': this.authToken,
+          },
+        });
+
+        if (response.status == 200) {
+          let r = await response.json();
+
+          console.log(r)
+
+          return r;
+        } else {
+          return null;
+        }
+
+      } catch (error) {
+        console.error(error, "getLoginToken");
+        return null;
+      }
+    },
+
+    async getUserInfo(user_id) {
+      try {
+        let response = await fetch(USER_API_BASE + "/" + user_id, {
+          mode: 'cors', // no-cors, *cors, same-origin
+          credentials: 'same-origin', // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json',
+            'Authentication-Token': this.authToken,
+          }
+        });
+
+        if (response.status == 200) {
+          let r = await response.json();
+
+          console.log(r)
+
+          return r;
+        } else {
+          return null;
+        }
+
+      } catch (error) {
+        console.error(error, "getLoginToken");
+        return null;
+      }
+    },
+
+    async getList(followers) {
+      let suffix = "my_follows"
+      if (followers) {
+        suffix = "follow_me"
+      }
+      try {
+        let response = await fetch(USER_API_BASE + "/" + suffix, {
+          mode: 'cors', // no-cors, *cors, same-origin
+          credentials: 'same-origin', // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json',
+            'Authentication-Token': this.authToken,
+          }
+        });
+
+        if (response.status == 200) {
+          let r = await response.json();
+
+          console.log(r)
+
+          if (followers) {
+            return r['followers']
+          } else {
+            return r['following']
+          }
+
+        } else {
+          return null;
+        }
+
+      } catch (error) {
+        console.error(error, "getLoginToken");
+        return null;
+      }
+    },
 
     setAuthToken(token) {
       this._loginToken = token;
       window.localStorage.setItem("auth_token", token);
     },
 
-    async checkUserState(login, password) {
-      try {
-        console.log("checkUserState start")
 
-        await new Promise((resolve, reject) => {
-          setTimeout(() => resolve(), 1000)
-        });
-
-        console.log("checkUserState main stuff done")
-        // this.userData = await api.post({ login, password })
-        // showTooltip(`Welcome back ${this.userData.name}!`)
-
-        this._userInfo = true;
-
-        console.log("checkUserState end")
-      } catch (error) {
-        // showTooltip(error)
-        // let the form component display the error
-        return error
-      }
-    },
-
-    async getLoginToken() {
-      try {
-        let response = await fetch(API_BASE + "/login", {
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        let r = await response.json();
-
-        return r["response"]["csrf_token"];
-      } catch (error) {
-        console.error(error, "getLoginToken");
-        return error
-      }
-    },
-
-    async getSignupToken() {
-      try {
-
-        let response = await fetch(API_BASE + "/register", {
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        let r = await response.json();
-
-        return r["response"]["csrf_token"];
-      } catch (error) {
-        console.error(error, "getLoginToken");
-        return error
-      }
-    },
-
-    async login(email, password) {
-      if (this._csrfToken == null) {
-        try {
-          this._csrfToken = await this.getLoginToken()
-        } catch (e) {
-          return { done: false, 'user_error': false };
-        }
-      }
-
-      try {
-        let response = await fetch(API_BASE + "/login?include_auth_token=true", {
-          method: 'POST',
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            "email": email,
-            "password": password,
-          })
-        });
-
-        if (response.status == 200) {
-          let r = await response.json();
-          this.setAuthToken(r["response"]["user"]["authentication_token"])
-          return { done: true };
-        } else if (response.status == 400) {
-          return { done: false, 'user_error': true };
-        } else {
-          return { done: false, 'user_error': false };
-        }
-      } catch (error) {
-        console.log(error);
-
-        return { done: false, 'user_error': false };
-      }
-    },
-
-    async signup(email, password) {
-      if (this._csrfToken == null) {
-        try {
-          this._csrfToken = await this.getSignupToken();
-        } catch (error) {
-          return { done: false, 'user_error': false };
-        }
-      }
-
-      try {
-        let response = await fetch(API_BASE + "/register?include_auth_token=true", {
-          method: 'POST',
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            "email": email,
-            "password": password,
-          })
-        });
-
-        if (response.status == 200) {
-          let r = await response.json();
-          return { done: true };
-        } else if (response.status == 400) {
-          return { done: false, 'user_error': true };
-        } else {
-          return { done: false, 'user_error': false };
-        }
-      } catch (error) {
-        return { done: false, 'user_error': false };
-      }
-    },
   },
 })

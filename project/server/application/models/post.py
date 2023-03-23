@@ -45,3 +45,13 @@ class Post(db.Model):
         **self.public_view_as_dict(),
         'hidden': getattr(self, 'hidden'),
     }
+
+  def simplified_private_view(self):
+    full_view = self.private_as_dict()
+    del full_view['creator']
+    return full_view
+
+  def simplified_public_view(self):
+    full_view = self.public_view_as_dict()
+    del full_view['creator']
+    return full_view

@@ -25,7 +25,7 @@ export default {
 
     console.log(this.$route);
 
-    this.postId = this.$route.params.post_id;
+    this.username = this.$route.params.username;
 
     if (!this.loggedIn) {
       await this.checkUserState()
@@ -38,8 +38,10 @@ export default {
     }
     console.log("App.vue", "BEFORE MOUNTED END")
 
-    this.postData = await this.getPost(this.postId);
+    this.userData = await this.getUserInfo(this.username);
     this.loading = false;
+
+    this.isActuallyUser = this.userData['is_actually_user'];
   },
   async mounted() {
   },
@@ -48,8 +50,8 @@ export default {
     return {
       msg: "U did it",
       loading: true,
-      postData: null,
-      postId: '',
+      userData: null,
+      username: '',
     }
   },
   // 
@@ -60,7 +62,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(apiStore, { getPost: 'getPost' }),
+    ...mapActions(apiStore, { getUserInfo: 'getUserInfo' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
   }
 }
@@ -70,35 +72,64 @@ export default {
   <div v-if="loading" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
-  <div v-else-if="postData != null">
+  <div v-else-if="userData != null">
     <div class="col-md-4 py-4"></div>
     <div class="px-1">
       <div>
-        <h3 class="mb-0"> {{ postData.title }} </h3>
+        <h3 class="mb-0"> {{ userData.email }} </h3>
         <div>
-          <h5>by {{ postData.creator_id }}</h5>
+          <h5>by {{ userData.user_id }}</h5>
           <h6>
-            {{ postData.created_at }}
+            {{ userData.created_at }}
           </h6>
           <h6>
-            {{ postData.updated_at }}
+            {{ userData.updated_at }}
           </h6>
         </div>
 
         <h5>
-          {{ postData.content }}
+          <template v-if="isActuallyUser">
+            <RouterLink to="/profile/me/followers" replace class="fw-bold">
+              Followers: {{ userData.followers.length }}
+            </RouterLink>
+          </template>
+          <template v-else>
+            Followers: {{ userData.followers.length }} || You Follow : {{ userData.user_follows }}
+          </template>
+        </h5>
+        <h5>
+
+          <template v-if="isActuallyUser">
+            <RouterLink to="/profile/me/following" replace class="fw-bold">
+              Following: {{ userData.following.length }}
+            </RouterLink>
+          </template>
+          <template v-else>
+            following: {{ userData.following.length }} || Follows You : {{ userData.follows_user }}
+          </template>
         </h5>
       </div>
     </div>
 
+    <hr>
+    <h3>Posts</h3>
 
+
+    <template v-for="post in userData.posts">
+      <div> {{ post.post_id }}</div>
+      <span v-if="isActuallyUser">
+        <span v-if="post.hidden == null">
+          NOT HIDDEN
+        </span>
+        <span v-else>
+          {{ post.hidden }}
+        </span>
+
+      </span>
+
+    </template>
 
     <div class="col-md-4 py-4"></div>
-    <div class="col-md-4 py-2 text-center">
-      <a class="btn btn-primary btn-sm" href=" url_for('render_edit_card', card_id=card['card_id']) ">Edit</a>
-    </div>
-    <div class="col-md-4 py-2"></div>
-    <div class="col-md-4 py-2"></div>
     <div class="col-md-4 py-2">
       <div class="card mb-1 px-0">
         <div class="card-header px-2 py-2 mb-0">
