@@ -96,12 +96,6 @@ def delete_card(card):
 
   return redirect(url_for('index'))
 
-@app.route("/card/<card_id>", methods=['GET'])
-@ensure_logged_in
-@ensure_card_exists
-def render_card(card):
-  return render_template('cards/card.html', errors=[], card=card)
-
 @app.route("/card/<card_id>/edit", methods=['GET'])
 @ensure_logged_in
 @ensure_card_exists

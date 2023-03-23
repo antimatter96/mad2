@@ -42,3 +42,11 @@ def user_search_by_prefix():
       return None
   else:
     return {}, 400
+
+@app.route("/followers", methods=['GET'])
+def render_signup():
+  ...
+
+@app.route("/following", methods=['GET'])
+def render_signin():
+  ...

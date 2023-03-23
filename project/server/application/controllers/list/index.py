@@ -11,18 +11,6 @@ from application.controllers.utils import get_redirect_error, create_redirect_er
 from application.controllers.decorators import ensure_logged_in, ensure_list_exists
 from application.controllers.list.form import DeleteListForm, ListForm
 
-# Board
-@app.route("/", methods=['GET'])
-@ensure_logged_in
-def index():
-  errors = []
-  redirect_error = get_redirect_error()
-  if redirect_error != None:
-    errors.append(redirect_error)
-
-  lists = db.session.query(List).all()
-  return render_template('board/index.html', errors=errors, lists=lists)
-
 # Lists
 @app.route("/lists/new", methods=['POST'])
 @ensure_logged_in
@@ -62,29 +50,8 @@ def create_list():
   app.logger.info('everything was OK')
   return redirect(url_for('index'))
 
-@app.route("/lists/new", methods=['GET'])
-@ensure_logged_in
-def render_create_list():
-  errors = []
-  redirect_error = get_redirect_error()
-  if redirect_error != None:
-    errors.append(redirect_error)
-
-  return render_template('lists/new_list.html', errors=errors)
-
 ### Individual Lists
 
-@app.route("/list/<list_id>/edit", methods=['GET'])
-@ensure_logged_in
-@ensure_list_exists
-def render_edit_list(list_obj):
-  errors = []
-  redirect_error = get_redirect_error()
-  if redirect_error != None:
-    errors.append(redirect_error)
-
-  lists = db.session.query(List).all()
-  return render_template('lists/edit_list.html', errors=errors, list_obj=list_obj, lists=lists, disable_list=True)
 
 @app.route("/list/<list_id>/edit", methods=['POST'])
 @ensure_logged_in
@@ -175,11 +142,3 @@ def delete_list(list_obj):
     return redirect(url_for('render_edit_list', list_id=list_obj.list_id, redirect_error=encoded_redirect_error))
 
   return redirect(url_for('index'))
-
-@app.route("/list/<list_id>", methods=['GET'])
-@ensure_logged_in
-@ensure_list_exists
-def render_list(list_obj):
-  lists = db.session.query(List).all()
-  img_hash = plot_timeline(list_obj.timeline(), size=(10, 4), rotation=0)
-  return render_template('lists/list.html', errors=[], list_obj=list_obj, lists=lists, img_hash=img_hash)
