@@ -1,5 +1,8 @@
+import os
+
+from app import cache
 from flask import current_app as app
-from flask import render_template
+from flask import render_template, send_from_directory
 
 from flask_security import Security, current_user, auth_required, hash_password, SQLAlchemySessionUserDatastore
 
@@ -13,5 +16,10 @@ def page_not_found(e):
 def not_authorized(e):
   return render_template('403.html'), 403
 
+from application.controllers.api.non_rest import *
 
-from application.controllers.user_search.index import *
+from flask import send_from_directory
+
+@app.route('/favicon.ico')
+def favicon():
+  return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico')

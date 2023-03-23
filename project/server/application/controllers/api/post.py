@@ -1,6 +1,9 @@
 from datetime import datetime
+import os
+import base64
 
-import werkzeug
+from werkzeug.utils import secure_filename
+
 from flask_restful import current_app as app
 from flask_restful import Resource, fields, marshal_with, reqparse, inputs
 
@@ -21,6 +24,7 @@ class SimpleDateTime(fields.Raw):
 post_errors = {
     "post_001": "List does not exist",
     "post_009": "Post does not exist",
+    "post_029": "Image upload failed",
 }
 
 post_fields = {
@@ -38,7 +42,8 @@ post_update_parser = reqparse.RequestParser()
 post_update_parser.add_argument('title', type=min_length(1), required=True, trim=True)
 post_update_parser.add_argument('content', type=min_length(1), required=True, trim=True)
 post_update_parser.add_argument('hidden', type=inputs.boolean, default=False)
-post_update_parser.add_argument('image', type=werkzeug.datastructures.FileStorage, location='files')
+post_update_parser.add_argument('coverImage')
+post_update_parser.add_argument('fileName', type=min_length(5), required=True, trim=True)
 
 post_create_parser = post_update_parser.copy()
 
@@ -109,10 +114,21 @@ class PostsAPI(Resource):
     title = args.get('title')
     content = args.get('content')
     hidden = args.get('hidden', False)
-    image_url = args.get('image', None)
+    image_base64 = args.get('coverImage', None)
+    orignal_filename = args.get('fileName', "unknown.png")
+
+    filename = secure_filename(str(current_user.user_id) + "_" + datetime.now().strftime('%f') + orignal_filename)
 
     try:
-      new_post = Post(title=title, content=content, hidden=hidden, creator=current_user, img_url=image_url)
+      with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), "wb") as f:
+        f.write(base64.decodebytes(image_base64.encode()))
+    except Exception as e:
+      app.log_exception(e)
+      db.session.rollback()
+      raise InternalServerError(error_code='post_029', error_message=post_errors['post_029'])
+
+    try:
+      new_post = Post(title=title, content=content, hidden=hidden, creator=current_user, img_url=filename)
       db.session.add(new_post)
       db.session.commit()
     except Exception as e:

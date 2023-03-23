@@ -37,6 +37,12 @@ class Config():
 
   SECURITY_TOKEN_AUTHENTICATION_HEADER = "Authentication-Token"
 
+  UPLOAD_FOLDER = os.path.join(basedir, "./static/user_uploads")
+
+  CACHE_TYPE = "SimpleCache"
+  CACHE_KEY_PREFIX = "_idx_"
+  CACHE_DEFAULT_TIMEOUT = 1000
+
 
 class NonProdConfig(Config):
   DEBUG = True

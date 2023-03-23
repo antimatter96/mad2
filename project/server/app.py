@@ -6,6 +6,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
 from flask_security import Security, SQLAlchemySessionUserDatastore
+from flask_caching import Cache
 
 from config import LocalDevelopmentConfig, TestingConfig
 
@@ -14,6 +15,8 @@ from application.models.user import User, Role
 from application.database.index import db
 
 app = None
+cache = None
+config = None
 
 def create_app():
   app = Flask(__name__, template_folder="templates")
@@ -44,6 +47,7 @@ def create_app():
 
   api.init_app(app)
   app.app_context().push()
+  app.app_context().push()
 
   security.init_app(app, user_datastore)
   app.logger.info("App setup complete")
@@ -52,6 +56,9 @@ def create_app():
   return app
 
 app = create_app()
+cache = Cache(config=app.config.get_namespace("CACHE_", trim_namespace=True))
+cache.init_app(app)
+
 from application.controllers.index import *
 
 if __name__ == '__main__':
