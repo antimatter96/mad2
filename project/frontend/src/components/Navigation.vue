@@ -18,6 +18,7 @@ defineProps({
 
 <script>
 export default {
+  props: ['msg', 'loggedin', 'loading'],
   data() {
     return {}
   },

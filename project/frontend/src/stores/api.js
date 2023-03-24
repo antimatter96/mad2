@@ -16,6 +16,7 @@ export const apiStore = defineStore('post', {
       _authStore: userAuthStore()
     }
   },
+
   getters: {
     loggedIn(state) {
       console.log(state._loginToken, state._loginToken != null, state._userInfo, state._userInfo != null)
@@ -30,12 +31,7 @@ export const apiStore = defineStore('post', {
     async getPost(id) {
       try {
         let response = await fetch(POST_API_BASE + "/" + id, {
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json',
-            'Authentication-Token': this.authToken,
-          }
+          ...this._commonHeaders(),
         });
 
         if (response.status == 200) {
@@ -58,12 +54,7 @@ export const apiStore = defineStore('post', {
       try {
         let response = await fetch(POST_API_BASE, {
           method: 'POST',
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json',
-            'Authentication-Token': this.authToken,
-          },
+          ...this._commonHeaders(),
           body: JSON.stringify(body),
         });
 
@@ -87,12 +78,7 @@ export const apiStore = defineStore('post', {
       try {
         let response = await fetch(FOLLOWERS_API_BASE + '/' + user_id, {
           method: 'POST',
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json',
-            'Authentication-Token': this.authToken,
-          },
+          ...this._commonHeaders()
         });
 
         if (response.status == 200) {
@@ -115,12 +101,7 @@ export const apiStore = defineStore('post', {
       try {
         let response = await fetch(FOLLOWERS_API_BASE + '/' + user_id, {
           method: 'DELETE',
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json',
-            'Authentication-Token': this.authToken,
-          },
+          ...this._commonHeaders()
         });
 
         if (response.status == 200) {
@@ -129,6 +110,8 @@ export const apiStore = defineStore('post', {
           console.log(r)
 
           return r;
+        } else if (response.status == 400) {
+          return null;
         } else {
           return null;
         }
@@ -142,12 +125,7 @@ export const apiStore = defineStore('post', {
     async getUserInfo(user_id) {
       try {
         let response = await fetch(USER_API_BASE + "/" + user_id, {
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json',
-            'Authentication-Token': this.authToken,
-          }
+          ...this._commonHeaders()
         });
 
         if (response.status == 200) {
@@ -156,6 +134,8 @@ export const apiStore = defineStore('post', {
           console.log(r)
 
           return r;
+        } else if (response.status == 404 ){
+          return null;
         } else {
           return null;
         }
@@ -173,12 +153,7 @@ export const apiStore = defineStore('post', {
       }
       try {
         let response = await fetch(USER_API_BASE + "/" + suffix, {
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json',
-            'Authentication-Token': this.authToken,
-          }
+          ...this._commonHeaders()
         });
 
         if (response.status == 200) {
@@ -199,6 +174,17 @@ export const apiStore = defineStore('post', {
       } catch (error) {
         console.error(error, "getLoginToken");
         return null;
+      }
+    },
+
+    _commonHeaders() {
+      return {
+        mode: 'cors', // no-cors, *cors, same-origin
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+          'Content-Type': 'application/json',
+          'Authentication-Token': this.authToken,
+        }
       }
     },
 

@@ -85,10 +85,11 @@ export default {
       </h3>
       <div>
         <h5> List </h5>
-      <template v-for="(user, index) in userList.list" class="bg-red">
-        <span> {{index+1}} </span> <UserTab :userData="user" />
-      </template>
-    </div>
+        <div v-for="(user, index) in userList.list">
+          <span> {{ index + 1 }} </span>
+          <UserTab :userData="user" :showFollowing="!showingFollowers" :showFollowers="showingFollowers" />
+        </div>
+      </div>
     </div>
   </div>
 </template>

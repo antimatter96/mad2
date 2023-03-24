@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
-import LoadingIcon from './icons/Loading.vue'
+import LoadingIcon from '../components/icons/Loading.vue'
 
 </script>
 
@@ -20,7 +20,7 @@ export default {
     console.log("Register.vue", "BEFORECREATE START")
     this.loading = true;
 
-    if (this.loggedIn) {
+    if (!this.loggedIn) {
       await this.checkUserState();
     }
 
@@ -45,11 +45,10 @@ export default {
   // INTERNAL STATE
   data() {
     return {
-      msg: "U did it",
+      display_error: null,
       loading: true,
       email: null,
       password: null,
-      token: null,
     }
   },
 
@@ -64,23 +63,34 @@ export default {
   methods: {
     ...mapActions(userAuthStore, { userAuthStoreRegister: 'signup', checkUserState: 'checkUserState' }),
 
-
     async signup(e) {
       e.preventDefault();
       console.log(e);
 
-      this.userAuthStoreRegister(this.email, this.password)
+      this.display_error = null;
+
+      let result = await this.userAuthStoreRegister(this.email, this.password)
+
+
+      if (result.done) {
+        this.$router.push('/login');
+      } else {
+        if (result.user_error) {
+          this.display_error = "Incorrect username / password"
+        } else {
+          this.display_error = "Something went wrong"
+        }
+      }
     }
   }
 }
 </script>
 
 <template>
-
   <div class="col-md-4 py-2"></div>
+
   <div class="col-md-4 py-2">
     <form action="" method="POST" v-on:submit="signup">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <div class="form-floating m-2"><br><br></div>
       <div class="form-floating mb-2">
         <input type="email" name="email" class="form-control" required v-model="email">
@@ -93,15 +103,20 @@ export default {
       <div>
         <input type="submit" value="Signup" class="btn btn-primary btn-lg w-100">
       </div>
+
+      <div class="mt-2 text-danger" v-if="display_error != null">
+        <span class="fw-bold">Error : {{ display_error }}</span>
+      </div>
+
     </form>
 
     <div class="mt-2 text-center">
-      <RouterLink to="/login" replace class="fw-bold">SIgn In</RouterLink>
+      <RouterLink to="/login" replace class="fw-bold">Sign In</RouterLink>
     </div>
   </div>
+
   <div class="col-md-4 py-2"></div>
 </template>
 
 <style>
-
 </style>

@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
-import LoadingIcon from './icons/Loading.vue'
+import LoadingIcon from '../components/icons/Loading.vue'
 
 </script>
 
@@ -23,9 +23,6 @@ export default {
     await this.checkUserState()
 
     console.log("DONE async");
-
-    this.loading = false;
-
     console.log("Login.vue", "CREATE END")
 
     if (this.loggedIn) {
@@ -36,6 +33,8 @@ export default {
 
       return;
     }
+
+    this.loading = false;
   },
   async beforeMount() {
     console.log("Login.vue", "BEFORE MOUNT START")
@@ -44,7 +43,6 @@ export default {
   // INTERNAL STATE
   data() {
     return {
-      msg: "U did it",
       display_error: null,
       loading: true,
       email: null,
@@ -54,14 +52,13 @@ export default {
 
   // COMPUTED
   computed: {
-      ...mapState(userAuthStore, ['loggedIn'])
+    ...mapState(userAuthStore, ['loggedIn'])
   },
 
 
   // METHODS
   methods: {
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
-
 
     async login(e) {
       e.preventDefault();
@@ -72,7 +69,7 @@ export default {
       let result = await this.userAuthStoreLogin(this.email, this.password);
 
       if (result.done) {
-
+        this.$router.push('/');
       } else {
         if (result.user_error) {
           this.display_error = "Incorrect username / password"
@@ -87,6 +84,7 @@ export default {
 
 <template>
   <div class="col-md-4 py-2"></div>
+
   <div class="col-md-4 py-2">
     <form action="/" method="POST" v-on:submit="login">
       <div class="form-floating m-2"><br><br></div>
@@ -102,18 +100,19 @@ export default {
         <input type="submit" value="Login" class="btn btn-primary btn-lg w-100">
       </div>
 
-      <div class="mt-2 text-danger" v-if="display_error != null" >
+      <div class="mt-2 text-danger" v-if="display_error != null">
         <span class="fw-bold">Error : {{ display_error }}</span>
       </div>
 
     </form>
+
     <div class="mt-2 text-center">
       <RouterLink to="/signup" replace class="fw-bold">Sign Up</RouterLink>
     </div>
   </div>
+
   <div class="col-md-4 py-2"></div>
 </template>
 
 <style>
-
 </style>

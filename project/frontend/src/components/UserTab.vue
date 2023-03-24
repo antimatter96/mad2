@@ -5,7 +5,8 @@ import { mapActions, mapState } from 'pinia'
 import { userAuthStore } from '../stores/userAuth'
 import { apiStore } from '../stores/api'
 import LoadingIcon from './icons/Loading.vue'
-
+import FollowIndicator from './icons/FollowIndicator.vue'
+import FollowAction from './icons/FollowAction.vue'
 
 </script>
 
@@ -23,7 +24,7 @@ export default {
     console.log(this.userData);
   },
   //
-  props: ['user', 'userData'],
+  props: ['user', 'userData', 'showFollows', 'showFollowing'],
   // 
   computed: {},
   methods: {
@@ -43,16 +44,32 @@ export default {
   <div v-if="userData == null" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
-  <div v-else>
+  <div v-else class="d-inline-block">
     <div class="px-1">
       <div>
-        <h5 class="mb-0"> {{ userData.email }} <span> |||||  </span>
-          <span v-if="userData.user_follows" v-on:click="unfollow">Unfollow</span>
-          <span v-else v-on:click="follow">FOLLOW</span>
-          <span>||</span>
-          <span v-if="userData.follows_user">Follows You</span>
-          <span v-else>Doesn't Follow You</span>
-        </h5>
+        <h5 class="mb-0"> {{ userData.email }} </h5>
+        <div>
+          <div>
+            <button v-if="userData.user_follows" v-on:click="unfollow" type="button" class="btn btn-outline-danger">
+              Unfollow
+              <FollowAction v-if="showFollowing" :positive="false"></FollowAction>
+            </button>
+            <button v-else v-on:click="follow" type="button" class="btn btn-outline-success">
+              Follow
+              <FollowAction v-if="showFollowing" :positive="true"></FollowAction>
+            </button>
+          </div>
+          <div v-if="showFollowing">
+            <button v-if="userData.follows_user" type="button" class="btn btn-outline-info">
+              Follows You
+              <FollowIndicator :positive="true"></FollowIndicator>
+            </button>
+            <button v-else type="button" class="btn btn-outline-info">
+              Does not follow You
+              <FollowIndicator :positive="false"></FollowIndicator>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

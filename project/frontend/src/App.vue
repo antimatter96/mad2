@@ -24,6 +24,7 @@ export default {
     if (!this.loggedIn) {
       await this.checkUserState();
     }
+
     if (!this.loggedIn) {
       await this.checkUserState();
 
@@ -32,6 +33,7 @@ export default {
       this.$router.push('/login');
       this.loading = false;
     }
+
     this.loading = false;
     console.log("App.vue", "BEFORE MOUNTED END")
   },
@@ -61,7 +63,7 @@ export default {
 <template>
   <div class="container">
     <header class="row">
-      <Navigation v-bind:msg=msg v-bind:loggedin=loggedin v-bind:loading=hideNavBar />
+      <Navigation :msg=msg :loggedin=loggedin :loading=hideNavBar />
     </header>
 
     <div id="main" class="row py-2">
