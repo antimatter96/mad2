@@ -6,6 +6,7 @@ import { userAuthStore } from '../stores/userAuth'
 const POST_API_BASE = "http://localhost:8080/api/post"
 const USER_API_BASE = "http://localhost:8080/api/users"
 const FOLLOWERS_API_BASE = "http://localhost:8080/api/followers"
+const FEED_API_BASE = "http://localhost:8080/api/feed"
 
 
 export const apiStore = defineStore('post', {
@@ -125,6 +126,30 @@ export const apiStore = defineStore('post', {
     async getUserInfo(user_id) {
       try {
         let response = await fetch(USER_API_BASE + "/" + user_id, {
+          ...this._commonHeaders()
+        });
+
+        if (response.status == 200) {
+          let r = await response.json();
+
+          console.log(r)
+
+          return r;
+        } else if (response.status == 404 ){
+          return null;
+        } else {
+          return null;
+        }
+
+      } catch (error) {
+        console.error(error, "getLoginToken");
+        return null;
+      }
+    },
+
+    async getFeed(from) {
+      try {
+        let response = await fetch(FEED_API_BASE, {
           ...this._commonHeaders()
         });
 

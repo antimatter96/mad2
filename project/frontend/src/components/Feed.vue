@@ -5,8 +5,8 @@ import { mapActions, mapState } from 'pinia'
 import { userAuthStore } from '../stores/userAuth'
 import { apiStore } from '../stores/api'
 import LoadingIcon from './icons/Loading.vue'
-
 import UserTab from './UserTab.vue'
+import PostSummary from './PostSummary.vue'
 
 </script>
 
@@ -25,11 +25,6 @@ export default {
 
     console.log(this.$route);
 
-
-    this.mode = this.$route.name;
-    this.showingFollowers = this.mode == 'user_followers';
-    this.showingFollowing = this.mode != 'user_followers';
-
     if (!this.loggedIn) {
       await this.checkUserState()
     }
@@ -42,7 +37,7 @@ export default {
     console.log("App.vue", "BEFORE MOUNTED END")
 
     console.log("mode", this.mode);
-    this.userList = await this.getList(this.showingFollowers);
+    this.postList = await this.getFeed(0);
 
     this.loading = false;
   },
@@ -52,8 +47,7 @@ export default {
   data() {
     return {
       loading: true,
-      userList: null,
-      mode: '',
+      postList: null,
     }
   },
   // 
@@ -64,34 +58,38 @@ export default {
     },
   },
   methods: {
-    ...mapActions(apiStore, { getList: 'getList' }),
+    ...mapActions(apiStore, { getFeed: 'getFeed' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
   }
 }
 </script>
 
 <template>
-  <div v-if="loading || userList == null" id="main-loading" class="h-100 w-100">
+  <div v-if="loading || postList == null" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
   <div v-else>
+
     <div class="col-md-4 py-4"></div>
     <div class="px-1">
       <h3 class="mb-0">
-        <span v-if="showingFollowers"> Your Followers : </span>
-        <span v-else>Who you follow : </span>
-        ({{ userList.length }})
+        <span> Your Feed : </span>
       </h3>
-      <div>
-        <h5> List </h5>
-        <div class="col-md-8 offset-md-2">
-        <div v-for="(user, index) in userList.list">
-          <span> {{ index + 1 }} </span>
-          <UserTab :userData="user" :showFollowing="true" :showFollowers="showingFollowing" class="d-flex"/>
-        </div>
-        </div>
+    </div>
+
+    <div class="col-md-4 py-2"></div>
+
+    <div class="col-md-10 offset-md-1">
+      <div v-if="postList.count > 0">
+        <template v-for="(user) in postList.posts">
+          <PostSummary :postData="user" />
+        </template>
+      </div>
+      <div v-else>
+        Nothing Found
       </div>
     </div>
+    <div class="col-md-4 py-2"></div>
   </div>
 </template>
 

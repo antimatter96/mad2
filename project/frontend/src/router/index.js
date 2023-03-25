@@ -7,7 +7,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: () => import('../components/Feed.vue')
     },
     {
       path: '/posts/new',
@@ -17,6 +17,7 @@ const router = createRouter({
     {
       path: '/posts/:post_id',
       name: 'post',
+      props: true,
       component: () => import('../components/Post.vue')
     },
     {
@@ -37,6 +38,7 @@ const router = createRouter({
     {
       path: '/profile/:username',
       name: 'user_profile_page',
+      props: true,
       component: () => import('../components/UserProfile.vue')
     },
     {
@@ -46,7 +48,7 @@ const router = createRouter({
     },
     {
       path: '/profile/me/following',
-      name: 'user_following',
+      name: 'user_follows',
       component: () => import('../components/GraphList.vue')
     },
   ]

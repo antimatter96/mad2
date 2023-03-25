@@ -90,47 +90,6 @@ export default {
         </h5>
       </div>
     </div>
-
-
-
-    <div class="col-md-4 py-4"></div>
-    <div class="col-md-4 py-2 text-center">
-      <a class="btn btn-primary btn-sm" href=" url_for('render_edit_card', card_id=card['card_id']) ">Edit</a>
-    </div>
-    <div class="col-md-4 py-2"></div>
-    <div class="col-md-4 py-2"></div>
-    <div class="col-md-4 py-2">
-      <div class="card mb-1 px-0">
-        <div class="card-header px-2 py-2 mb-0">
-          <h5 class="card-title mb-0"> card['title'] </h5>
-        </div>
-        <div class="card-body px-4">
-          <p class="card-text"> card['content'] | replace("\n", "<br>") | safe </p>
-          <p class="card-text mb-2"><span class="fw-bold">Due Date: </span> card['deadline'].strftime('%Y-%m-%d') </p>
-          <p class="card-text mb-2"><span class="fw-bold">Status: </span>
-            {% if card['complete'] %}
-            <span class="text-success fw-bold">Completed</span>
-            {% else %}
-            <span class="text-danger fw-bold">Pending</span>
-            {% endif %}
-          </p>
-          {% if card['complete'] %}
-          <p class="card-text mb-2"><span class="fw-bold">Completed On: </span>
-            <span class="text-success fw-bold"> card['completed_on'].strftime('%Y-%m-%d') </span>
-          </p>
-          <p class="card-text mb-2"><span class="fw-bold">Deadline: </span>
-            {% if card['deadline_passed'] %}
-            <span class="text-danger fw-bold">Missed</span>
-            {% else %}
-            <span class="text-success fw-bold">Met</span>
-            {% endif %}
-          </p>
-          {% endif %}
-
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4 py-2"></div>
   </div>
   <div v-else>
     <h3>

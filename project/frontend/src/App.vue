@@ -21,6 +21,7 @@ export default {
     this.loading = true;
     console.log("DONE async");
 
+    console.log("loggedin", this.loggedIn)
     if (!this.loggedIn) {
       await this.checkUserState();
     }
@@ -43,13 +44,12 @@ export default {
   // 
   data() {
     return {
-      msg: "U did it",
       loading: true,
     }
   },
   // 
   computed: {
-    ...mapState(userAuthStore, ['loggedIn']),
+    ...mapState(userAuthStore, { loggedIn: 'loggedIn' }),
     hideNavBar() {
       return this.loading
     },
@@ -61,10 +61,11 @@ export default {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container d-flex flex-column">
     <header class="row">
-      <Navigation :msg=msg :loggedin=loggedin :loading=hideNavBar />
+      <Navigation :loggedIn=loggedIn :loading=hideNavBar />
     </header>
+
 
     <div id="main" class="row py-2">
       <div v-if="loading" id="main-loading" class="h-100 w-100">
@@ -75,12 +76,19 @@ export default {
       </div>
     </div>
 
-    <footer class="row">
-      Footer
+
+    <footer class="row pt-4 pb-4 mt-auto ">
+      <div class="d-flex flex-row justify-content-evenly">
+        <div>
+          Some part of footer
+        </div>
+        <div>
+          Some part of footer
+        </div>
+      </div>
     </footer>
   </div>
 </template>
 
 <style scoped>
-
 </style>
