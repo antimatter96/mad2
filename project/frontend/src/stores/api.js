@@ -135,7 +135,31 @@ export const apiStore = defineStore('post', {
           console.log(r)
 
           return r;
-        } else if (response.status == 404 ){
+        } else if (response.status == 404) {
+          return null;
+        } else {
+          return null;
+        }
+
+      } catch (error) {
+        console.error(error, "getLoginToken");
+        return null;
+      }
+    },
+
+    async searchByPrefix(prefix) {
+      try {
+        let response = await fetch(USER_API_BASE + "/" + 'search_by_prefix' + '?prefix=' + encodeURIComponent(prefix), {
+          ...this._commonHeaders()
+        });
+
+        if (response.status == 200) {
+          let r = await response.json();
+
+          console.log(r)
+
+          return r;
+        } else if (response.status == 404) {
           return null;
         } else {
           return null;
@@ -159,7 +183,7 @@ export const apiStore = defineStore('post', {
           console.log(r)
 
           return r;
-        } else if (response.status == 404 ){
+        } else if (response.status == 404) {
           return null;
         } else {
           return null;
@@ -217,7 +241,6 @@ export const apiStore = defineStore('post', {
       this._loginToken = token;
       window.localStorage.setItem("auth_token", token);
     },
-
 
   },
 })

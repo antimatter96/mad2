@@ -6,14 +6,11 @@ import { userAuthStore } from '../stores/userAuth'
 import { apiStore } from '../stores/api'
 import LoadingIcon from './icons/Loading.vue'
 import UserTab from './UserTab.vue'
-
-
-
 </script>
 
 <script>
 export default {
-  props: ['postData'],
+  props: ['postData', 'showCreatorStats'],
   data() {
     return {}
   },
@@ -48,8 +45,8 @@ export default {
           </h3>
           <h6 class="card-title mb-0"> {{ postData.created_at }} - {{ postData.updated_at }} </h6>
         </div>
-        <div class="card-header px-2 py-2 mb-0">
-          <UserTab :userData="postData.creator" :showFollowing="true" :showFollowers="true" />
+        <div v-if="showCreatorStats" class="card-header px-2 py-2 mb-0">
+          <UserTab showSummary="true" :userData="postData.creator" :showFollowing="true" :showFollowers="true" />
         </div>
         <div class="card-body px-4">
           {{ postData.content }}

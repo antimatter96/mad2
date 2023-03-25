@@ -5,6 +5,8 @@ import { mapActions, mapState } from 'pinia'
 import { userAuthStore } from '../stores/userAuth'
 import { apiStore } from '../stores/api'
 import LoadingIcon from './icons/Loading.vue'
+import UserTab from './UserTab.vue'
+import PostSummary from './PostSummary.vue'
 
 
 
@@ -73,20 +75,10 @@ export default {
     <LoadingIcon element="h2" />
   </div>
   <div v-else-if="userData != null">
-    <div class="col-md-4 py-4"></div>
-    <div class="px-1">
+    <div class="px-4">
       <div>
         <h3 class="mb-0"> {{ userData.email }} </h3>
-        <div>
-          <h5>by {{ userData.user_id }}</h5>
-          <h6>
-            {{ userData.created_at }}
-          </h6>
-          <h6>
-            {{ userData.updated_at }}
-          </h6>
-        </div>
-
+          <UserTab v-if="!isActuallyUser" showSummary="false" :userData="userData" :showFollowing="true" :showFollowers="true" />
         <h5>
           <template v-if="isActuallyUser">
             <RouterLink to="/profile/me/followers" replace class="fw-bold">
@@ -94,18 +86,17 @@ export default {
             </RouterLink>
           </template>
           <template v-else>
-            Followers: {{ userData.followers.length }} || You Follow : {{ userData.user_follows }}
+            Followers: {{ userData.followers.length }}
           </template>
         </h5>
         <h5>
-
           <template v-if="isActuallyUser">
             <RouterLink to="/profile/me/following" replace class="fw-bold">
               Following: {{ userData.following.length }}
             </RouterLink>
           </template>
           <template v-else>
-            following: {{ userData.following.length }} || Follows You : {{ userData.follows_user }}
+            Following: {{ userData.following.length }}
           </template>
         </h5>
       </div>
@@ -116,6 +107,7 @@ export default {
 
 
     <template v-for="post in userData.posts">
+      <PostSummary :postData="post" :showCreatorStats="false" />
       <div> {{ post.post_id }}</div>
       <span v-if="isActuallyUser">
         <span v-if="post.hidden == null">

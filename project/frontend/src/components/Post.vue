@@ -5,6 +5,7 @@ import { mapActions, mapState } from 'pinia'
 import { userAuthStore } from '../stores/userAuth'
 import { apiStore } from '../stores/api'
 import LoadingIcon from './icons/Loading.vue'
+import UserTab from './UserTab.vue'
 
 
 
@@ -40,6 +41,9 @@ export default {
 
     this.postData = await this.getPost(this.postId);
     this.loading = false;
+
+
+    this.mode = "edit"
   },
   async mounted() {
   },
@@ -58,6 +62,10 @@ export default {
     hideNavBar() {
       return this.loading
     },
+    imageUrl() {
+      console.log(this.postData)
+      return 'http://localhost:8080/static/user_uploads/' + this.postData.img_url;
+    }
   },
   methods: {
     ...mapActions(apiStore, { getPost: 'getPost' }),
@@ -70,26 +78,26 @@ export default {
   <div v-if="loading" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
-  <div v-else-if="postData != null">
-    <div class="col-md-4 py-4"></div>
-    <div class="px-1">
+  <div v-else-if="postData != null" class="px-4">
+    <div class="px-4">
+      <h2 class="mb-1"> {{ postData.title }} </h2>
       <div>
-        <h3 class="mb-0"> {{ postData.title }} </h3>
-        <div>
-          <h5>by {{ postData.creator_id }}</h5>
-          <h6>
-            {{ postData.created_at }}
-          </h6>
-          <h6>
-            {{ postData.updated_at }}
-          </h6>
+        <div v-if="!postData.creator.is_actually_user" class="card-header px-2 py-2 mb-0">
+          <UserTab :showSummary="true" :userData="postData.creator" :showFollowing="true" :showFollowers="true" class="bg-red fw-bold d-flex align-items-baseline" />
         </div>
-
-        <h5>
-          {{ postData.content }}
-        </h5>
+        <div v-else>
+          <em>by you</em> Last updated at : {{ postData.updated_at }} EDIT
+        </div>
       </div>
+
+      <img :src="imageUrl">
+
+      <h5>
+        {{ postData.content }}
+      </h5>
     </div>
+
+
   </div>
   <div v-else>
     <h3>

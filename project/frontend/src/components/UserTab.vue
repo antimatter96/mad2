@@ -17,16 +17,18 @@ export default {
     console.log(this.userData);
   },
   //
-  props: ['user', 'userData', 'showFollowers', 'showFollowing'],
+  props: ['user', 'userData', 'showFollowers', 'showFollowing', 'showSummary'],
   // 
   computed: {},
   methods: {
     ...mapActions(apiStore, { follow: 'follow', unfollow: 'unfollow' }),
 
     unfollow() {
+      this.$emit("followersUpdate", "-", this.userData.user_id)
       console.log("Here")
     },
     follow() {
+      this.$emit("followersUpdate", "+", this.userData.user_id)
       console.log("Here")
     }
   }
@@ -38,7 +40,7 @@ export default {
     <LoadingIcon element="h2" />
   </div>
   <div v-else>
-    <h5 class="mb-0 d-inline-block">
+    <h5 v-if="showSummary == true" class="mb-0 d-inline-block">
       <RouterLink replace class="text-decoration-none" :to="
         {
           name: 'user_profile_page',
@@ -47,26 +49,40 @@ export default {
       </RouterLink>
 
     </h5>
-    <template v-if="showFollowing">
-      <button v-if="userData.user_follows" v-on:click="unfollow" type="button" class="btn btn-outline-danger px-3 mx-3">
-        Unfollow
-        <FollowAction :positive="false"></FollowAction>
-      </button>
-      <button v-else v-on:click="follow" type="button" class="btn btn-outline-success px-3 mx-3">
-        Follow
-        <FollowAction :positive="true"></FollowAction>
-      </button>
-    </template>
-    <template v-if="showFollowers">
-      <button v-if="userData.follows_user" type="button" class="btn btn-outline-info px-3 mx-3">
-        Follows You
-        <FollowIndicator :positive="true"></FollowIndicator>
-      </button>
-      <button v-else type="button" class="btn btn-outline-info px-3 mx-3">
-        Does not follow You
-        <FollowIndicator :positive="false"></FollowIndicator>
-      </button>
-    </template>
+    <div>
+      <template v-if="showFollowing">
+        <button v-if="userData.user_follows" v-on:click="unfollow" type="button"
+          class="btn btn-outline-danger px-3 mx-3 fw-bold">
+          Unfollow
+          <FollowAction :positive="false"></FollowAction>
+        </button>
+        <button v-else v-on:click="follow" type="button" class="btn btn-outline-success px-3 mx-3 fw-bold">
+          Follow
+          <FollowAction :positive="true"></FollowAction>
+        </button>
+      </template>
+      <!-- <template v-if="showFollowers">
+          <button v-if="userData.follows_user" type="button" class="btn btn-outline-info px-3 mx-3 disabled" disabled>
+            Follows you
+            <FollowIndicator :positive="true"></FollowIndicator>
+          </button>
+          <button v-else type="button" class="btn px-3 mx-3 disabled" disabled>
+            Does not follow you
+            <FollowIndicator :positive="false"></FollowIndicator>
+          </button>
+        </template> -->
+      <template v-if="showFollowers">
+        <button class="btn disabled fw-light"
+          :class="{ 'bg-success': userData.follows_user, 'bg-warning': !userData.follows_user }">
+          <template v-if="userData.follows_user">
+            <FollowIndicator :positive="true"></FollowIndicator> Follows you
+          </template>
+          <template v-else>
+            <FollowIndicator :positive="false"></FollowIndicator> Does not follow you
+          </template>
+        </button>
+      </template>
+    </div>
   </div>
 </template>
 

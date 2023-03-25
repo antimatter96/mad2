@@ -42,7 +42,7 @@ export default {
     console.log("App.vue", "BEFORE MOUNTED END")
 
     console.log("mode", this.mode);
-    this.userList = await this.getList(this.showingFollowers);
+    this.userList = [];
 
     this.loading = false;
   },
@@ -54,6 +54,8 @@ export default {
       loading: true,
       userList: null,
       mode: '',
+      searchText: null,
+      searching: false,
     }
   },
   // 
@@ -64,11 +66,20 @@ export default {
     },
   },
   methods: {
-    ...mapActions(apiStore, { getList: 'getList' }),
+    ...mapActions(apiStore, { getList: 'getList', searchByPrefix: 'searchByPrefix' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
-    followersUpdate(a,b) {
+    followersUpdate(a, b) {
       console.log(parent, a, b);
+    },
+
+    async search() {
+      console.log(this.searchText, "<<<<<<<<<<")
+
+      this.userList = await this.searchByPrefix(this.searchText);
+
+      console.log(this.userList);
+
     }
   }
 }
@@ -78,21 +89,27 @@ export default {
   <div v-if="loading || userList == null" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
-  <div v-else>
-    <div class="px-1">
-      <h3 class="mb-0">
-        <span v-if="showingFollowers"> Your Followers : </span>
-        <span v-else>Who you follow : </span>
-        ({{ userList.length }})
-      </h3>
-      <div>
-        <h5> List </h5>
-        <div class="col-md-10 offset-md-1">
-        <div v-for="(user, index) in userList.list">
+  <div v-else class="px-3">
+    <div class="col-md-10 offset-md-1 border-bottom border-2">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Recipient's username" v-model="searchText">
+        <button class="btn btn-primary" type="button" v-on:click="search">Button</button>
+      </div>
+    </div>
+    <div class="mt-4">
+      <div v-if="userList.count > 0" class="col-md-10 offset-md-1">
+        <h5> Search Result </h5>
+        <div v-for="(user, index) in userList.users">
           <span> {{ index + 1 }} </span>
-          <UserTab :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="showingFollowing" class="d-flex"/>
+          <UserTab :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="showingFollowing"
+            class="d-flex" />
         </div>
-        </div>
+      </div>
+      <div v-else-if="searching == true" class="col-md-10 offset-md-1">
+        Nothing Found
+      </div>
+      <div v-else class="col-md-10 offset-md-1">
+        Start Searching
       </div>
     </div>
   </div>

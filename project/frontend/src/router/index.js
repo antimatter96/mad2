@@ -42,6 +42,12 @@ const router = createRouter({
       component: () => import('../components/UserProfile.vue')
     },
     {
+      path: '/profile/search',
+      name: 'user_search_page',
+      props: true,
+      component: () => import('../components/UserSearch.vue')
+    },
+    {
       path: '/profile/me/followers',
       name: 'user_followers',
       component: () => import('../components/GraphList.vue')

@@ -61,11 +61,8 @@ export default {
 </script>
 
 <template>
-  <div class="container d-flex flex-column">
-    <header class="row">
-      <Navigation :loggedIn=loggedIn :loading=hideNavBar />
-    </header>
-
+  <div class="container d-flex flex-column px-4">
+    <Navigation :loggedIn=loggedIn :loading=hideNavBar />
 
     <div id="main" class="row py-2">
       <div v-if="loading" id="main-loading" class="h-100 w-100">

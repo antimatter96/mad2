@@ -41,7 +41,6 @@ export default {
   // 
   data() {
     return {
-      msg: "U did it",
       loading: true,
       title: "",
       content: "",
