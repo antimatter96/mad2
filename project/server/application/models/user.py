@@ -52,19 +52,19 @@ class User(db.Model, UserMixin):
 
   posts = relationship("Post", back_populates="creator")
 
-  def public_view_as_dict(self, with_posts=False):
+  def public_view_as_dict(self, current_user, with_posts=False):
     return {
         'user_id': getattr(self, 'user_id'),
         'email': getattr(self, 'email'),
         'created_at': getattr(self, 'created_at'),
         'followers': { 'length': len(self.followers)},
         'following': { 'length': len(self.following)},
-        **({ 'posts': [post.simplified_public_view() for post in self.posts if post.hidden == False]} if with_posts else {}),
+        **({ 'posts': [post.simplified_public_view(current_user) for post in self.posts if post.hidden == False]} if with_posts else {}),
     }
 
   def public_view_wrt(self, current_user, with_posts=False):
     return {
-        **self.public_view_as_dict(with_posts=with_posts),
+        **self.public_view_as_dict(current_user, with_posts=with_posts),
         'follows_user': self in current_user.followers,
         'user_follows': self in current_user.following,
         'is_actually_user': self.user_id == current_user.user_id,
@@ -72,9 +72,9 @@ class User(db.Model, UserMixin):
 
   def private_view(self, with_posts=False, with_followers_list=False, with_following_list=False):
     return {
-        **self.public_view_as_dict(with_posts=with_posts),
+        **self.public_view_as_dict(self, with_posts=with_posts),
         **({
-            'posts': [post.simplified_private_view() for post in self.posts]
+            'posts': [post.simplified_private_view(self) for post in self.posts]
         } if with_posts else {}),
         **({
             'following': {

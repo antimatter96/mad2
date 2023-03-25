@@ -28,14 +28,19 @@ post_errors = {
 
 post_fields = {
     "post_id": fields.Integer,
-    "creator_id": fields.Integer,
     "title": fields.String,
-    "content": fields.String,
     "hidden": fields.Boolean,
     "image_url": fields.String,
     "created_at": SimpleDateTime,
     "updated_at": SimpleDateTime,
+    "creator": {
+        "user_id": fields.Integer(attribute='creator.user_id'),
+        "email": fields.String(attribute='creator.email'),
+        "follows_user": fields.Boolean(attribute='creator.follows_user'),
+        "user_follows": fields.Boolean(attribute='creator.user_follows'),
+    }
 }
+
 
 post_update_parser = reqparse.RequestParser()
 post_update_parser.add_argument('title', type=min_length(1), required=True, trim=True)
@@ -54,13 +59,13 @@ class PostsAPI(Resource):
     print(current_user)
     post = db.session.query(Post)\
       .filter(Post.post_id == post_id)\
-      .filter(Post.creator_id == current_user.user_id or Post.hidden == False)\
+      .filter(Post.creator_id == current_user.user_id or Post.hidden != True)\
       .first()
 
     if post is None:
       raise NotFoundError(error_code='post_009', error_message=post_errors['post_009'])
 
-    return post, 200
+    return post.public_view_as_dict(current_user), 200
 
   def delete(self, post_id):
     print(current_user)

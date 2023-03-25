@@ -27,7 +27,7 @@ def export_csv():
   following_ids = [following.user_id for following in current_user.following]
   posts = db.session.query(Post).filter(Post.creator_id.in_(following_ids)).filter(Post.hidden == True).order_by(Post.updated_at).all()
 
-  post_dicts = [post.public_view_as_dict() for post in posts]
+  post_dicts = [post.public_view_as_dict(current_user) for post in posts]
 
   print(current_user)
 
@@ -42,7 +42,7 @@ def export_report():
   following_ids = [following.user_id for following in current_user.following]
   posts = db.session.query(Post).filter(Post.creator_id.in_(following_ids)).filter(Post.hidden == True).order_by(Post.updated_at).all()
 
-  post_dicts = [post.public_view_as_dict() for post in posts]
+  post_dicts = [post.public_view_as_dict(current_user) for post in posts]
 
   print(current_user)
 

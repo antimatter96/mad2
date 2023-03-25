@@ -26,32 +26,29 @@ class Post(db.Model):
   #     return self.completed_on > self.deadline
   #   return datetime.now() > self.deadline
 
-  def public_view_as_dict(self):
+  def public_view_as_dict(self, current_user):
     return {
         'post_id': getattr(self, 'post_id'),
         'title': getattr(self, 'title'),
         'content': getattr(self, 'content'),
-        'creator': {
-            'user_id': getattr(self.creator, 'user_id'),
-            'email': getattr(self.creator, 'email')
-        },
+        'creator': getattr(self, 'creator').public_view_wrt(current_user),
         'created_at': getattr(self, 'created_at'),
         'updated_at': getattr(self, 'updated_at'),
         'img_url': getattr(self, 'img_url'),
     }
 
-  def private_as_dict(self):
+  def private_as_dict(self, current_user):
     return {
-        **self.public_view_as_dict(),
+        **self.public_view_as_dict(current_user),
         'hidden': getattr(self, 'hidden'),
     }
 
-  def simplified_private_view(self):
-    full_view = self.private_as_dict()
+  def simplified_private_view(self, current_user):
+    full_view = self.private_as_dict(current_user)
     del full_view['creator']
     return full_view
 
-  def simplified_public_view(self):
-    full_view = self.public_view_as_dict()
+  def simplified_public_view(self, current_user):
+    full_view = self.public_view_as_dict(current_user)
     del full_view['creator']
     return full_view
