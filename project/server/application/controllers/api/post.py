@@ -30,7 +30,7 @@ post_fields = {
     "post_id": fields.Integer,
     "title": fields.String,
     "hidden": fields.Boolean,
-    "image_url": fields.String,
+    "img_url": fields.String,
     "created_at": SimpleDateTime,
     "updated_at": SimpleDateTime,
     "creator": {
@@ -38,6 +38,7 @@ post_fields = {
         "email": fields.String(attribute='creator.email'),
         "follows_user": fields.Boolean(attribute='creator.follows_user'),
         "user_follows": fields.Boolean(attribute='creator.user_follows'),
+        "is_actually_user": fields.Boolean(attribute='creator.is_actually_user'),
     }
 }
 

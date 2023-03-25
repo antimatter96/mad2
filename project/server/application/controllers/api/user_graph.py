@@ -18,7 +18,7 @@ from flask_security import Security, current_user, auth_required, hash_password,
 ##@cache.cached(timeout=5000)
 @auth_required('token')
 def user_search_by_prefix():
-  content = request.get_json(force=True)
+  content = request.args
   prefix = content.get("prefix", "").strip()
 
   if prefix != "":
@@ -36,19 +36,11 @@ def user_search_by_prefix():
           continue
         res.append(u.public_view_wrt(current_user))
 
-      return jsonify(res)
+      return jsonify({'count': len(res), 'users': res})
     except:
       return {}
   else:
     return {}, 400
-
-@app.route("/followers", methods=['GET'])
-def render_signup():
-  ...
-
-@app.route("/following", methods=['GET'])
-def render_signin():
-  ...
 
 @app.route("/api/users/me", methods=['GET'])
 ##@cache.cached(timeout=5000)
@@ -69,7 +61,10 @@ def my_following():
 @app.route("/api/users/<int:user_id>", methods=['GET'])
 @auth_required('token')
 def get_user_by_id(user_id):
-  other_user = db.session.query(User).filter(User.user_id == user_id).first()
+  other_user = db.session\
+    .query(User)\
+    .filter(User.user_id == user_id)\
+    .first()
 
   if other_user == None:
     return {}, 404
