@@ -2,7 +2,7 @@ import time
 import bcrypt
 import hashlib
 
-from app import cache
+from cache import cache
 from flask import current_app as app
 from flask import request, jsonify
 from flask import render_template, redirect, url_for, session
@@ -22,11 +22,10 @@ def user_search_by_prefix():
   prefix = content.get("prefix", "").strip()
 
   if prefix != "":
-    search = "{}%".format(prefix)
+    user_ids = _creator_ids_by_prefix(prefix)
     try:
       users = User.query\
-        .filter(User.email.like(search))\
-        .limit(20)\
+        .filter(User.user_id.in_(user_ids))\
         .all()
 
       res = []
@@ -36,11 +35,22 @@ def user_search_by_prefix():
           continue
         res.append(u.public_view_wrt(current_user))
 
-      return jsonify({'count': len(res), 'users': res})
+      return jsonify({ 'count': len(res), 'users': res})
     except:
       return {}
   else:
     return {}, 400
+
+@cache.memoize(30_000)
+def _creator_ids_by_prefix(prefix):
+  search = "{}%".format(prefix)
+  users = User.query\
+    .filter(User.email.like(search))\
+    .with_entities(User.user_id)\
+    .limit(21)\
+    .all()
+  user_ids = [user_id for (user_id, ) in users]
+  return user_ids
 
 @app.route("/api/users/me", methods=['GET'])
 ##@cache.cached(timeout=5000)

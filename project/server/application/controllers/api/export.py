@@ -18,32 +18,11 @@ from flask_security import Security, current_user, auth_required, hash_password,
 
 
 
-@app.route("/api/export_csv/", methods=['GET'])
+@app.route("/api/posts/export_csv", methods=['GET'])
 @auth_required('token')
 def export_csv():
-  content = request.get_json(force=True)
-  prefix = content["asd"].strip()
+  post_dicts = [post.simplified_private_view(current_user) for post in current_user.posts]
 
-  following_ids = [following.user_id for following in current_user.following]
-  posts = db.session.query(Post).filter(Post.creator_id.in_(following_ids)).filter(Post.hidden == True).order_by(Post.updated_at).all()
-
-  post_dicts = [post.public_view_as_dict(current_user) for post in posts]
-
-  print(current_user)
-
-  return jsonify(post_dicts, default=str)
-
-@app.route("/api/export_report/", methods=['GET'])
-@auth_required('token')
-def export_report():
-  content = request.get_json(force=True)
-  prefix = content["asd"].strip()
-
-  following_ids = [following.user_id for following in current_user.following]
-  posts = db.session.query(Post).filter(Post.creator_id.in_(following_ids)).filter(Post.hidden == True).order_by(Post.updated_at).all()
-
-  post_dicts = [post.public_view_as_dict(current_user) for post in posts]
-
-  print(current_user)
+  print(post_dicts)
 
   return jsonify(post_dicts, default=str)

@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from flask_security import UserMixin, RoleMixin
 
 from application.database.index import db
+from cache import cache
 
 class RolesUsers(db.Model):
   __tablename__ = 'roles_users'
@@ -52,6 +53,7 @@ class User(db.Model, UserMixin):
 
   posts = relationship("Post", back_populates="creator")
 
+  @cache.memoize(300000)
   def public_view_as_dict(self, current_user, with_posts=False):
     return {
         'user_id': getattr(self, 'user_id'),
@@ -62,6 +64,7 @@ class User(db.Model, UserMixin):
         **({ 'posts': [post.simplified_public_view(current_user) for post in self.posts if post.hidden == False]} if with_posts else {}),
     }
 
+  @cache.memoize(300000)
   def public_view_wrt(self, current_user, with_posts=False):
     return {
         **self.public_view_as_dict(current_user, with_posts=with_posts),
@@ -70,6 +73,7 @@ class User(db.Model, UserMixin):
         'is_actually_user': self.user_id == current_user.user_id,
     }
 
+  @cache.memoize(300000)
   def private_view(self, with_posts=False, with_followers_list=False, with_following_list=False):
     return {
         **self.public_view_as_dict(self, with_posts=with_posts),

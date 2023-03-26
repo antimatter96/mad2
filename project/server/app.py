@@ -6,16 +6,15 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
 from flask_security import Security, SQLAlchemySessionUserDatastore
-from flask_caching import Cache
 
 from config import LocalDevelopmentConfig, TestingConfig
 
 from application.controllers.api.index import api
 from application.models.user import User, Role
 from application.database.index import db
+from cache import cache
 
 app = None
-cache = None
 config = None
 
 def create_app():
@@ -56,7 +55,6 @@ def create_app():
   return app
 
 app = create_app()
-cache = Cache(config=app.config.get_namespace("CACHE_", trim_namespace=True))
 cache.init_app(app)
 
 from application.controllers.index import *

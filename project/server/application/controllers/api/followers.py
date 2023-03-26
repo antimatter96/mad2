@@ -8,7 +8,7 @@ from application.controllers.api.errors import NotFoundError, BusinessValidation
 
 from flask_security import auth_required, current_user
 
-follower_api_errors = {"user_001": "User does not exist", "user_002": "User can't follow itself"}
+follower_api_errors = { "user_001": "User does not exist", "user_002": "User can't follow itself"}
 
 class FollowersAPI(Resource):
   method_decorators = [auth_required("token")]
@@ -16,7 +16,10 @@ class FollowersAPI(Resource):
   def delete(self, other_user_id):
     print(current_user)
 
-    other_user = db.session.query(User).filter(User.user_id == other_user_id).first()
+    other_user = db.session.query(User)\
+      .filter(User.user_id == other_user_id)\
+      .first()
+
     if other_user is None:
       return '', 200
 
@@ -39,7 +42,10 @@ class FollowersAPI(Resource):
     if current_user.user_id == other_user_id:
       raise BusinessValidationError(status_code=400, error_code='user_002', error_message=follower_api_errors['user_002'])
 
-    other_user = db.session.query(User).filter(User.user_id == other_user_id).first()
+    other_user = db.session.query(User)\
+      .filter(User.user_id == other_user_id)\
+      .first()
+
     if other_user is None:
       raise NotFoundError(error_code='user_001', error_message=follower_api_errors['user_001'])
 
