@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
-import { apiStore } from '../stores/api'
+import { postStore } from '../stores/posts'
 import LoadingIcon from './icons/Loading.vue'
 
 
@@ -57,7 +57,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(apiStore, { getPost: 'getPost', createPost: 'createPost' }),
+    ...mapActions(postStore, { getPost: 'getPost', createPost: 'createPost' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
     coverImageChange(fileInput) {

@@ -3,7 +3,8 @@ import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
-import { apiStore } from '../stores/api'
+import { postStore } from '../stores/posts'
+import { graphStore } from '../stores/graph'
 import LoadingIcon from './icons/Loading.vue'
 import UserTab from './UserTab.vue'
 import PostSummary from './PostSummary.vue'
@@ -58,7 +59,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(apiStore, { getFeed: 'getFeed' }),
+    ...mapActions(graphStore, { getFeed: 'getFeed' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
   }
 }

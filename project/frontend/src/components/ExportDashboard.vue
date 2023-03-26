@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
-import { graphStore } from '../stores/graph' 
+import { graphStore } from '../stores/graph'
 import LoadingIcon from './icons/Loading.vue'
 
 import UserTab from './UserTab.vue'
@@ -23,13 +23,6 @@ export default {
 
     console.log("DONE async");
 
-    console.log(this.$route);
-
-
-    this.mode = this.$route.name;
-    this.showingFollowers = this.mode == 'user_followers';
-    this.showingFollowing = this.mode != 'user_followers';
-
     if (!this.loggedIn) {
       await this.checkUserState()
     }
@@ -41,12 +34,20 @@ export default {
     }
     console.log("App.vue", "BEFORE MOUNTED END")
 
-    console.log("mode", this.mode);
-    this.userList = [];
-
     this.loading = false;
   },
   async mounted() {
+    var source = new EventSource("{{ url_for('sse.stream') }}");
+    source.addEventListener('greeting', function (event) {
+      var data = JSON.parse(event.data);
+      alert("The server says " + data.message);
+    }, false);
+    source.addEventListener('error', function (event) {
+      alert("Failed to connect to event stream. Is Redis running?");
+    }, false);
+    source.addEventListener('open', function (event) {
+      console.log("ASD")
+    });
   },
   // 
   data() {
@@ -86,7 +87,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="loading || userList == null" id="main-loading" class="h-100 w-100">
+  <div v-if="loading" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
   <div v-else class="px-3">

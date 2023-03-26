@@ -2,8 +2,7 @@
 import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
-import { userAuthStore } from '../stores/userAuth'
-import { apiStore } from '../stores/api'
+import { graphStore } from '../stores/graph'
 import LoadingIcon from './icons/Loading.vue'
 import FollowIndicator from './icons/FollowIndicator.vue'
 import FollowAction from './icons/FollowAction.vue'
@@ -21,7 +20,7 @@ export default {
   // 
   computed: {},
   methods: {
-    ...mapActions(apiStore, { follow: 'follow', unfollow: 'unfollow' }),
+    ...mapActions(graphStore, { follow: 'follow', unfollow: 'unfollow' }),
 
     unfollow() {
       this.$emit("followersUpdate", "-", this.userData.user_id)

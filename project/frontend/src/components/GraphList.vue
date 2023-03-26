@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
-import { apiStore } from '../stores/api'
+import { graphStore } from '../stores/graph'
 import LoadingIcon from './icons/Loading.vue'
 
 import UserTab from './UserTab.vue'
@@ -64,7 +64,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(apiStore, { getList: 'getList' }),
+    ...mapActions(graphStore, { getList: 'getList' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
     followersUpdate(a,b) {

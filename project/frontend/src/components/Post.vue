@@ -2,8 +2,8 @@
 import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
-import { userAuthStore } from '../stores/userAuth'
-import { apiStore } from '../stores/api'
+import { userAuthStore, postStore } from '../stores'
+
 import LoadingIcon from './icons/Loading.vue'
 import UserTab from './UserTab.vue'
 
@@ -68,7 +68,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(apiStore, { getPost: 'getPost' }),
+    ...mapActions(postStore, { getPost: 'getPost' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
   }
 }

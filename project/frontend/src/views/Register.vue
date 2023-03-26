@@ -71,7 +71,6 @@ export default {
 
       let result = await this.userAuthStoreRegister(this.email, this.password)
 
-
       if (result.done) {
         this.$router.push('/login');
       } else {

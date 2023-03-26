@@ -55,7 +55,6 @@ export default {
     ...mapState(userAuthStore, ['loggedIn'])
   },
 
-
   // METHODS
   methods: {
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
