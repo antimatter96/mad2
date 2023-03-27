@@ -20,12 +20,12 @@ def export_csv(user_id):
 
   export_job = ExportJob.query.filter(ExportJob.job_id == job_id).first()
   if export_job == None:
+    print("job not found")
     return None
-
-  filename = secure_filename(str(user_id) + "_" + job_id + ".csv")
 
   user = User.query.filter(User.user_id == user_id).first()
   if user == None:
+    print("user not found")
     return None
 
   post_dicts = [post.simplified_private_view(user) for post in user.posts]
@@ -33,6 +33,7 @@ def export_csv(user_id):
     post['content'] = post['content'].replace('\n', " ⏎ ")
     post['title'] = post['title'].replace('\n', " ⏎ ")
 
+  filename = secure_filename(str(user_id) + "_" + job_id + ".csv")
   file_saved = False
   try:
     with open(os.path.join(app.config['CSV_UPLOAD_FOLDER'], filename), "w") as f:
@@ -55,7 +56,7 @@ def export_csv(user_id):
     db.session.rollback()
     raise e
 
-  sse.publish({ "message": "done ", "job_id": job_id}, type='greeting', channel="users." + str(user_id))
+  sse.publish({ "message": "done", "job_id": job_id}, type='jobDone', channel="users." + str(user_id))
 
   print("End export_csv", user_id)
 

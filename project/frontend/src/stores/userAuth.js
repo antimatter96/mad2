@@ -60,11 +60,7 @@ export const userAuthStore = defineStore('userAuth', {
       try {
 
         let response = await fetch(API_BASE + "/login", {
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-          }
+          ...this._commonHeaders(),
         });
         let r = await response.json();
 
@@ -79,11 +75,7 @@ export const userAuthStore = defineStore('userAuth', {
       try {
 
         let response = await fetch(API_BASE + "/register", {
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-          }
+          ...this._commonHeaders(),
         });
         let r = await response.json();
 
@@ -106,11 +98,7 @@ export const userAuthStore = defineStore('userAuth', {
       try {
         let response = await fetch(API_BASE + "/login?include_auth_token=true", {
           method: 'POST',
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          ...this._commonHeaders(),
           body: JSON.stringify({
             "email": email,
             "password": password,
@@ -145,11 +133,7 @@ export const userAuthStore = defineStore('userAuth', {
       try {
         let response = await fetch(API_BASE + "/register?include_auth_token=true", {
           method: 'POST',
-          mode: 'cors', // no-cors, *cors, same-origin
-          credentials: 'same-origin', // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          ...this._commonHeaders(),
           body: JSON.stringify({
             "email": email,
             "password": password,
@@ -166,6 +150,16 @@ export const userAuthStore = defineStore('userAuth', {
         }
       } catch (error) {
         return { done: false, 'user_error': false };
+      }
+    },
+
+    _commonHeaders() {
+      return {
+        mode: 'cors',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json',
+        }
       }
     },
   },

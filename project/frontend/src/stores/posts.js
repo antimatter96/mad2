@@ -101,7 +101,6 @@ export const postStore = defineStore('post', {
     async listExportJobs() {
       try {
         let response = await fetch(POST_API_BASE + "/export/jobs", {
-          method: 'GET',
           ...this._commonHeaders(),
         });
 

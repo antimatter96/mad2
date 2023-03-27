@@ -23,8 +23,7 @@ import application.background_workers.tasks as tasks
 @app.route("/api/post/export/", methods=['POST'])
 @auth_required('token', 'session')
 def export_csv():
-  job = tasks.export_csv.delay(current_user.user_id)
-  print(job)
+  job = tasks.export_csv.apply_async((current_user.user_id, ), countdown=5)
 
   try:
     export_job = ExportJob(job_id=job.id, creator=current_user)
