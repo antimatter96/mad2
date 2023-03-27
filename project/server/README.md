@@ -33,3 +33,6 @@ curl --request GET \
   --header 'x-api-token: 76d1d29655361c8ec04623e40a2fecfacf742dbf43d4712a914c4e24f9b26fe8' \
 ```
 
+
+
+python3.9 -m celery -A app.celery call application.background_workers.tasks.export_csv --kwargs='{"user_id": 1}'

@@ -39,9 +39,25 @@ class Config():
 
   UPLOAD_FOLDER = os.path.join(basedir, "./static/user_uploads")
 
-  CACHE_TYPE = "SimpleCache"
+  CACHE_TYPE = "RedisCache"
   CACHE_KEY_PREFIX = "_idx_"
-  CACHE_DEFAULT_TIMEOUT = 1000
+  CACHE_DEFAULT_TIMEOUT = 5000
+  CACHE_REDIS_HOST = 'localhost'
+  CACHE_REDIS_PORT = 6379
+  CACHE_REDIS_DB = 1
+
+  _BASE_REDIS_URL = "redis://" + CACHE_REDIS_HOST + ":" + str(CACHE_REDIS_PORT) + "/"
+
+  SSE_REDIS_DB = 2
+  REDIS_URL = _BASE_REDIS_URL + str(SSE_REDIS_DB)
+
+  CELERY_BROKER_REDIS_DB = 3
+  CELERY_BROKER_URL = _BASE_REDIS_URL + str(CELERY_BROKER_REDIS_DB)
+
+  CELERY_RESULT_BACKEND_REDIS_DB = 4
+  CELERY_RESULT_BACKEND = _BASE_REDIS_URL + str(CELERY_RESULT_BACKEND_REDIS_DB)
+
+  CSV_UPLOAD_FOLDER = os.path.join(basedir, "./static/export_reports")
 
 
 class NonProdConfig(Config):
@@ -54,7 +70,6 @@ class LocalDevelopmentConfig(NonProdConfig):
   SECURITY_PASSWORD_HASH = "bcrypt"
   SECURITY_PASSWORD_SALT = "really super secret"
   SQLALCHEMY_ECHO = True
-
 
 class TestingConfig(NonProdConfig):
   SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"

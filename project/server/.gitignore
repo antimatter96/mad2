@@ -4,5 +4,6 @@ __pycache__
 db_directory/*.sqlite3
 
 static/user_uploads
+static/export_reports
 
 *.log

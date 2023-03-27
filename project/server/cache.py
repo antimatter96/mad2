@@ -14,6 +14,6 @@ elif env == 'development':
 elif env == 'testing':
   _configClass = TestingConfig
 
-_config=flask_config.Config(_configClass())
+_config = flask_config.Config(_configClass())
 _config.from_object(_configClass())
 cache = Cache(config=_config.get_namespace("CACHE_", trim_namespace=True))
