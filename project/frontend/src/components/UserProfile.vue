@@ -99,6 +99,11 @@ export default {
             Following: {{ userData.following.length }}
           </template>
         </h5>
+          <template v-if="isActuallyUser">
+            <RouterLink to="/profile/me/export" replace class="fw-bold">
+              EXPORT ALL
+            </RouterLink>
+          </template>
       </div>
     </div>
 

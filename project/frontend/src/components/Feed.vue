@@ -82,7 +82,7 @@ export default {
 
     <div class="col-md-10 offset-md-1">
       <div v-if="postList.count > 0">
-        <template v-for="(post) in postList.posts">
+        <template v-for="(post) in postList.posts" :key="post.post_id">
           <PostSummary :postData="post" :showCreatorStats="true"/>
         </template>
       </div>

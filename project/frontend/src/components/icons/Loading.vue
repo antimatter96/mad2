@@ -1,10 +1,15 @@
 <script setup>
-
 defineProps({
   element: {
     type: String,
-    required: true
-  }
+    required: true,
+    value:"h1",
+  },
+  text: {
+    type: String,
+    required: true,
+    value:"loading",
+  },
 })
 </script>
 

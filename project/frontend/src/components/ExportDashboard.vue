@@ -4,6 +4,7 @@ import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
 import { graphStore } from '../stores/graph'
+import { postStore } from '../stores/posts'
 import LoadingIcon from './icons/Loading.vue'
 
 import UserTab from './UserTab.vue'
@@ -34,29 +35,37 @@ export default {
     }
     console.log("App.vue", "BEFORE MOUNTED END")
 
+    this.jobs = await this.listExportJobs();
+    console.log(this.jobs)
     this.loading = false;
   },
   async mounted() {
-    var source = new EventSource("{{ url_for('sse.stream') }}");
-    source.addEventListener('greeting', function (event) {
+    console.log("App.vue", "MOUNTED START")
+
+    const source = new EventSource("http://localhost:8080/stream", { withCredentials: true });
+    source.addEventListener('greeting', async function (event) {
+      console.log('event_received', event)
       var data = JSON.parse(event.data);
-      alert("The server says " + data.message);
-    }, false);
-    source.addEventListener('error', function (event) {
-      alert("Failed to connect to event stream. Is Redis running?");
-    }, false);
-    source.addEventListener('open', function (event) {
-      console.log("ASD")
+      console.log("The server says " + data.message);
     });
+    source.addEventListener('error', async function (event, xxx) {
+      console.log(event, xxx);
+      console.error(event);
+      console.log(JSON.stringify(event));
+
+      console.log("Failed to connect to event stream. Is Redis running?");
+    });
+    source.addEventListener('open', async function (event) {
+      console.log("open", event);
+    });
+
+    console.log("App.vue", "MOUNTED END")
   },
   // 
   data() {
     return {
       loading: true,
-      userList: null,
-      mode: '',
-      searchText: null,
-      searching: false,
+      jobs: null,
     }
   },
   // 
@@ -68,6 +77,7 @@ export default {
   },
   methods: {
     ...mapActions(graphStore, { getList: 'getList', searchByPrefix: 'searchByPrefix' }),
+    ...mapActions(postStore, { exportCSV: 'exportCSV', listExportJobs: 'listExportJobs' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
     followersUpdate(a, b) {
@@ -75,42 +85,71 @@ export default {
     },
 
     async search() {
-      console.log(this.searchText, "<<<<<<<<<<")
+      let response = await this.exportCSV();
+      if (response != null) {
+        this.jobs.count++;
+        this.jobs.jobs.unshift(response);
+      }
+    },
 
-      this.userList = await this.searchByPrefix(this.searchText);
-
-      console.log(this.userList);
-
+    jobStatus(job) {
+      if (job.done != null && job.done == true) {
+        return 'Successfull'
+      } else if (job.error != null) {
+        return 'Error'
+      } else {
+        return 'Pending'
+      }
     }
   }
 }
+
+
 </script>
 
 <template>
-  <div v-if="loading" id="main-loading" class="h-100 w-100">
+  <div v-if="loading || jobs == null" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
   <div v-else class="px-3">
     <div class="col-md-10 offset-md-1 border-bottom border-2">
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Recipient's username" v-model="searchText">
-        <button class="btn btn-primary" type="button" v-on:click="search">Button</button>
+      <h5> Export all your posts <em>[Valid for 1 hour only]</em></h5>
+      <div class="text-center mb-3">
+        <button class="btn btn-primary fw-bold" type="button" v-on:click="search">Export</button>
       </div>
     </div>
     <div class="mt-4">
-      <div v-if="userList.count > 0" class="col-md-10 offset-md-1">
-        <h5> Search Result </h5>
-        <div v-for="(user, index) in userList.users">
-          <span> {{ index + 1 }} </span>
-          <UserTab :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="showingFollowing"
-            class="d-flex" />
-        </div>
-      </div>
-      <div v-else-if="searching == true" class="col-md-10 offset-md-1">
-        Nothing Found
+      <div v-if="jobs.count > 0" class="col-md-10 offset-md-1">
+        <h5>Your Export Jobs</h5>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Export Time</th>
+              <th scope="col">Status</th>
+              <th scope="col">Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(job, index) in jobs.jobs" :key="job.job_id">
+              <td>{{ index + 1 }}</td>
+              <td>{{ job.created_at }}</td>
+              <td>{{ jobStatus(job) }}</td>
+              <td>
+                <span v-if="job.expired" class="fw-bold text-danger">Expired</span>
+                <span v-else-if="job.deleted">Deleted</span>
+                <span v-else-if="job.done"><a
+                    :href="'http://localhost:8080/api/post/export/' + job.job_id">Download</a></span>
+                <span v-else-if="jobStatus(job) == 'Pending'">❌</span>
+                <span v-else-if="jobStatus(job) == 'Error'">❌</span>
+                <span v-else>??❌??</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div v-else class="col-md-10 offset-md-1">
-        Start Searching
+        No export jobs
       </div>
     </div>
   </div>

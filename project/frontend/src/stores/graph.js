@@ -159,6 +159,8 @@ export const graphStore = defineStore('post', {
           ...this._commonHeaders()
         });
 
+        console.log('>>>>>>>>>',response)
+
         if (response.status == 200) {
           let r = await response.json();
 

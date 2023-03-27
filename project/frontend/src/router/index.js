@@ -20,11 +20,6 @@ const router = createRouter({
       component: () => import('../components/Post.vue')
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
-    },
-    {
       path: '/login',
       name: 'login',
       component: () => import('../views/Login.vue')
@@ -55,6 +50,11 @@ const router = createRouter({
       path: '/profile/me/following',
       name: 'user_follows',
       component: () => import('../components/GraphList.vue')
+    },
+    {
+      path: '/profile/me/export',
+      name: 'export_dashboard',
+      component: () => import('../components/ExportDashboard.vue')
     },
   ]
 })
