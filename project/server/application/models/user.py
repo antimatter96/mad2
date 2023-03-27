@@ -52,8 +52,9 @@ class User(db.Model, UserMixin):
   )
 
   posts = relationship("Post", back_populates="creator")
+  export_jobs = relationship("ExportJob", back_populates="creator")
 
-  @cache.memoize(300000)
+  @cache.memoize(60)
   def public_view_as_dict(self, current_user, with_posts=False):
     return {
         'user_id': getattr(self, 'user_id'),
@@ -64,7 +65,7 @@ class User(db.Model, UserMixin):
         **({ 'posts': [post.simplified_public_view(current_user) for post in self.posts if post.hidden == False]} if with_posts else {}),
     }
 
-  @cache.memoize(300000)
+  @cache.memoize(60)
   def public_view_wrt(self, current_user, with_posts=False):
     return {
         **self.public_view_as_dict(current_user, with_posts=with_posts),
@@ -73,13 +74,11 @@ class User(db.Model, UserMixin):
         'is_actually_user': self.user_id == current_user.user_id,
     }
 
-  @cache.memoize(300000)
+  @cache.memoize(60)
   def private_view(self, with_posts=False, with_followers_list=False, with_following_list=False):
     return {
         **self.public_view_as_dict(self, with_posts=with_posts),
-        **({
-            'posts': [post.simplified_private_view(self) for post in self.posts]
-        } if with_posts else {}),
+        **({ 'posts': [post.simplified_private_view(self) for post in self.posts]} if with_posts else {}),
         **({
             'following': {
                 'length': len(self.following),

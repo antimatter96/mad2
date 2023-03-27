@@ -1,9 +1,5 @@
-import time
-import bcrypt
-import hashlib
-
 from cache import cache
-from flask import current_app as app
+from app import app as app
 from flask import request, jsonify
 from flask import render_template, redirect, url_for, session
 
@@ -41,7 +37,7 @@ def user_search_by_prefix():
   else:
     return {}, 400
 
-@cache.memoize(30_000)
+@cache.memoize(60)
 def _creator_ids_by_prefix(prefix):
   search = "{}%".format(prefix)
   users = User.query\

@@ -4,7 +4,7 @@ from flask_restful import Resource
 from application.models.user import User
 
 from application.database.index import db
-from application.controllers.api.errors import NotFoundError, BusinessValidationError, InternalServerError, common_errors
+from application.controllers.restful.errors import NotFoundError, BusinessValidationError, InternalServerError, common_errors
 
 from flask_security import auth_required, current_user
 

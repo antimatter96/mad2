@@ -10,8 +10,8 @@ from flask_restful import Resource, fields, marshal_with, reqparse, inputs
 from application.models.post import Post
 
 from application.database.index import db
-from application.controllers.api.utils import min_length
-from application.controllers.api.errors import NotFoundError, BusinessValidationError, InternalServerError, common_errors
+from application.controllers.restful.utils import min_length
+from application.controllers.restful.errors import NotFoundError, BusinessValidationError, InternalServerError, common_errors
 
 from flask_security import auth_required, current_user
 
@@ -57,7 +57,6 @@ class PostsAPI(Resource):
 
   @marshal_with(post_fields)
   def get(self, post_id):
-    print(current_user)
     post = db.session.query(Post)\
       .filter(Post.post_id == post_id)\
       .filter(Post.creator_id == current_user.user_id or Post.hidden != True)\
@@ -69,7 +68,6 @@ class PostsAPI(Resource):
     return post.public_view_as_dict(current_user), 200
 
   def delete(self, post_id):
-    print(current_user)
     post = db.session.query(Post)\
       .filter(Post.post_id == post_id and Post.creator_id == current_user.user_id)\
       .first()
@@ -89,7 +87,6 @@ class PostsAPI(Resource):
 
   @marshal_with(post_fields)
   def put(self, post_id):
-    print(current_user)
     post = db.session.query(Post)\
       .filter(Post.post_id == post_id and Post.creator_id == current_user.user_id)\
       .first()
@@ -119,7 +116,6 @@ class PostsAPI(Resource):
 
   @marshal_with(post_fields)
   def post(self):
-    print(current_user)
     args = post_create_parser.parse_args()
 
     title = args.get('title')

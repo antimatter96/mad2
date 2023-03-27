@@ -3,7 +3,7 @@ import bcrypt
 import hashlib
 
 from app import cache
-from flask import current_app as app
+from app import app as app
 from flask import request, jsonify
 from flask import render_template, redirect, url_for, session
 
