@@ -2,8 +2,6 @@ import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-print("basedir", basedir)
-
 class Config():
   DEBUG = False
   SQLITE_DB_DIR = None

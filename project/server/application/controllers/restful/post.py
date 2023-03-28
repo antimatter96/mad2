@@ -7,7 +7,7 @@ from flask_restful import current_app as app
 from flask_restful import Resource, fields, marshal_with, reqparse, inputs
 from flask_security import auth_required, current_user
 
-from application.models.post import Post
+from application.database.models.post import Post
 from application.database.index import db
 from application.controllers.restful.utils import min_length
 from application.controllers.restful.errors import NotFoundError, InternalServerError, common_errors

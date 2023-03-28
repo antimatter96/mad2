@@ -18,9 +18,18 @@ class Role(db.Model, RoleMixin):
   description = db.Column(db.String(255))
 
 follower_following = db.Table(
-    'follower_following', db.Column('follower_user_id', db.Integer(), db.ForeignKey('user.user_id'), primary_key=True),
-    db.Column('following_user_id', db.Integer(), db.ForeignKey('user.user_id'), primary_key=True)
+    'follower_following', 
+    db.Column('follower_user_id', db.Integer(), db.ForeignKey('user.user_id'), primary_key=True),
+    db.Column('following_user_id', db.Integer(), db.ForeignKey('user.user_id'), primary_key=True),
+    db.Column('created_at', db.DateTime(), default=datetime.now)
 )
+
+class UserLastSeen(db.Model):
+  __tablename__ = 'users_last_seen'
+  user_id = db.Column('user_id', db.Integer(), db.ForeignKey('user.user_id'), primary_key=True)
+  last_seen_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+  rand_number = db.Column(db.Integer())
+
 
 class User(db.Model, UserMixin):
   __tablename__ = 'user'
@@ -90,11 +99,3 @@ class User(db.Model, UserMixin):
         } if with_following_list else {}),
         'is_actually_user': True,
     }
-
-@cache.memoize(timeout=6000)
-def _private_view_with_followers(user_id):
-  user = db.session.query(User)\
-    .where(User.user_id == user_id)\
-    .first()
-
-  return user.private_view(with_following_list=True)

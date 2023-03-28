@@ -1,6 +1,6 @@
 import os
 
-from flask import render_template, send_from_directory
+from flask import render_template, send_from_directory, redirect, url_for
 from flask_sse import sse
 from flask_security import current_user, auth_required
 
@@ -17,6 +17,7 @@ def not_authorized(e):
 from application.controllers.feed import *
 from application.controllers.export import *
 from application.controllers.user_graph import *
+from application.background_workers.tasks import send_monthly_report
 
 @app.route('/favicon.ico')
 def favicon():
@@ -41,3 +42,8 @@ def check_access():
 def add_header(response):
   response.headers['Access-Control-Allow-Credentials'] = 'true'
   return response
+
+@app.route('/extra')
+def extra_stuff():
+  send_monthly_report.delay()
+  return ""

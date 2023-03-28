@@ -6,7 +6,7 @@ from flask_security import current_user, auth_required
 
 from app import app as app
 
-from application.models.export_job import ExportJob
+from application.database.models.export_job import ExportJob
 from application.database.index import db
 import application.background_workers.tasks as tasks
 

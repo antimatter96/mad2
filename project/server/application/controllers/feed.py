@@ -2,7 +2,7 @@ from flask import request, jsonify
 from flask_security import current_user, auth_required
 
 from application.database.index import db
-from application.models.post import Post
+from application.database.models.post import Post
 
 from app import app as app
 

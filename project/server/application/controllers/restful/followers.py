@@ -4,7 +4,9 @@ from flask_security import auth_required, current_user
 
 from cache import cache
 
-from application.models.user import User, _private_view_with_followers
+from application.database.models.user import User
+from application.database.data_access import _private_view_with_followers
+
 from application.database.index import db
 from application.controllers.restful.errors import NotFoundError, BusinessValidationError, InternalServerError, common_errors
 

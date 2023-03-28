@@ -4,8 +4,9 @@ from flask_security import current_user, auth_required
 from cache import cache
 from app import app as app
 
-from application.models.user import User, _private_view_with_followers
 from application.database.index import db
+from application.database.models.user import User
+from application.database.data_access import _private_view_with_followers
 
 @app.route("/api/users/search_by_prefix", methods=['GET'])
 ##@cache.cached(timeout=5000)

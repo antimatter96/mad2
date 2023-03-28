@@ -11,10 +11,12 @@ from flask_sse import sse
 from config import LocalDevelopmentConfig, TestingConfig
 
 from application.controllers.restful.index import api
-from application.models.user import User, Role
+from application.database.models.user import User, Role
 from application.database.index import db
 from application.background_workers.index import celery as celery_worker, TaskWithContext
 from cache import cache
+
+from application.extras.new_user_form import ExtendedRegisterForm
 
 app = None
 config = None
@@ -45,12 +47,12 @@ def create_app():
 
   CORS(app)
 
-  user_datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
-  security = Security()
-
   api.init_app(app)
   app.app_context().push()
-  security.init_app(app, user_datastore)
+
+  user_datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
+  app.security = Security(app, user_datastore, register_form=ExtendedRegisterForm)
+  app.app_context().push()
 
   celery = celery_worker
   celery.conf.update(
@@ -58,6 +60,8 @@ def create_app():
       result_backend=app.config['CELERY_RESULT_BACKEND'],
   )
   celery.Task = TaskWithContext
+  app.app_context().push()
+
   app.logger.info("App setup complete")
 
   logging.basicConfig(filename='debug.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')

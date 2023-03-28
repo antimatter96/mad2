@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    html {
+      font-family: 'IBM Plex Sans', Verdana, sans-serif;
+    }
+
+    body {
+      margin-top: 0.25in;
+      margin-right: 0.25in;
+      margin-bottom: 0.25in;
+      margin-left: 0.25in,
+    }
+
+    h1 {
+      font-size: 200%;
+    }
+
+    h2 {
+      font-size: 150%;
+    }
+
+    .stats_container {
+      display: inline-block;
+      width: 33%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .stats_container>div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stats_container_smaller {
+      width: 100%;
+      background-color: antiquewhite;
+      padding-top: 0;
+      text-align: center;
+    }
+
+    .stats_heading {
+      text-align: center;
+      background-color: aliceblue;
+      padding-top: 1em;
+      padding-bottom: 1em;
+      width: 100%;
+
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .stats_counter {
+      font-weight: 900;
+      font-family: 'Consolas', 'JetBrains Mono';
+
+    }
+
+    .positive {
+      color: darkgreen;
+    }
+
+    .negative {
+      color: firebrick;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div style="text-align: center;">
+    <h1 style="text-decoration: underline;">Report</h1>
+    <h2>{{ data['from'] }} to {{ data['to'] }}</h2>
+  </div>
+  <hr>
+  <div>
+    {% for _key in data['keys'] %}
+    <div class="stats_container">
+      <div style="background-color: antiquewhite; padding-bottom: 1rem;">
+        <h2 class="stats_heading">{{_key.capitalize()}}</h2>
+
+        <div class="stats_container_smaller">
+          {% if data['stats'][_key]['delta'] > 0 %}
+          <h1 class="stats_counter positive">{{ data['stats'][_key]['delta'] }}</h1>
+          {% else %}
+          <h1 class="stats_counter negative">{{ data['stats'][_key]['delta'] }}</h1>
+          {% endif %}
+
+          {% if data['stats'][_key]['percentage'] > 0 %}
+          <h2 class="color:green">Up {{ data['stats'][_key]['percentage'] }} % </h2>
+          {% else %}
+          <h2 class="color:red">Down {{ data['stats'][_key]['percentage'] }} % </h2>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+    <h3 class="stats_counter negative">New followings : {{ data['stats']['followers_count'] }}</h3>
+
+    <hr>
+
+    <div>
+      <h3 style="font-weight: 900;">Most Profilic User</h3>
+
+      <span style="font-weight: 800;">User</span> : {{ data['stats']['max_creator'] }}<br>
+      <span style="font-weight: 800;">Posts created</span> : {{ data['stats']['max_creator_count'] }}
+    </div>
+  </div>
+  <hr>
+</body>
+
+
+</html>
