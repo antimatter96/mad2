@@ -3,7 +3,7 @@ import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
-import { graphStore } from '../stores/graph' 
+import { graphStore } from '../stores/graph'
 import LoadingIcon from './icons/Loading.vue'
 
 import UserTab from './UserTab.vue'
@@ -66,7 +66,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(graphStore, { 
+    ...mapActions(graphStore, {
       getList: 'getList', searchByPrefix: 'searchByPrefix', follow: 'follow', unfollow: 'unfollow'
     }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
@@ -76,41 +76,58 @@ export default {
     },
 
     async search() {
+      this.loading = true;
+      this.searching = true;
+      this.userList = [];
       console.log(this.searchText, "<<<<<<<<<<")
 
       this.userList = await this.searchByPrefix(this.searchText);
 
-      console.log(this.userList);
+      this.loading = false;
 
+      console.log(this.userList);
     },
   }
 }
 </script>
 
 <template>
-  <div v-if="loading || userList == null" id="main-loading" class="h-100 w-100">
-    <LoadingIcon element="h2" />
-  </div>
-  <div v-else class="px-3">
+
+  <div class="px-3">
     <div class="col-md-10 offset-md-1 border-bottom border-2">
       <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Recipient's username" v-model="searchText">
-        <button class="btn btn-primary" type="button" v-on:click="search">Button</button>
+        <input type="text" class="form-control" placeholder="Enter username" v-model="searchText">
+        <button class="btn btn-primary w-15" type="button" v-on:click="search">Search</button>
       </div>
     </div>
-    <div class="mt-4">
+    <div class="mt-2">
+      <div><LoadingIcon :element="'h4'" element="h4" :style="{'opacity': (loading? 100: 0)}"></LoadingIcon></div>
       <div v-if="userList.count > 0" class="col-md-10 offset-md-1">
         <h5> Search Result </h5>
-        <div v-for="(user, index) in userList.users">
-          <span> {{ index + 1 }} </span>
-          <UserTab :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="showingFollowing"
-            class="d-flex" />
-        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Export Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(user, index) in userList.users" class="">
+              <td class="small-index"> {{ index + 1 }} </td>
+              <td>
+                <UserTab :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="showingFollowing"
+                  class="d-flex align-items-center" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div v-else-if="searching == true" class="col-md-10 offset-md-1">
-        Nothing Found
+      <div v-else-if="loading == true" class="col-md-10 offset-md-1">
       </div>
-      <div v-else class="col-md-10 offset-md-1">
+      <div v-else-if="loading == false && searching == true" class="col-md-10 offset-md-1 text-center text-danger">
+        <h4>Nothing Found</h4>
+      </div>
+      <div v-else class="col-md-10 offset-md-1 text-center">
         Start Searching
       </div>
     </div>
@@ -118,4 +135,7 @@ export default {
 </template>
 
 <style scoped>
+.small-index {
+  vertical-align: middle;
+}
 </style>

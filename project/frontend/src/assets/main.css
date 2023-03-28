@@ -7,7 +7,7 @@ html {
 
 
 body {
-  font-family: "Open Sans", "Monaco", "JetBrains Mono";
+  font-family: "IBM Plex Sans", "Monaco", "JetBrains Mono";
 
   position: relative;
   margin-top: 0;
@@ -22,6 +22,14 @@ body {
   padding-top: 1em;
   padding-bottom: 1em;
 
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Work Sans", "Open Sans", "Product Sans", "Noto Sans";
+}
+
+input, label, button {
+  font-family: inherit;
 }
 
 #app {
@@ -83,6 +91,11 @@ header > h2 {
   padding-top: 0.125rem !important;
   padding-bottom: 0.125rem !important;
 }
+
+.w-10 {
+  width: 5% !important;
+}
+
 
 .w-35 {
   width: 35% !important;

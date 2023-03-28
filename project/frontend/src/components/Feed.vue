@@ -24,7 +24,7 @@ export default {
 
     console.log("DONE async");
 
-    console.log(this.$route);
+    console.log(this.$route, this.loggedIn);
 
     if (!this.loggedIn) {
       await this.checkUserState()
@@ -34,6 +34,8 @@ export default {
       this.loading = false;
       this.$router.push('/login');
       this.loading = false;
+
+      return
     }
     console.log("App.vue", "BEFORE MOUNTED END")
 

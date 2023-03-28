@@ -49,6 +49,7 @@ export default {
       loading: true,
       email: null,
       password: null,
+      name: null,
     }
   },
 
@@ -65,6 +66,7 @@ export default {
 
     async signup(e) {
       e.preventDefault();
+      this.loading = true;
       console.log(e);
 
       this.display_error = null;
@@ -80,6 +82,9 @@ export default {
           this.display_error = "Something went wrong"
         }
       }
+
+      this.loading = false;
+
     }
   }
 }
@@ -88,7 +93,14 @@ export default {
 <template>
   <div class="offset-md-3 col-md-6 py-2">
     <form action="" method="POST" v-on:submit="signup">
-      <div class="form-floating m-2"><br><br></div>
+      <div>
+        <br>
+        <div><LoadingIcon :element="'h4'" element="h4" :style="{'opacity': (loading? 100: 0)}"></LoadingIcon></div>
+      </div>
+      <div class="form-floating mb-2">
+        <input type="text" name="name" class="form-control" required v-model="name">
+        <label for="name" class="fw-bold">Full Name</label>
+      </div>
       <div class="form-floating mb-2">
         <input type="email" name="email" class="form-control" required v-model="email">
         <label for="email" class="fw-bold">Email</label>

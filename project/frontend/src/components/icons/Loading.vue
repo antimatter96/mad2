@@ -3,23 +3,29 @@ defineProps({
   element: {
     type: String,
     required: true,
-    value:"h1",
+    value: "h1",
   },
   text: {
     type: String,
     required: true,
-    value:"loading",
+    value: "loading",
   },
 })
 </script>
 
 <template>
-  <div class="loader">
-    <h1 data-text="Loading" v-if="element == 'h1'" class="loader_heading">Loading</h1>
-    <h2 data-text="Loading" v-if="element == 'h2'" class="loader_heading">Loading</h2>
-    <h3 data-text="Loading" v-if="element == 'h3'" class="loader_heading">Loading</h3>
-    <h4 data-text="Loading" v-if="element == 'h4'" class="loader_heading">Loading</h4>
-    <h5 data-text="Loading" v-if="element == 'h5'" class="loader_heading">Loading</h5>
+  <div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+
+    <div class="loader mx-1">
+      <h1 data-text="Loading..." v-if="element == 'h1'" class="loader_heading">Loading...</h1>
+      <h2 data-text="Loading..." v-if="element == 'h2'" class="loader_heading">Loading...</h2>
+      <h3 data-text="Loading..." v-if="element == 'h3'" class="loader_heading">Loading...</h3>
+      <h4 data-text="Loading..." v-if="element == 'h4'" class="loader_heading">Loading...</h4>
+      <h5 data-text="Loading..." v-if="element == 'h5'" class="loader_heading">Loading...</h5>
+    </div>
   </div>
 </template>
 
@@ -31,6 +37,7 @@ defineProps({
   max-width: 7em;
   white-space: nowrap;
   color: #4582ec;
+
   animation-name: loading;
   animation-duration: 2s;
   animation-timing-function: cubic-bezier(0.895, 0.03, 0.685, 0.22);
