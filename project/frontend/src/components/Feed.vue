@@ -59,8 +59,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(graphStore, { getFeed: 'getFeed' }),
+    ...mapActions(graphStore, { getFeed: 'getFeed', follow: 'follow', unfollow: 'unfollow' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
+
+    followersUpdate(a, b) {
+      console.log("parent", a, b, "followersUpdate");
+    },
   }
 }
 </script>

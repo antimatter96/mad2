@@ -27,12 +27,14 @@ export default {
     }
 
     if (!this.loggedIn) {
-      await this.checkUserState();
-
-      console.log("LOGIN PAGE")
       this.loading = false;
+
+      console.log("NEED TO LOGIN")
+      console.log("LOGIN PAGE")
       this.$router.push('/login');
       this.loading = false;
+
+      return;
     }
 
     this.loading = false;
@@ -64,6 +66,7 @@ export default {
   <div class="container d-flex flex-column px-4">
     <Navigation :loggedIn=loggedIn :loading=hideNavBar />
 
+
     <div id="main" class="row py-2">
       <div v-if="loading" id="main-loading" class="h-100 w-100">
         <LoadingIcon element="h2" />
@@ -74,7 +77,7 @@ export default {
     </div>
 
 
-    <footer class="row pt-4 pb-4 mt-auto ">
+    <footer class="row py-4 mt-auto w-85 mx-auto border-top border-2">
       <div class="d-flex flex-row justify-content-evenly">
         <div>
           Some part of footer

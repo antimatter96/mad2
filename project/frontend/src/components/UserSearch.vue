@@ -66,11 +66,13 @@ export default {
     },
   },
   methods: {
-    ...mapActions(graphStore, { getList: 'getList', searchByPrefix: 'searchByPrefix' }),
+    ...mapActions(graphStore, { 
+      getList: 'getList', searchByPrefix: 'searchByPrefix', follow: 'follow', unfollow: 'unfollow'
+    }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
     followersUpdate(a, b) {
-      console.log(parent, a, b);
+      console.log("parent", a, b, followersUpdate);
     },
 
     async search() {
@@ -80,7 +82,7 @@ export default {
 
       console.log(this.userList);
 
-    }
+    },
   }
 }
 </script>

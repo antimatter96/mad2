@@ -21,7 +21,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(postStore, { getPost: 'getPost' }),
+    ...mapActions(postStore, { getPost: 'getPost', follow: 'follow', unfollow: 'unfollow' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
   }
 }

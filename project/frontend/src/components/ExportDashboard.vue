@@ -12,63 +12,51 @@ import UserTab from './UserTab.vue'
 </script>
 
 <script>
+const FILENAME = "ExportDashboard"
+
 export default {
-  // 
   created() {
-    console.log("App.vue", "CREATED START")
-    console.log("App.vue", "CREATED END")
+    console.log(FILENAME, "CREATED START")
+    console.log(FILENAME, "CREATED END")
   },
   async beforeMount() {
-    console.log("App.vue", "BEFORE MOUNTED START")
+    console.log(FILENAME, "BEFORE MOUNTED START")
     this.loading = true;
-
-    console.log("DONE async");
 
     if (!this.loggedIn) {
       await this.checkUserState()
     }
     if (!this.loggedIn) {
-      console.log("LOGIN PAGE")
+      console.log(FILENAME, "redirect to LOGIN PAGE")
       this.loading = false;
       this.$router.push('/login');
       this.loading = false;
     }
-    console.log("App.vue", "BEFORE MOUNTED END")
 
     this.jobs = await this.listExportJobs();
     console.log(this.jobs)
     this.loading = false;
+
+    console.log(FILENAME, "BEFORE MOUNTED END")
   },
   async mounted() {
-    console.log("App.vue", "MOUNTED START")
+    console.log(FILENAME, "MOUNTED START")
 
     const source = new EventSource("http://localhost:8080/stream", { withCredentials: true });
-    source.addEventListener('greeting', async function (event) {
-      console.log('event_received', event)
-      var data = JSON.parse(event.data);
-      console.log("The server says " + data.message);
-    });
-    source.addEventListener('error', async function (event, xxx) {
-      console.log(event, xxx);
-      console.error(event);
-      console.log(JSON.stringify(event));
+    source.addEventListener('jobDone', this.sseMessage);
+    source.addEventListener('error', this.sseError);
+    source.addEventListener('open', this.sseOpen);
 
-      console.log("Failed to connect to event stream. Is Redis running?");
-    });
-    source.addEventListener('open', async function (event) {
-      console.log("open", event);
-    });
-
-    console.log("App.vue", "MOUNTED END")
+    console.log(FILENAME, "MOUNTED END")
   },
-  // 
+
   data() {
     return {
       loading: true,
       jobs: null,
     }
   },
-  // 
+
   computed: {
     ...mapState(userAuthStore, ['loggedIn']),
     hideNavBar() {
@@ -80,15 +68,44 @@ export default {
     ...mapActions(postStore, { exportCSV: 'exportCSV', listExportJobs: 'listExportJobs' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
-    followersUpdate(a, b) {
-      console.log(parent, a, b);
-    },
-
-    async search() {
+    async _export() {
+      console.log("export", "called")
       let response = await this.exportCSV();
       if (response != null) {
         this.jobs.count++;
         this.jobs.jobs.unshift(response);
+      }
+    },
+
+    async sseError(event, xxx) {
+      console.log(event, xxx);
+      console.error(event);
+      console.log("Failed to connect to event stream. Is Redis running?");
+    },
+    async sseOpen(event) {
+      console.log("open", event);
+    },
+    async sseMessage(event) {
+      console.log('event_received', event)
+      let data = JSON.parse(event.data);
+      console.log(data);
+      if (data.message === 'done') {
+        this.updateJobStatus(data.job_id);
+      }
+    },
+
+    updateJobStatus(job_id) {
+      console.log("updateJobStatus", job_id);
+      if(this.jobs != null) {
+        if(this.jobs.jobs != null) {
+          let target = 0;
+
+          for(let i = 0; i < this.jobs.jobs.length; i++) {
+            if (this.jobs.jobs[i].job_id == job_id) {
+              this.jobs.jobs[i].done = true;
+            }
+          }
+        } 
       }
     },
 
@@ -115,7 +132,7 @@ export default {
     <div class="col-md-10 offset-md-1 border-bottom border-2">
       <h5> Export all your posts <em>[Valid for 1 hour only]</em></h5>
       <div class="text-center mb-3">
-        <button class="btn btn-primary fw-bold" type="button" v-on:click="search">Export</button>
+        <button class="btn btn-primary fw-bold" type="button" v-on:click="_export">Export</button>
       </div>
     </div>
     <div class="mt-4">

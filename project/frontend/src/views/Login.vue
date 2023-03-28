@@ -82,9 +82,7 @@ export default {
 </script>
 
 <template>
-  <div class="col-md-4 py-2"></div>
-
-  <div class="col-md-4 py-2">
+  <div class="offset-md-3 col-md-6 py-2">
     <form action="/" method="POST" v-on:submit="login">
       <div class="form-floating m-2"><br><br></div>
       <div class="form-floating mb-2">

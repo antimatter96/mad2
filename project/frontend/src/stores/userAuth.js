@@ -13,7 +13,10 @@ export const userAuthStore = defineStore('userAuth', {
   },
   getters: {
     loggedIn(state) {
-      console.log(state._loginToken, state._loginToken != null, state._userInfo, state._userInfo != null)
+      // null false true true
+
+      console.log(state._loginToken, state._loginToken != null, state._userInfo, state._userInfo != null);
+      console.log("loggedIn", state._loginToken != null || state._userInfo != null);
       return state._loginToken != null || state._userInfo != null;
     },
     userInfo(state) {
@@ -45,8 +48,6 @@ export const userAuthStore = defineStore('userAuth', {
         console.log("checkUserState main stuff done")
         // this.userData = await api.post({ login, password })
         // showTooltip(`Welcome back ${this.userData.name}!`)
-
-        this._userInfo = true;
 
         console.log("checkUserState end")
       } catch (error) {

@@ -23,11 +23,11 @@ export default {
     ...mapActions(graphStore, { follow: 'follow', unfollow: 'unfollow' }),
 
     unfollow() {
-      this.$emit("followersUpdate", "-", this.userData.user_id)
+      this.$emit("followAction", "-", this.userData.user_id)
       console.log("Here")
     },
     follow() {
-      this.$emit("followersUpdate", "+", this.userData.user_id)
+      this.$emit("followAction", "+", this.userData.user_id)
       console.log("Here")
     }
   }

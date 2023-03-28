@@ -3,13 +3,10 @@ import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
-import { graphStore } from '../stores/graph' 
+import { graphStore } from '../stores/graph'
 import LoadingIcon from './icons/Loading.vue'
 import UserTab from './UserTab.vue'
 import PostSummary from './PostSummary.vue'
-
-
-
 </script>
 
 <script>
@@ -64,8 +61,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(graphStore, { getUserInfo: 'getUserInfo' }),
+    ...mapActions(graphStore, { getUserInfo: 'getUserInfo', follow: 'follow', unfollow: 'unfollow' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
+
+    followersUpdate(mode, user_id) {
+      console.log("parent", mode, user_id, "followersUpdate");
+    }
   }
 }
 </script>
@@ -78,7 +79,8 @@ export default {
     <div class="px-4">
       <div>
         <h3 class="mb-0"> {{ userData.email }} </h3>
-          <UserTab v-if="!isActuallyUser" showSummary="false" :userData="userData" :showFollowing="true" :showFollowers="true" />
+        <UserTab v-if="!isActuallyUser" showSummary="false" :userData="userData" :showFollowing="true"
+          :showFollowers="true" />
         <h5>
           <template v-if="isActuallyUser">
             <RouterLink to="/profile/me/followers" replace class="fw-bold">
@@ -99,11 +101,11 @@ export default {
             Following: {{ userData.following.length }}
           </template>
         </h5>
-          <template v-if="isActuallyUser">
-            <RouterLink to="/profile/me/export" replace class="fw-bold">
-              EXPORT ALL
-            </RouterLink>
-          </template>
+        <template v-if="isActuallyUser">
+          <RouterLink to="/profile/me/export" replace class="fw-bold">
+            EXPORT ALL
+          </RouterLink>
+        </template>
       </div>
     </div>
 

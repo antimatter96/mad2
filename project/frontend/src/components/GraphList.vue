@@ -64,11 +64,20 @@ export default {
     },
   },
   methods: {
-    ...mapActions(graphStore, { getList: 'getList' }),
+    ...mapActions(graphStore, { getList: 'getList', follow: 'follow', unfollow: 'unfollow' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
-    followersUpdate(a,b) {
-      console.log(parent, a, b);
+    async followersUpdate(mode, user_id) {
+      console.log("parent", mode, user_id, "followersUpdate");
+
+      let res = null;
+      if (mode == '+') {
+         res = await this.follow(user_id);
+      } else {
+         res = await this.unfollow(user_id);
+      }
+      
+      console.log(res);
     }
   }
 }
@@ -90,7 +99,8 @@ export default {
         <div class="col-md-10 offset-md-1">
         <div v-for="(user, index) in userList.list">
           <span> {{ index + 1 }} </span>
-          <UserTab :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="showingFollowing" class="d-flex"/>
+          <UserTab :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="showingFollowing" @followAction="followersUpdate"
+          class="d-flex"/>
         </div>
         </div>
       </div>

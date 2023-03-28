@@ -100,6 +100,11 @@ header > h2 {
   width: 60% !important;
 }
 
+.w-85 {
+  width: 85% !important;
+}
+
+
 .btn, .form-check-label {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
