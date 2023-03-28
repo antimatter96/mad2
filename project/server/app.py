@@ -1,7 +1,7 @@
 import os
 import logging
 
-from flask import Flask, url_for
+from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
@@ -51,11 +51,11 @@ def create_app():
   api.init_app(app)
   app.app_context().push()
   security.init_app(app, user_datastore)
-  
+
   celery = celery_worker
   celery.conf.update(
-    broker_url=app.config['CELERY_BROKER_URL'],
-    result_backend=app.config['CELERY_RESULT_BACKEND'],
+      broker_url=app.config['CELERY_BROKER_URL'],
+      result_backend=app.config['CELERY_RESULT_BACKEND'],
   )
   celery.Task = TaskWithContext
   app.logger.info("App setup complete")
@@ -67,6 +67,7 @@ app, celery = create_app()
 cache.init_app(app)
 
 from application.controllers.index import *
+
 app.register_blueprint(sse, url_prefix='/stream')
 
 if __name__ == '__main__':

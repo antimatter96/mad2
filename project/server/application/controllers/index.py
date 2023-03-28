@@ -1,9 +1,10 @@
 import os
 
-from app import app as app
 from flask import render_template, send_from_directory
 from flask_sse import sse
-from flask_security import Security, current_user, auth_required, hash_password, SQLAlchemySessionUserDatastore
+from flask_security import current_user, auth_required
+
+from app import app as app
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -12,8 +13,6 @@ def page_not_found(e):
 @app.errorhandler(403)
 def not_authorized(e):
   return render_template('403.html'), 403
-
-from flask import send_from_directory
 
 from application.controllers.feed import *
 from application.controllers.export import *

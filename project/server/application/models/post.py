@@ -1,6 +1,5 @@
 from datetime import datetime
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.hybrid import hybrid_property
 
 from application.database.index import db
 
@@ -19,12 +18,6 @@ class Post(db.Model):
 
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
-
-  # @hybrid_property
-  # def deadline_passed(self):
-  #   if self.complete:
-  #     return self.completed_on > self.deadline
-  #   return datetime.now() > self.deadline
 
   def public_view_as_dict(self, current_user):
     return {

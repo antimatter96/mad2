@@ -41,7 +41,7 @@ class Config():
 
   CACHE_TYPE = "RedisCache"
   CACHE_KEY_PREFIX = "_idx_"
-  CACHE_DEFAULT_TIMEOUT = 60 * 1 # 10 minutes
+  CACHE_DEFAULT_TIMEOUT = 60 * 1    # 10 minutes
   CACHE_REDIS_HOST = 'localhost'
   CACHE_REDIS_PORT = 6379
   CACHE_REDIS_DB = 1
@@ -58,7 +58,6 @@ class Config():
   CELERY_RESULT_BACKEND = _BASE_REDIS_URL + str(CELERY_RESULT_BACKEND_REDIS_DB)
 
   CSV_UPLOAD_FOLDER = os.path.join(basedir, "./static/export_reports")
-
 
 class NonProdConfig(Config):
   DEBUG = True

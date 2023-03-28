@@ -1,19 +1,10 @@
-import time
-import bcrypt
-import hashlib
-
-from app import cache
-from app import app as app
 from flask import request, jsonify
-from flask import render_template, redirect, url_for, session
-
-from application.models.user import User
-from application.models.post import Post
+from flask_security import current_user, auth_required
 
 from application.database.index import db
+from application.models.post import Post
 
-from flask_security import Security, current_user, auth_required, hash_password, SQLAlchemySessionUserDatastore
-
+from app import app as app
 
 @app.route("/api/feed", methods=['GET'])
 @auth_required('token')
@@ -42,4 +33,4 @@ def feed():
 
   post_dicts = [post.public_view_as_dict(current_user) for post in posts]
 
-  return jsonify({'count': len(post_dicts), 'posts': post_dicts})
+  return jsonify({ 'count': len(post_dicts), 'posts': post_dicts})

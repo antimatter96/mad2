@@ -1,14 +1,11 @@
+from flask import request, jsonify
+from flask_security import current_user, auth_required
+
 from cache import cache
 from app import app as app
-from flask import request, jsonify
-from flask import render_template, redirect, url_for, session
 
 from application.models.user import User, _private_view_with_followers
-from application.models.post import Post
-
 from application.database.index import db
-
-from flask_security import Security, current_user, auth_required, hash_password, SQLAlchemySessionUserDatastore
 
 @app.route("/api/users/search_by_prefix", methods=['GET'])
 ##@cache.cached(timeout=5000)

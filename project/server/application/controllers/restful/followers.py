@@ -2,12 +2,11 @@ from flask_restful import current_app as app
 from flask_restful import Resource
 from flask_security import auth_required, current_user
 
+from cache import cache
+
 from application.models.user import User, _private_view_with_followers
 from application.database.index import db
 from application.controllers.restful.errors import NotFoundError, BusinessValidationError, InternalServerError, common_errors
-
-from cache import cache
-
 
 follower_api_errors = { "user_001": "User does not exist", "user_002": "User can't follow itself"}
 
