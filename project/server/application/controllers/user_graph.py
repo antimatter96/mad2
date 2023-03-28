@@ -3,7 +3,7 @@ from app import app as app
 from flask import request, jsonify
 from flask import render_template, redirect, url_for, session
 
-from application.models.user import User
+from application.models.user import User, _private_view_with_followers
 from application.models.post import Post
 
 from application.database.index import db
@@ -57,12 +57,12 @@ def my_profile():
 @app.route("/api/users/my_follows", methods=['GET'])
 @auth_required('token')
 def my_followers():
-  return jsonify(current_user.private_view(with_followers_list=True))
+  return jsonify(_private_view_with_followers(current_user.user_id))
 
 @app.route("/api/users/follow_me", methods=['GET'])
 @auth_required('token')
 def my_following():
-  return jsonify(current_user.private_view(with_following_list=True))
+  return jsonify(_private_view_with_followers(current_user.user_id))
 
 @app.route("/api/users/<int:user_id>", methods=['GET'])
 @auth_required('token')

@@ -2,7 +2,7 @@ from faker import Faker
 
 fake = Faker()
 
-from flask_security import SQLAlchemySessionUserDatastore
+from flask_security import SQLAlchemySessionUserDatastore, hash_password
 from sqlalchemy.sql.expression import func, select
 
 user_datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
@@ -11,7 +11,7 @@ new_users = []
 
 for i in range(0, 20):
   email = fake.ascii_company_email()
-  user_datastore.create_user(email=email, password='password' + str(i))
+  user_datastore.create_user(email=email, password=hash_password('password' + str(i)))
 
 db.session.commit()
 

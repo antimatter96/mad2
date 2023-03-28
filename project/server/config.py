@@ -41,7 +41,7 @@ class Config():
 
   CACHE_TYPE = "RedisCache"
   CACHE_KEY_PREFIX = "_idx_"
-  CACHE_DEFAULT_TIMEOUT = 5000
+  CACHE_DEFAULT_TIMEOUT = 60 * 1 # 10 minutes
   CACHE_REDIS_HOST = 'localhost'
   CACHE_REDIS_PORT = 6379
   CACHE_REDIS_DB = 1

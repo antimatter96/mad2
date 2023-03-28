@@ -1,9 +1,8 @@
-from datetime import datetime
 import os
 import csv
 
-from flask_sse import sse
 from flask import current_app as app
+from flask_sse import sse
 from werkzeug.utils import secure_filename
 
 from application.background_workers.index import celery

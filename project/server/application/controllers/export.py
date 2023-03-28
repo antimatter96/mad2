@@ -1,23 +1,13 @@
-import time
-import bcrypt
-import hashlib
 import os
 
-from app import cache
-from app import app as app
-from flask import request, jsonify
-from flask import render_template, redirect, url_for, session, send_from_directory
 from sqlalchemy import desc
+from flask import jsonify, send_from_directory
+from flask_security import current_user, auth_required
 
-from application.models.user import User
-from application.models.post import Post
+from app import app as app
+
 from application.models.export_job import ExportJob
-
-#from flask_sse import sse
 from application.database.index import db
-
-from flask_security import Security, current_user, auth_required, hash_password, SQLAlchemySessionUserDatastore
-
 import application.background_workers.tasks as tasks
 
 @app.route("/api/post/export/", methods=['POST'])
@@ -33,7 +23,6 @@ def export_csv():
     app.log_exception(e)
     app.logger.error(e)
     db.session.rollback()
-  print(export_job)
 
   return jsonify(export_job.public_view())
 
@@ -55,7 +44,6 @@ def list_jobs():
 @app.route("/api/post/export/<job_id>", methods=['GET'])
 @auth_required('token', 'session')
 def download_and_delete_export_csv(job_id):
-  print("job", ">>>>>>>>>>>>>>.", job_id, ">>>>>>>>>>>>>>>>")
   export_job = ExportJob.query\
     .filter(ExportJob.creator_id == current_user.user_id and ExportJob.job_id == job_id)\
     .order_by(desc(ExportJob.created_at))\
