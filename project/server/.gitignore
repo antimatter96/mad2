@@ -7,3 +7,9 @@ static/user_uploads
 static/export_reports
 
 *.log
+
+static/*.js
+static/static/*.js
+static/*.css
+static/static/*.css
+static/index.html

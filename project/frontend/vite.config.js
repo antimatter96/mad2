@@ -15,5 +15,10 @@ export default defineConfig({
     watch: {
       usePolling: true,
     }
+  },
+  build: {
+    assetsDir: 'static',
+    assetsInlineLimit: 1024 * 1024 * 1024,
+    cssCodeSplit: false,
   }
 })
