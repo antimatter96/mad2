@@ -20,5 +20,8 @@ export default defineConfig({
     assetsDir: 'static',
     assetsInlineLimit: 1024 * 1024 * 1024,
     cssCodeSplit: false,
-  }
+  },
+  esbuild: {
+    drop: ['console', 'debugger'],
+  },
 })

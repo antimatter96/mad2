@@ -13,7 +13,7 @@ import FollowAction from './icons/FollowAction.vue'
 export default {
   // 
   async mounted() {
-    console.log(this.userData);
+    // console.log(this.userData);
   },
   //
   props: ['user', 'userData', 'showFollowers', 'showFollowing', 'showSummary'],

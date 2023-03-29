@@ -39,7 +39,7 @@ export const graphStore = defineStore('post', {
         if (response.status == 200) {
           let r = await response.json();
 
-          console.log(r)
+          console.log(r);
 
           return r;
         } else {
@@ -47,7 +47,7 @@ export const graphStore = defineStore('post', {
         }
 
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(error, "follow");
         return null;
       }
     },
@@ -72,7 +72,7 @@ export const graphStore = defineStore('post', {
         }
 
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(error, "unfollow");
         return null;
       }
     },

@@ -108,7 +108,7 @@ export default {
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Export Time</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
