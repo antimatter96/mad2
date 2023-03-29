@@ -4,6 +4,8 @@ import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
 import { postStore } from '../stores/posts'
+import { graphStore } from '../stores/graph'
+
 import LoadingIcon from './icons/Loading.vue'
 import UserTab from './UserTab.vue'
 </script>
@@ -21,7 +23,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions(postStore, { getPost: 'getPost', follow: 'follow', unfollow: 'unfollow' }),
+    ...mapActions(postStore, { getPost: 'getPost' }),
+    ...mapActions(graphStore, { follow: 'follow', unfollow: 'unfollow' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
 

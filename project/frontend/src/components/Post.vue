@@ -2,7 +2,8 @@
 import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
-import { userAuthStore, postStore } from '../stores'
+import { userAuthStore } from '../stores/userAuth'
+import { postStore } from '../stores/posts'
 
 import LoadingIcon from './icons/Loading.vue'
 import UserTab from './UserTab.vue'

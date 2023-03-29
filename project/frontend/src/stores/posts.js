@@ -4,9 +4,6 @@ import { defineStore } from 'pinia'
 import { userAuthStore } from './userAuth'
 
 const POST_API_BASE = "http://localhost:8080/api/post"
-const USER_API_BASE = "http://localhost:8080/api/users"
-const FOLLOWERS_API_BASE = "http://localhost:8080/api/followers"
-const FEED_API_BASE = "http://localhost:8080/api/feed"
 
 
 export const postStore = defineStore('post', {

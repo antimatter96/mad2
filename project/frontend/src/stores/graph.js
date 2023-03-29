@@ -8,7 +8,7 @@ const FOLLOWERS_API_BASE = "http://localhost:8080/api/followers"
 const FEED_API_BASE = "http://localhost:8080/api/feed"
 
 
-export const graphStore = defineStore('post', {
+export const graphStore = defineStore('graph', {
   state: () => {
     return {
       _loginToken: window.localStorage.getItem("auth_token"),
