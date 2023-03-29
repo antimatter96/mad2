@@ -7,10 +7,13 @@ from flask_restful import current_app as app
 from flask_restful import Resource, fields, marshal_with, reqparse, inputs
 from flask_security import auth_required, current_user
 
+from cache import cache
+
 from application.database.models.post import Post
 from application.database.index import db
 from application.controllers.restful.utils import min_length
 from application.controllers.restful.errors import NotFoundError, InternalServerError, common_errors
+from application.database.data_access import _self_view
 
 class SimpleDateTime(fields.Raw):
 
@@ -24,13 +27,8 @@ post_errors = {
 }
 
 post_fields = {
-    "post_id": fields.Integer,
-    "title": fields.String,
-    "hidden": fields.Boolean,
-    "img_url": fields.String,
-    "created_at": SimpleDateTime,
-    "updated_at": SimpleDateTime,
-    "creator": {
+    "post_id": fields.Integer, "title": fields.String, "hidden": fields.Boolean, "img_url": fields.String, "created_at": SimpleDateTime,
+    "updated_at": SimpleDateTime, "creator": {
         "user_id": fields.Integer(attribute='creator.user_id'),
         "email": fields.String(attribute='creator.email'),
         "follows_user": fields.Boolean(attribute='creator.follows_user'),
@@ -38,7 +36,6 @@ post_fields = {
         "is_actually_user": fields.Boolean(attribute='creator.is_actually_user'),
     }
 }
-
 
 post_update_parser = reqparse.RequestParser()
 post_update_parser.add_argument('title', type=min_length(1), required=True, trim=True)
@@ -80,6 +77,7 @@ class PostsAPI(Resource):
       app.log_exception(e)
       raise InternalServerError(error_code='common_001', error_message=common_errors['common_001'])
 
+    _clear_graph_cache(current_user.user_id)
     return '', 200
 
   @marshal_with(post_fields)
@@ -109,6 +107,7 @@ class PostsAPI(Resource):
       db.session.rollback()
       raise InternalServerError(error_code='common_001', error_message=common_errors['common_001'])
 
+    _clear_graph_cache(current_user.user_id)
     return post
 
   @marshal_with(post_fields)
@@ -140,4 +139,8 @@ class PostsAPI(Resource):
       db.session.rollback()
       raise InternalServerError(error_code='common_001', error_message=common_errors['common_001'])
 
+    _clear_graph_cache(current_user.user_id)
     return new_post
+
+def _clear_graph_cache(user_id_1):
+  cache.delete_memoized(_self_view, user_id_1)

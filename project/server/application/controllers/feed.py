@@ -1,8 +1,7 @@
 from flask import request, jsonify
 from flask_security import current_user, auth_required
 
-from application.database.index import db
-from application.database.models.post import Post
+from application.database.data_access import _feed
 
 from app import app as app
 
@@ -15,22 +14,16 @@ def feed():
 
   try:
     from_int = int(from_int_s)
+  except:
+    from_int = 0
+
+  try:
     limit_int = int(limit_int_s)
     if limit_int > 40:
       limit_int = 40
   except:
-    from_int = 0
     limit_int = 0
 
-  following_ids = [following.user_id for following in current_user.following]
-  posts = db.session.query(Post)\
-    .filter(Post.creator_id.in_(following_ids))\
-    .filter(Post.hidden != True)\
-    .order_by(Post.updated_at)\
-    .offset(from_int)\
-    .limit(limit_int)\
-    .all()
-
-  post_dicts = [post.public_view_as_dict(current_user) for post in posts]
+  post_dicts = _feed(current_user.user_id, from_int, limit_int)
 
   return jsonify({ 'count': len(post_dicts), 'posts': post_dicts})
