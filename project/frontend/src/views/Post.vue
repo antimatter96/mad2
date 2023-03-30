@@ -1,13 +1,15 @@
 <script setup>
-import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
+
 
 import { userAuthStore } from '../stores/userAuth'
 import { postStore } from '../stores/posts'
 import { graphStore } from '../stores/graph'
 
-import LoadingIcon from './icons/Loading.vue'
-import UserTab from './UserTab.vue'
+import { UPLOADS_BASE_PATH } from '../config'
+
+import LoadingIcon from '../components/icons/Loading.vue'
+import UserTab from '../components/UserTab.vue'
 
 
 
@@ -60,7 +62,7 @@ export default {
       postId: '',
     }
   },
-  // 
+  //
   computed: {
     ...mapState(userAuthStore, ['loggedIn']),
     hideNavBar() {
@@ -86,11 +88,10 @@ export default {
     imageUrl() {
       console.log(this.postData)
       if (this.postData != null) {
-        return 'http://localhost:8080/static/user_uploads/' + this.postData.img_url;
+        return UPLOADS_BASE_PATH + '/' + this.postData.img_url;
       }
 
       return ''
-
     }
   },
   methods: {
@@ -134,7 +135,8 @@ export default {
   <div v-if="postData == null" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
-  <div v-else-if="Object.keys(postData).length > 0" class="col-md-12 px-5" :style="{backgroundImage:`linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),url(${imageUrl})`}">
+  <div v-else-if="Object.keys(postData).length > 0" class="col-md-12 px-5"
+    :style="{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),url(${imageUrl})` }">
     <div>
       <LoadingIcon :element="'h4'" element="h4" :style="{ 'opacity': (loading ? 100 : 0) }"
         style="transform: scale(0.7);"></LoadingIcon>
@@ -145,7 +147,7 @@ export default {
         <template v-if="!postData.creator.is_actually_user">
           <h6 class="d-inline-block mb-0 fw-light text-end">Created : {{ postData.created_at }}</h6>
           <UserTab :showSummary="true" :userData="postData.creator" :showFollowing="true" :showFollowers="true"
-            class="fw-bold d-flex align-items-baseline" @followAction="followersUpdate" style="transform: scale(0.8)" />
+            @followAction="followersUpdate" class="fw-bold d-flex align-items-baseline" style="transform: scale(0.8)" />
         </template>
         <template v-else>
           <h6 class="d-inline-block mb-0 fw-light text-end">Last updated at : {{ postData.updated_at }} <em>Edit</em></h6>
@@ -166,7 +168,7 @@ export default {
 </template>
 
 <style scoped>
-.subhead::first-letter {
+.subhead {
   font-family: serif;
 }
 

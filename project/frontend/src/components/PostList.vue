@@ -1,9 +1,9 @@
 <script setup>
-import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { postStore } from '../stores/posts'
 import { graphStore } from '../stores/graph'
+
 import LoadingIcon from './icons/Loading.vue'
 import UserTab from './UserTab.vue'
 import PostSummary from './PostSummary.vue'

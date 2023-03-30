@@ -3,8 +3,8 @@ import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
-import LoadingIcon from '../components/icons/Loading.vue'
 
+import LoadingIcon from '../components/icons/Loading.vue'
 </script>
 
 
@@ -89,7 +89,9 @@ export default {
     <form action="/" method="POST" v-on:submit="login">
       <div>
         <br>
-        <div><LoadingIcon :element="'h4'" element="h4" :style="{'opacity': (loading? 100: 0)}"></LoadingIcon></div>
+        <div>
+          <LoadingIcon :element="'h4'" element="h4" :style="{ 'opacity': (loading ? 100 : 0) }"></LoadingIcon>
+        </div>
       </div>
       <div class="form-floating mb-2">
         <input type="email" name="email" class="form-control" required v-model="email">

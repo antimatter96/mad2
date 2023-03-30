@@ -1,11 +1,10 @@
 <script setup>
-import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
 import { graphStore } from '../stores/graph'
-import LoadingIcon from '../components/icons/Loading.vue'
 
+import LoadingIcon from '../components/icons/Loading.vue'
 import UserTab from '../components/UserTab.vue'
 
 </script>

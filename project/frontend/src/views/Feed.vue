@@ -1,14 +1,14 @@
 <script setup>
-import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
 import { postStore } from '../stores/posts'
 import { graphStore } from '../stores/graph'
-import LoadingIcon from './icons/Loading.vue'
-import UserTab from './UserTab.vue'
-import PostSummary from './PostSummary.vue'
-import PostList from './PostList.vue'
+
+import LoadingIcon from '../components/icons/Loading.vue'
+import UserTab from '../components/UserTab.vue'
+import PostSummary from '../components/PostSummary.vue'
+import PostList from '../components/PostList.vue'
 
 </script>
 

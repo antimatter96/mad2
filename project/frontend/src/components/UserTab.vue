@@ -3,6 +3,7 @@ import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { graphStore } from '../stores/graph'
+
 import LoadingIcon from './icons/Loading.vue'
 import FollowIndicator from './icons/FollowIndicator.vue'
 import FollowAction from './icons/FollowAction.vue'

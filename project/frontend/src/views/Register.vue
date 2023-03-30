@@ -3,6 +3,7 @@ import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
+
 import LoadingIcon from '../components/icons/Loading.vue'
 
 </script>

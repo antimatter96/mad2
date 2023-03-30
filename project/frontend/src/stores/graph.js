@@ -1,18 +1,15 @@
-import { mapActions, mapState } from 'pinia'
 import { defineStore } from 'pinia'
+
+import { FOLLOWERS_API_BASE, USER_API_BASE, FEED_API_BASE } from '../config'
 
 import { userAuthStore } from '../stores/userAuth'
 
-const USER_API_BASE = "http://localhost:8080/api/users"
-const FOLLOWERS_API_BASE = "http://localhost:8080/api/followers"
-const FEED_API_BASE = "http://localhost:8080/api/feed"
-
+const FILENAME = 'graph.js'
 
 export const graphStore = defineStore('graph', {
   state: () => {
     return {
       _loginToken: window.localStorage.getItem("auth_token"),
-      _userInfo: null,
       _authStore: userAuthStore()
     }
   },
@@ -38,15 +35,15 @@ export const graphStore = defineStore('graph', {
         if (response.status == 200) {
           let r = await response.json();
 
-          console.log(r);
+          console.log(FILENAME, "follow", r);
 
-          return r;
-        } else {
+          return {};
+        } else if (response.status == 400) {
           return null;
         }
 
       } catch (error) {
-        console.error(error, "follow");
+        console.error(FILENAME, "follow", error);
         return null;
       }
     },
@@ -61,9 +58,9 @@ export const graphStore = defineStore('graph', {
         if (response.status == 200) {
           let r = await response.json();
 
-          console.log(r)
+          console.log(FILENAME, "unfollow", r)
 
-          return r;
+          return {};
         } else if (response.status == 400) {
           return null;
         } else {
@@ -71,7 +68,7 @@ export const graphStore = defineStore('graph', {
         }
 
       } catch (error) {
-        console.error(error, "unfollow");
+        console.error(FILENAME, "unfollow", error);
         return null;
       }
     },
@@ -85,10 +82,10 @@ export const graphStore = defineStore('graph', {
         if (response.status == 200) {
           let r = await response.json();
 
-          console.log(r)
+          console.log(FILENAME, "getUserInfo", r)
 
           if (user_id == 'me') {
-            this._authStore.setUserInfo( { user_id: r['user_id'] });
+            this._authStore.setUserInfo({ user_id: r['user_id'] });
           }
 
           return r;
@@ -99,7 +96,7 @@ export const graphStore = defineStore('graph', {
         }
 
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(FILENAME, "getUserInfo", error);
         return null;
       }
     },
@@ -113,7 +110,7 @@ export const graphStore = defineStore('graph', {
         if (response.status == 200) {
           let r = await response.json();
 
-          console.log(r)
+          console.log(FILENAME, "searchByPrefix", r)
 
           return r;
         } else if (response.status == 404) {
@@ -123,7 +120,7 @@ export const graphStore = defineStore('graph', {
         }
 
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(FILENAME, "searchByPrefix", error);
         return null;
       }
     },
@@ -137,7 +134,7 @@ export const graphStore = defineStore('graph', {
         if (response.status == 200) {
           let r = await response.json();
 
-          console.log(r)
+          console.log(FILENAME, "getFeed", r)
 
           return r;
         } else if (response.status == 404) {
@@ -147,7 +144,7 @@ export const graphStore = defineStore('graph', {
         }
 
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(FILENAME, "getFeed", error);
         return null;
       }
     },
@@ -162,12 +159,10 @@ export const graphStore = defineStore('graph', {
           ...this._commonHeaders()
         });
 
-        console.log('>>>>>>>>>',response)
-
         if (response.status == 200) {
           let r = await response.json();
 
-          console.log(r)
+          console.error(FILENAME, "getList", r);
 
           if (followers) {
             return r['followers']
@@ -180,26 +175,20 @@ export const graphStore = defineStore('graph', {
         }
 
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(FILENAME, "getList", error);
         return null;
       }
     },
 
     _commonHeaders() {
       return {
-        mode: 'cors', // no-cors, *cors, same-origin
-        credentials: 'same-origin', // include, *same-origin, omit
+        mode: 'cors',
+        credentials: 'same-origin',
         headers: {
           'Content-Type': 'application/json',
           'Authentication-Token': this.authToken,
         }
       }
     },
-
-    setAuthToken(token) {
-      this._loginToken = token;
-      window.localStorage.setItem("auth_token", token);
-    },
-
   },
 })

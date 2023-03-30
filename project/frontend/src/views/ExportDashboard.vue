@@ -1,13 +1,13 @@
 <script setup>
-import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
 import { graphStore } from '../stores/graph'
 import { postStore } from '../stores/posts'
-import LoadingIcon from '../components/icons/Loading.vue'
 
-import UserTab from '../components/UserTab.vue'
+import { SSE_BASE_PATH, EXPORT_CSV_BASE_PATH } from '../config'
+
+import LoadingIcon from '../components/icons/Loading.vue'
 
 </script>
 
@@ -43,7 +43,7 @@ export default {
     console.log(FILENAME, "MOUNTED START", this.userInfo)
 
     const channelId = `?channel=users.${this.userInfo['user_id']}`
-    const source = new EventSource("http://localhost:8080/stream" + channelId, { withCredentials: true });
+    const source = new EventSource(SSE_BASE_PATH + channelId, { withCredentials: true });
     source.addEventListener('jobDone', this.sseMessage);
     source.addEventListener('error', this.sseError);
     source.addEventListener('open', this.sseOpen);
@@ -101,16 +101,16 @@ export default {
       this.loading = true;
 
       console.log("updateJobStatus", job_id);
-      if(this.jobs != null) {
-        if(this.jobs.jobs != null) {
+      if (this.jobs != null) {
+        if (this.jobs.jobs != null) {
           let target = 0;
 
-          for(let i = 0; i < this.jobs.jobs.length; i++) {
+          for (let i = 0; i < this.jobs.jobs.length; i++) {
             if (this.jobs.jobs[i].job_id == job_id) {
               this.jobs.jobs[i].done = true;
             }
           }
-        } 
+        }
       }
       this.loading = false;
 
@@ -163,7 +163,7 @@ export default {
                 <span v-if="job.expired" class="fw-bold text-danger">Expired</span>
                 <span v-else-if="job.deleted">Deleted</span>
                 <span v-else-if="job.done"><a
-                    :href="'http://localhost:8080/api/post/export/' + job.job_id">Download</a></span>
+                    :href="EXPORT_CSV_BASE_PATH + '/' + job.job_id">Download</a></span>
                 <span v-else-if="jobStatus(job) == 'Pending'">❌</span>
                 <span v-else-if="jobStatus(job) == 'Error'">❌</span>
                 <span v-else>??❌??</span>

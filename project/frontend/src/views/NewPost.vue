@@ -3,10 +3,8 @@ import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
 import { postStore } from '../stores/posts'
+
 import LoadingIcon from '../components/icons/Loading.vue'
-
-
-
 </script>
 
 <script>

@@ -6,7 +6,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../components/Feed.vue')
+      component: () => import('../views/Feed.vue')
     },
     {
       path: '/posts/new',
@@ -17,7 +17,7 @@ const router = createRouter({
       path: '/posts/:post_id',
       name: 'post',
       props: true,
-      component: () => import('../components/Post.vue')
+      component: () => import('../views/Post.vue')
     },
     {
       path: '/login',

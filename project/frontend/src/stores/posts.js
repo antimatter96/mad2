@@ -1,24 +1,23 @@
-import { mapActions, mapState } from 'pinia'
 import { defineStore } from 'pinia'
+
+import { POST_API_BASE } from '../config'
 
 import { userAuthStore } from './userAuth'
 
-const POST_API_BASE = "http://localhost:8080/api/post"
-
+const FILENAME = 'posts.js'
 
 export const postStore = defineStore('post', {
   state: () => {
     return {
       _loginToken: window.localStorage.getItem("auth_token"),
-      _userInfo: null,
       _authStore: userAuthStore()
     }
   },
 
   getters: {
     loggedIn(state) {
-      console.log(state._loginToken, state._loginToken != null, state._userInfo, state._userInfo != null)
-      return state._loginToken != null || state._userInfo != null;
+      console.log(FILENAME, state._loginToken, state._loginToken != null)
+      return state._loginToken != null;
     },
     authToken(state) {
       return state._authStore.authToken
@@ -35,7 +34,7 @@ export const postStore = defineStore('post', {
         if (response.status == 200) {
           let r = await response.json();
 
-          console.log(r)
+          console.log(FILENAME, "getPost", r)
 
           return r;
         } else {
@@ -43,7 +42,7 @@ export const postStore = defineStore('post', {
         }
 
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(FILENAME, "getPost", error);
         return null;
       }
     },
@@ -59,7 +58,7 @@ export const postStore = defineStore('post', {
         if (response.status == 200) {
           let r = await response.json();
 
-          console.log(r)
+          console.log(FILENAME, "createPost", r)
 
           return r;
         } else {
@@ -67,7 +66,7 @@ export const postStore = defineStore('post', {
         }
 
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(FILENAME, "createPost", error);
         return null;
       }
     },
@@ -82,7 +81,7 @@ export const postStore = defineStore('post', {
         if (response.status == 200) {
           let r = await response.json();
 
-          console.log(r)
+          console.log(FILENAME, "exportCSV", r)
 
           return r;
         } else {
@@ -90,7 +89,7 @@ export const postStore = defineStore('post', {
         }
 
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(FILENAME, "exportCSV", error);
         return null;
       }
     },
@@ -104,7 +103,7 @@ export const postStore = defineStore('post', {
         if (response.status == 200) {
           let r = await response.json();
 
-          console.log(r)
+          console.log(FILENAME, "exportCSV", r)
 
           return r;
         } else {
@@ -112,7 +111,7 @@ export const postStore = defineStore('post', {
         }
 
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(FILENAME, "exportCSV", error);
         return null;
       }
     },
@@ -120,19 +119,13 @@ export const postStore = defineStore('post', {
 
     _commonHeaders() {
       return {
-        mode: 'cors', // no-cors, *cors, same-origin
-        credentials: 'same-origin', // include, *same-origin, omit
+        mode: 'cors',
+        credentials: 'same-origin',
         headers: {
           'Content-Type': 'application/json',
           'Authentication-Token': this.authToken,
         }
       }
     },
-
-    setAuthToken(token) {
-      this._loginToken = token;
-      window.localStorage.setItem("auth_token", token);
-    },
-
   },
 })

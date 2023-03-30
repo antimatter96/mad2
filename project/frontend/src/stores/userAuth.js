@@ -1,7 +1,9 @@
-// stores/userAuth.js
 import { defineStore } from 'pinia'
 
-const API_BASE = "http://localhost:8080/api/accounts"
+import { ACCOUNTS_API_BASE } from '../config'
+
+const FILENAME = 'userAuth.js'
+
 
 export const userAuthStore = defineStore('userAuth', {
   state: () => {
@@ -13,10 +15,7 @@ export const userAuthStore = defineStore('userAuth', {
   },
   getters: {
     loggedIn(state) {
-      // null false true true
-
-      console.log(state._loginToken, state._loginToken != null, state._userInfo, state._userInfo != null);
-      console.log("loggedIn", state._loginToken != null || state._userInfo != null);
+      console.log(FILENAME, "loggedIn", state._loginToken, state._loginToken != null);
       return state._loginToken != null;
     },
     userInfo(state) {
@@ -28,10 +27,6 @@ export const userAuthStore = defineStore('userAuth', {
   },
 
   actions: {
-    increment() {
-      this.count++
-    },
-
     setAuthToken(token) {
       this._loginToken = token;
       window.localStorage.setItem("auth_token", token);
@@ -44,17 +39,17 @@ export const userAuthStore = defineStore('userAuth', {
 
     async checkUserState(login, password) {
       try {
-        console.log("checkUserState start")
+        console.log(FILENAME, "checkUserState start")
 
         await new Promise((resolve, reject) => {
           setTimeout(() => resolve(), 1000)
         });
 
-        console.log("checkUserState main stuff done")
+        console.log(FILENAME, "checkUserState main stuff done")
         // this.userData = await api.post({ login, password })
         // showTooltip(`Welcome back ${this.userData.name}!`)
 
-        console.log("checkUserState end")
+        console.log(FILENAME, "checkUserState end")
       } catch (error) {
         // showTooltip(error)
         // let the form component display the error
@@ -65,14 +60,14 @@ export const userAuthStore = defineStore('userAuth', {
     async getLoginToken() {
       try {
 
-        let response = await fetch(API_BASE + "/login", {
+        let response = await fetch(ACCOUNTS_API_BASE + "/login", {
           ...this._commonHeaders(),
         });
         let r = await response.json();
 
         return r["response"]["csrf_token"];
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(FILENAME, error, "getLoginToken");
         return error
       }
     },
@@ -80,14 +75,14 @@ export const userAuthStore = defineStore('userAuth', {
     async getSignupToken() {
       try {
 
-        let response = await fetch(API_BASE + "/register", {
+        let response = await fetch(ACCOUNTS_API_BASE + "/register", {
           ...this._commonHeaders(),
         });
         let r = await response.json();
 
         return r["response"]["csrf_token"];
       } catch (error) {
-        console.error(error, "getLoginToken");
+        console.error(FILENAME, error, "getLoginToken");
         return error
       }
     },
@@ -102,7 +97,7 @@ export const userAuthStore = defineStore('userAuth', {
       }
 
       try {
-        let response = await fetch(API_BASE + "/login?include_auth_token=true", {
+        let response = await fetch(ACCOUNTS_API_BASE + "/login?include_auth_token=true", {
           method: 'POST',
           ...this._commonHeaders(),
           body: JSON.stringify({
@@ -121,8 +116,7 @@ export const userAuthStore = defineStore('userAuth', {
           return { done: false, 'user_error': false };
         }
       } catch (error) {
-        console.log(error);
-
+        console.log(FILENAME, error);
         return { done: false, 'user_error': false };
       }
     },
@@ -137,7 +131,7 @@ export const userAuthStore = defineStore('userAuth', {
       }
 
       try {
-        let response = await fetch(API_BASE + "/register?include_auth_token=true", {
+        let response = await fetch(ACCOUNTS_API_BASE + "/register?include_auth_token=true", {
           method: 'POST',
           ...this._commonHeaders(),
           body: JSON.stringify({
