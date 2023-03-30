@@ -5,7 +5,7 @@ from flask_security import auth_required, current_user
 from cache import cache
 
 from application.database.models.user import User
-from application.database.data_access import _private_view_with_followers, _private_view_with_following, _self_view
+from application.database.data_access import _private_view_with_followers, _private_view_with_following, _self_view, _feed
 
 from application.database.index import db
 from application.controllers.restful.errors import NotFoundError, BusinessValidationError, InternalServerError, common_errors
@@ -73,4 +73,5 @@ def _clear_graph_cache(user_id_1, user_id_2):
   cache.delete_memoized(_private_view_with_following, user_id_2)
   cache.delete_memoized(_self_view, user_id_1)
   cache.delete_memoized(_self_view, user_id_2)
+  # cache.delete_memoized(_feed, user_id_1, 0, 40)
 

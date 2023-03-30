@@ -31,6 +31,7 @@ post_fields = {
     "created_at": SimpleDateTime, "updated_at": SimpleDateTime, "creator": {
         "user_id": fields.Integer(attribute='creator.user_id'),
         "email": fields.String(attribute='creator.email'),
+        "name": fields.String(attribute='creator.name'),
         "follows_user": fields.Boolean(attribute='creator.follows_user'),
         "user_follows": fields.Boolean(attribute='creator.user_follows'),
         "is_actually_user": fields.Boolean(attribute='creator.is_actually_user'),

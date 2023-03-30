@@ -69,10 +69,12 @@ def create_app():
 
 app, celery = create_app()
 cache.init_app(app)
+app.app_context().push()
 
 from application.controllers.index import *
 
 app.register_blueprint(sse, url_prefix='/stream')
+app.app_context().push()
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8080)

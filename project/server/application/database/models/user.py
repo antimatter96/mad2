@@ -18,8 +18,7 @@ class Role(db.Model, RoleMixin):
   description = db.Column(db.String(255))
 
 follower_following = db.Table(
-    'follower_following', 
-    db.Column('follower_user_id', db.Integer(), db.ForeignKey('user.user_id'), primary_key=True),
+    'follower_following', db.Column('follower_user_id', db.Integer(), db.ForeignKey('user.user_id'), primary_key=True),
     db.Column('following_user_id', db.Integer(), db.ForeignKey('user.user_id'), primary_key=True),
     db.Column('created_at', db.DateTime(), default=datetime.now)
 )
@@ -29,7 +28,6 @@ class UserLastSeen(db.Model):
   user_id = db.Column('user_id', db.Integer(), db.ForeignKey('user.user_id'), primary_key=True)
   last_seen_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
   rand_number = db.Column(db.Integer())
-
 
 class User(db.Model, UserMixin):
   __tablename__ = 'user'
@@ -66,7 +64,10 @@ class User(db.Model, UserMixin):
   def public_view_as_dict(self, current_user, with_posts=False):
     return {
         'user_id': getattr(self, 'user_id'),
-        'email': getattr(self, 'email', ),
+        'email': getattr(
+            self,
+            'email',
+        ),
         'name': getattr(self, 'name', None),
         'created_at': getattr(self, 'created_at'),
         'followers': { 'length': len(self.followers)},
@@ -85,7 +86,9 @@ class User(db.Model, UserMixin):
   def private_view(self, with_posts=False, with_followers_list=False, with_following_list=False):
     return {
         **self.public_view_as_dict(self, with_posts=with_posts),
-        **({ 'posts': [post.simplified_private_view(self) for post in self.posts]} if with_posts else {}),
+        **({
+            'posts': sorted([post.simplified_private_view(self) for post in self.posts], key=lambda x: x['created_at'], reverse=True)
+        } if with_posts else {}),
         **({
             'following': {
                 'length': len(self.following),
@@ -98,5 +101,6 @@ class User(db.Model, UserMixin):
                 'list': [user_following.public_view_wrt(self) for user_following in self.followers],
             },
         } if with_following_list else {}),
-        'is_actually_user': True,
+        'is_actually_user':
+            True,
     }

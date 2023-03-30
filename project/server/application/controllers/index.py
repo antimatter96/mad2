@@ -29,20 +29,23 @@ def index():
 def favicon():
   return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico')
 
-@sse.before_request
-@auth_required('token', 'session')
-def check_access():
-  if request.args.get("channel") == None:
-    return redirect(url_for('sse.stream', channel="users." + str(current_user.user_id)))
 
-  channel = request.args.get("channel", "users.-1", type=str)
-  try:
-    requested_user_id = int(channel.split(".")[1])
-  except:
-    return '', 403
+# @sse.before_request
+# @auth_required('token', 'session')
+# def check_access():
+#   print("check_access", request.args)
+#   if request.args.get("channel") == None:
+#     return redirect(url_for('sse.stream', channel="users." + str(current_user.user_id)))
 
-  if current_user.user_id != requested_user_id:
-    return '', 403
+#   print("check_access", request.args)
+#   channel = request.args.get("channel", "users.-1", type=str)
+#   try:
+#     requested_user_id = int(channel.split(".")[1])
+#   except:
+#     return '', 403
+
+#   if current_user.user_id != requested_user_id:
+#     return '', 403
 
 @sse.after_request
 def add_header(response):
