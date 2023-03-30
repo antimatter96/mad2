@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 from flask_restful import current_app as app
 from flask_restful import Resource, fields, marshal_with, reqparse, inputs
 from flask_security import auth_required, current_user
-
+from sqlalchemy import or_
 from cache import cache
 
 from application.database.models.post import Post
@@ -27,8 +27,8 @@ post_errors = {
 }
 
 post_fields = {
-    "post_id": fields.Integer, "title": fields.String, "hidden": fields.Boolean, "img_url": fields.String, "created_at": SimpleDateTime,
-    "updated_at": SimpleDateTime, "creator": {
+    "post_id": fields.Integer, "title": fields.String, "hidden": fields.Boolean, "img_url": fields.String, "content": fields.String,
+    "created_at": SimpleDateTime, "updated_at": SimpleDateTime, "creator": {
         "user_id": fields.Integer(attribute='creator.user_id'),
         "email": fields.String(attribute='creator.email'),
         "follows_user": fields.Boolean(attribute='creator.follows_user'),
@@ -53,7 +53,7 @@ class PostsAPI(Resource):
   def get(self, post_id):
     post = db.session.query(Post)\
       .filter(Post.post_id == post_id)\
-      .filter(Post.creator_id == current_user.user_id or Post.hidden != True)\
+      .filter((Post.creator_id == current_user.user_id) | (Post.hidden != True))\
       .first()
 
     if post is None:
@@ -63,7 +63,8 @@ class PostsAPI(Resource):
 
   def delete(self, post_id):
     post = db.session.query(Post)\
-      .filter(Post.post_id == post_id and Post.creator_id == current_user.user_id)\
+      .filter(Post.post_id == post_id)\
+      .filter(Post.creator_id == current_user.user_id)\
       .first()
 
     if post is None:
@@ -83,7 +84,8 @@ class PostsAPI(Resource):
   @marshal_with(post_fields)
   def put(self, post_id):
     post = db.session.query(Post)\
-      .filter(Post.post_id == post_id and Post.creator_id == current_user.user_id)\
+      .filter(Post.post_id == post_id)\
+      .filter(Post.creator_id == current_user.user_id)\
       .first()
 
     if post is None:

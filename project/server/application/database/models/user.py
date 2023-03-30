@@ -66,7 +66,8 @@ class User(db.Model, UserMixin):
   def public_view_as_dict(self, current_user, with_posts=False):
     return {
         'user_id': getattr(self, 'user_id'),
-        'email': getattr(self, 'email'),
+        'email': getattr(self, 'email', ),
+        'name': getattr(self, 'name', None),
         'created_at': getattr(self, 'created_at'),
         'followers': { 'length': len(self.followers)},
         'following': { 'length': len(self.following)},

@@ -45,7 +45,8 @@ def list_jobs():
 @auth_required('token', 'session')
 def download_and_delete_export_csv(job_id):
   export_job = ExportJob.query\
-    .filter(ExportJob.creator_id == current_user.user_id and ExportJob.job_id == job_id)\
+    .filter(ExportJob.creator_id == current_user.user_id)\
+    .filter(ExportJob.job_id == job_id)\
     .order_by(desc(ExportJob.created_at))\
     .first()
 
