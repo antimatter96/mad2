@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/posts/new',
       name: 'newPost',
-      component: () => import('../components/NewPost.vue')
+      component: () => import('../views/NewPost.vue')
     },
     {
       path: '/posts/:post_id',
@@ -33,7 +33,7 @@ const router = createRouter({
       path: '/profile/:username',
       name: 'user_profile_page',
       props: true,
-      component: () => import('../components/UserProfile.vue')
+      component: () => import('../views/UserProfile.vue')
     },
     {
       path: '/profile/search',
@@ -54,7 +54,7 @@ const router = createRouter({
     {
       path: '/profile/me/export',
       name: 'export_dashboard',
-      component: () => import('../components/ExportDashboard.vue')
+      component: () => import('../views/ExportDashboard.vue')
     },
   ]
 })

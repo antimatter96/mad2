@@ -4,10 +4,10 @@ import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
 import { graphStore } from '../stores/graph'
-import LoadingIcon from './icons/Loading.vue'
-import UserTab from './UserTab.vue'
-import PostSummary from './PostSummary.vue'
-import PostList from './PostList.vue'
+import LoadingIcon from '../components/icons/Loading.vue'
+import UserTab from '../components/UserTab.vue'
+import PostSummary from '../components/PostSummary.vue'
+import PostList from '../components/PostList.vue'
 </script>
 
 <script>
@@ -63,23 +63,54 @@ export default {
     ...mapActions(graphStore, { getUserInfo: 'getUserInfo', follow: 'follow', unfollow: 'unfollow' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
-    followersUpdate(mode, user_id) {
-      console.log("parent", mode, user_id, "followersUpdate");
-    }
+    async followersUpdate(operation, user_id) {
+      this.loading = true;
+
+      console.log("parent", operation, user_id, "followersUpdate");
+
+      let res = null;
+      if (operation == '+') {
+        res = await this.follow(user_id);
+      } else {
+        res = await this.unfollow(user_id);
+      }
+
+      if (res == null) {
+        this.loading = false;
+
+        return;
+      }
+
+
+      if (operation == '+') {
+        this.userData.followers.length++;
+        this.userData.user_follows = true;
+      } else {
+        this.userData.followers.length--;
+        this.userData.user_follows = false;
+      }
+  
+     
+      this.loading = false;
+      console.log(res);
+    },
   }
 }
 </script>
 
 <template>
-  <div v-if="loading" id="main-loading" class="h-100 w-100">
+  <div v-if="userData == null" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
-  <div v-else-if="userData != null">
+  <div v-else-if="Object.keys(userData).length > 0">
+    <div>
+      <LoadingIcon :element="'h4'" element="h4" :style="{ 'opacity': (loading ? 100 : 0) }"></LoadingIcon>
+    </div>
     <div class="px-3">
       <div>
         <h3 class="mb-0"> {{ userData.name || userData.email }} </h3>
         <UserTab v-if="!isActuallyUser" showSummary="false" :userData="userData" :showFollowing="true"
-          :showFollowers="true" />
+          :showFollowers="true" @followAction="followersUpdate" />
         <hr>
       </div>
 

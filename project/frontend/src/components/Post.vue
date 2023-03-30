@@ -4,6 +4,7 @@ import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
 import { postStore } from '../stores/posts'
+import { graphStore } from '../stores/graph'
 
 import LoadingIcon from './icons/Loading.vue'
 import UserTab from './UserTab.vue'
@@ -68,11 +69,11 @@ export default {
     splitText() {
       let split = this.postData.content.split('\n');
       let newSplit = [];
-      newSplit.push(split[0]);
+      newSplit.push(split[0] + ' ' + split[1]);
 
       let running = ''
-      for (let i = 1; i < split.length; i++) {
-        running += split[i];
+      for (let i = 2; i < split.length; i++) {
+        running += ' ' + split[i];
         if (running.length > 500) {
           newSplit.push(running);
           running = ''
@@ -84,37 +85,76 @@ export default {
 
     imageUrl() {
       console.log(this.postData)
-      return 'http://localhost:8080/static/user_uploads/' + this.postData.img_url;
+      if (this.postData != null) {
+        return 'http://localhost:8080/static/user_uploads/' + this.postData.img_url;
+      }
+
+      return ''
+
     }
   },
   methods: {
     ...mapActions(postStore, { getPost: 'getPost' }),
+    ...mapActions(graphStore, { follow: 'follow', unfollow: 'unfollow' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
+
+    async followersUpdate(operation, user_id) {
+      this.loading = true;
+
+      console.log("parent", operation, user_id, "followersUpdate");
+
+      let res = null;
+      if (operation == '+') {
+        res = await this.follow(user_id);
+      } else {
+        res = await this.unfollow(user_id);
+      }
+
+      if (res == null) {
+        this.loading = false;
+        return;
+      }
+
+
+      if (operation == '+') {
+        this.postData.creator.user_follows = true;
+      } else {
+        this.postData.creator.user_follows = false;
+      }
+
+
+      this.loading = false;
+      console.log(res);
+    },
   }
 }
 </script>
 
 <template>
-  <div v-if="loading" id="main-loading" class="h-100 w-100">
+  <div v-if="postData == null" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
-  <div v-else-if="postData != null" class="col-md-10 offset-md-1">
+  <div v-else-if="Object.keys(postData).length > 0" class="col-md-12 px-5" :style="{backgroundImage:`linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),url(${imageUrl})`}">
     <div>
+      <LoadingIcon :element="'h4'" element="h4" :style="{ 'opacity': (loading ? 100 : 0) }"
+        style="transform: scale(0.7);"></LoadingIcon>
+    </div>
+    <div class="boder-2 border-bottom mb-4">
       <h2 class="mb-1 text-center"> {{ postData.title }} </h2>
-      <div>
-        <div v-if="!postData.creator.is_actually_user" class="card-header px-2 py-2 mb-0">
+      <div class="align-items-center d-flex card-header px-0 py-0 mb-0 justify-content-between">
+        <template v-if="!postData.creator.is_actually_user">
+          <h6 class="d-inline-block mb-0 fw-light text-end">Created : {{ postData.created_at }}</h6>
           <UserTab :showSummary="true" :userData="postData.creator" :showFollowing="true" :showFollowers="true"
-            class="fw-bold d-flex align-items-baseline" />
-        </div>
-        <div v-else>
-          <em>by you</em> Last updated at : {{ postData.updated_at }} EDIT
-        </div>
+            class="fw-bold d-flex align-items-baseline" @followAction="followersUpdate" style="transform: scale(0.8)" />
+        </template>
+        <template v-else>
+          <h6 class="d-inline-block mb-0 fw-light text-end">Last updated at : {{ postData.updated_at }} <em>Edit</em></h6>
+          <h6 class="d-inline-block mb-0 fw-bold text-end">by you</h6>
+        </template>
       </div>
     </div>
-    <img :src="imageUrl" v-if="postData.img_url != null">
-
     <div>
-      <h6>{{ splitText[0] }}</h6>
+      <h6 class="subhead">{{ splitText[0] }}</h6>
       <p v-for="para in splitText.slice(1)">
         {{ para }}
       </p>
@@ -126,4 +166,13 @@ export default {
 </template>
 
 <style scoped>
+.subhead::first-letter {
+  font-family: serif;
+}
+
+.subhead::first-letter {
+  initial-letter: 2 1;
+  font-weight: bold;
+  margin-right: .75em;
+}
 </style>

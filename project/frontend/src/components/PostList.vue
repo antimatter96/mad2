@@ -50,12 +50,12 @@ export default {
       }
 
       // console.log(this.postList.posts);
-      for (let i = 0; i < this.postList.posts.length; i++) {
-        if (user_id == this.postList.posts[i].creator.user_id) {
+      for (let i = 0; i < this.postList.length; i++) {
+        if (user_id == this.postList[i].creator.user_id) {
           if (operation == '+') {
-            this.postList.posts[i].creator.user_follows = true;
+            this.postList[i].creator.user_follows = true;
           } else {
-            this.postList.posts[i].creator.user_follows = false;
+            this.postList[i].creator.user_follows = false;
           }
         }
       }

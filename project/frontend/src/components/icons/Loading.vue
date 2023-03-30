@@ -25,6 +25,7 @@ defineProps({
       <h3 data-text="Loading..." v-if="element == 'h3'" class="loader_heading">Loading...</h3>
       <h4 data-text="Loading..." v-if="element == 'h4'" class="loader_heading">Loading...</h4>
       <h5 data-text="Loading..." v-if="element == 'h5'" class="loader_heading">Loading...</h5>
+      <h6 data-text="Loading..." v-if="element == 'h6'" class="loader_heading">Loading...</h6>
     </div>
   </div>
 </template>

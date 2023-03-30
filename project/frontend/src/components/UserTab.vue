@@ -44,14 +44,14 @@ export default {
         {
           name: 'user_profile_page',
           params: { username: userData.user_id }
-        }">{{ userData.email }}
+        }">{{ userData.name || userData.email }}
       </RouterLink>
 
     </h5>
     <div>
       <template v-if="showFollowing">
         <button v-if="userData.user_follows" v-on:click="unfollow" type="button"
-          class="btn btn-outline-danger px-3 mx-3 fw-bold">
+          class="btn btn-outline-danger px-2 mx-2 fw-bold">
           Unfollow
           <FollowAction :positive="false"></FollowAction>
         </button>
@@ -71,7 +71,7 @@ export default {
           </button>
         </template> -->
       <template v-if="showFollowers">
-        <button class="btn disabled fw-light"
+        <button class="btn disabled fw-light px-2"
           :class="{ 'bg-success': userData.follows_user, 'bg-warning': !userData.follows_user }">
           <template v-if="userData.follows_user">
             <FollowIndicator :positive="true"></FollowIndicator> Follows you

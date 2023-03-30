@@ -7,7 +7,7 @@ export const userAuthStore = defineStore('userAuth', {
   state: () => {
     return {
       _loginToken: window.localStorage.getItem("auth_token"),
-      _userInfo: null,
+      _userInfo: window.localStorage.getItem("user_info") != null ? JSON.parse(window.localStorage.getItem("user_info")) : null,
       _csrfToken: null,
     }
   },
@@ -17,10 +17,10 @@ export const userAuthStore = defineStore('userAuth', {
 
       console.log(state._loginToken, state._loginToken != null, state._userInfo, state._userInfo != null);
       console.log("loggedIn", state._loginToken != null || state._userInfo != null);
-      return state._loginToken != null || state._userInfo != null;
+      return state._loginToken != null;
     },
     userInfo(state) {
-      return ""
+      return state._userInfo;
     },
     authToken(state) {
       return state._loginToken;
@@ -35,6 +35,11 @@ export const userAuthStore = defineStore('userAuth', {
     setAuthToken(token) {
       this._loginToken = token;
       window.localStorage.setItem("auth_token", token);
+    },
+
+    setUserInfo(info) {
+      this._userInfo = info;
+      window.localStorage.setItem("user_info", JSON.stringify(this._userInfo));
     },
 
     async checkUserState(login, password) {

@@ -1,10 +1,9 @@
 <script setup>
-import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
 import { postStore } from '../stores/posts'
-import LoadingIcon from './icons/Loading.vue'
+import LoadingIcon from '../components/icons/Loading.vue'
 
 
 
@@ -57,7 +56,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(postStore, { getPost: 'getPost', createPost: 'createPost' }),
+    ...mapActions(postStore, { createPost: 'createPost' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
     coverImageChange(fileInput) {
@@ -67,9 +66,7 @@ export default {
 
       if (file.size > 1024 * 1024 * 100) {
         this.display_error = "size too big"
-
         fileInput.target.value = null;
-
         return;
       }
 
@@ -80,9 +77,9 @@ export default {
       e.preventDefault();
       console.log(e);
 
+      this.loading = true;
+
       this.display_error = null;
-
-
 
       function getBase64(file) {
         return new Promise((resolve, reject) => {
@@ -106,29 +103,28 @@ export default {
       })
 
       console.log(result);
-      // let result = await this.userAuthStoreLogin(this.email, this.password);
 
-      // if (result.done) {
+      this.loading = false;
 
-      // } else {
-      //   if (result.user_error) {
-      //     this.display_error = "Incorrect username / password"
-      //   } else {
-      //     this.display_error = "Something went wrong"
-      //   }
-      // }
+      if (result != null) {
+        this.$router.push({
+          name: 'post',
+          params: { post_id: result.post_id }
+        });
+      } else {
+        this.display_error = "Something went wrong. Please try again later";
+      }
     }
   }
 }
 </script>
 
 <template>
-  <div v-if="loading" id="main-loading" class="h-100 w-100">
-    <LoadingIcon element="h2" />
-  </div>
-  <div v-else>
-    <div class="col-md-4 py-2"></div>
-    <div class="col-md-8 col-md-offset-2 py-2">
+  <div class="px-3">
+    <div class="col-md-10 offset-md-1 py-2">
+      <div>
+        <LoadingIcon :element="'h4'" element="h4" :style="{ 'opacity': (loading ? 100 : 0) }"></LoadingIcon>
+      </div>
       <form action="" method="POST" v-on:submit="handleSubmit">
         <div class="form-floating mb-2">
           <input type="text" class="form-control fw-bold" id="title" required v-model="title">
@@ -137,11 +133,11 @@ export default {
         <div class="form-floating mb-2">
           <textarea class="form-control fw-light" id="content" required style="height: 20rem;"
             v-model="content"></textarea>
-          <label for="title" class="fw-bold">Summary</label>
+          <label for="title" class="fw-bold">Post</label>
         </div>
         <div class="mb-4 row mx-0 custom-checkbox text-center">
           <div class="col-md-3 d-flex flex-row justify-content-around align-items-center">
-            <label for="hidden" class="fw-bold mx-2">Hidden</label>
+            <label for="hidden" class="fw-bold mx-2">Hidden/Draft</label>
             <input type="checkbox" class="form-check-input" id="hidden" v-model="hidden">
           </div>
           <div class="col-md-9 d-flex flex-row justify-content-between align-items-center">
@@ -151,7 +147,7 @@ export default {
           </div>
         </div>
         <div class="text-center mb-4">
-          <input type="submit" value="Post" class="btn btn-primary btn-lg w-25">
+          <input type="submit" value="Post" class="btn btn-primary btn-lg px-5">
         </div>
         <div v-if="display_error != null" class="mt-4 text-danger text-center">
           <span class="fw-bold">Error : {{ display_error }}</span>

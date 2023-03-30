@@ -19,8 +19,7 @@ export const graphStore = defineStore('graph', {
 
   getters: {
     loggedIn(state) {
-      console.log(state._loginToken, state._loginToken != null, state._userInfo, state._userInfo != null)
-      return state._loginToken != null || state._userInfo != null;
+      return state._loginToken != null;
     },
     authToken(state) {
       return state._authStore.authToken
@@ -87,6 +86,10 @@ export const graphStore = defineStore('graph', {
           let r = await response.json();
 
           console.log(r)
+
+          if (user_id == 'me') {
+            this._authStore.setUserInfo( { user_id: r['user_id'] });
+          }
 
           return r;
         } else if (response.status == 404) {

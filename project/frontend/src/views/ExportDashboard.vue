@@ -5,9 +5,9 @@ import { mapActions, mapState } from 'pinia'
 import { userAuthStore } from '../stores/userAuth'
 import { graphStore } from '../stores/graph'
 import { postStore } from '../stores/posts'
-import LoadingIcon from './icons/Loading.vue'
+import LoadingIcon from '../components/icons/Loading.vue'
 
-import UserTab from './UserTab.vue'
+import UserTab from '../components/UserTab.vue'
 
 </script>
 
@@ -40,9 +40,10 @@ export default {
     console.log(FILENAME, "BEFORE MOUNTED END")
   },
   async mounted() {
-    console.log(FILENAME, "MOUNTED START")
+    console.log(FILENAME, "MOUNTED START", this.userInfo)
 
-    const source = new EventSource("http://localhost:8080/stream", { withCredentials: true });
+    const channelId = `?channel=users.${this.userInfo['user_id']}`
+    const source = new EventSource("http://localhost:8080/stream" + channelId, { withCredentials: true });
     source.addEventListener('jobDone', this.sseMessage);
     source.addEventListener('error', this.sseError);
     source.addEventListener('open', this.sseOpen);
@@ -58,7 +59,7 @@ export default {
   },
 
   computed: {
-    ...mapState(userAuthStore, ['loggedIn']),
+    ...mapState(userAuthStore, ['loggedIn', 'userInfo']),
     hideNavBar() {
       return this.loading
     },
@@ -69,12 +70,14 @@ export default {
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
     async _export() {
+      this.loading = true;
       console.log("export", "called")
       let response = await this.exportCSV();
       if (response != null) {
         this.jobs.count++;
         this.jobs.jobs.unshift(response);
       }
+      this.loading = false;
     },
 
     async sseError(event, xxx) {
@@ -95,6 +98,8 @@ export default {
     },
 
     updateJobStatus(job_id) {
+      this.loading = true;
+
       console.log("updateJobStatus", job_id);
       if(this.jobs != null) {
         if(this.jobs.jobs != null) {
@@ -107,11 +112,13 @@ export default {
           }
         } 
       }
+      this.loading = false;
+
     },
 
     jobStatus(job) {
       if (job.done != null && job.done == true) {
-        return 'Successfull'
+        return 'Successful'
       } else if (job.error != null) {
         return 'Error'
       } else {
@@ -125,7 +132,7 @@ export default {
 </script>
 
 <template>
-  <div v-if="loading || jobs == null" id="main-loading" class="h-100 w-100">
+  <div v-if="jobs == null" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
   <div v-else class="px-3">
