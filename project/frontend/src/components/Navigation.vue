@@ -28,10 +28,10 @@ export default {
             </div>
             <template v-else-if="loggedIn">
               <li class="nav-item">
-                <RouterLink to="/" class="nav-link">Home</RouterLink>
+                <RouterLink replace to="/" class="nav-link">Home</RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink to="/profile/me" class="nav-link">My Profile</RouterLink>
+                <RouterLink replace to="/profile/me" class="nav-link">My Profile</RouterLink>
               </li>
               <li class="nav-item">
                 <RouterLink :to="{ name: 'user_search_page' }" class="nav-link">

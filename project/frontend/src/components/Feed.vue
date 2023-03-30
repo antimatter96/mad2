@@ -8,18 +8,20 @@ import { graphStore } from '../stores/graph'
 import LoadingIcon from './icons/Loading.vue'
 import UserTab from './UserTab.vue'
 import PostSummary from './PostSummary.vue'
+import PostList from './PostList.vue'
 
 </script>
 
 <script>
+const FILENAME = 'Feed';
 export default {
   // 
   created() {
-    console.log("App.vue", "CREATED START")
-    console.log("App.vue", "CREATED END")
+    console.log(FILENAME, "CREATED START")
+    console.log(FILENAME, "CREATED END")
   },
   async beforeMount() {
-    console.log("App.vue", "BEFORE MOUNTED START")
+    console.log(FILENAME, "BEFORE MOUNTED START")
     this.loading = true;
 
     console.log("DONE async");
@@ -42,7 +44,7 @@ export default {
     console.log("mode", this.mode);
     this.postList = await this.getFeed(0);
 
-    // console.log(this.postList.posts);
+    console.log(FILENAME, this.postList.posts);
     this.loading = false;
   },
   async mounted() {
@@ -64,40 +66,6 @@ export default {
   methods: {
     ...mapActions(graphStore, { getFeed: 'getFeed', follow: 'follow', unfollow: 'unfollow' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
-
-    async followersUpdate(operation, user_id) {
-      this.loading = true;
-
-      console.log("parent", operation, user_id, "followersUpdate");
-
-      let res = null;
-      if (operation == '+') {
-        res = await this.follow(user_id);
-      } else {
-        res = await this.unfollow(user_id);
-      }
-
-      if (res == null) {
-        this.loading = false;
-        console.log("res is null");
-        return;
-      }
-
-      console.log(this.postList.posts);
-      for (let i = 0; i < this.postList.posts.length; i++) {
-        if (user_id == this.postList.posts[i].creator.user_id) {
-          if (operation == '+') {
-            this.postList.posts[i].creator.user_follows = true;
-          } else {
-            this.postList.posts[i].creator.user_follows = false;
-          }
-        }
-      }
-
-      this.loading = false;
-      console.log(res);
-    },
-
   }
 }
 </script>
@@ -112,32 +80,7 @@ export default {
         Your Feed
       </h3>
     </div>
-    <div class="mt-2">
-      <div>
-        <LoadingIcon :element="'h4'" element="h4" :style="{ 'opacity': (loading ? 100 : 0) }"></LoadingIcon>
-      </div>
-      <div class="col-md-10 offset-md-1">
-        <template v-if="postList.count > 0">
-          <table class="table">
-            <tbody>
-              <tr v-for="(post) in postList.posts" :key="post.post_id">
-                <td>
-                  <PostSummary :postData="post" :showCreatorStats="true" :followersUpdate="followersUpdate"/>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </template>
-        <template v-else>
-          <h4 class="text-center text-info">
-            You don't follow anyone yet <br>
-            People who you follow haven't created any posts <br>
-          </h4>
-        </template>
-
-      </div>
-    </div>
-
+    <PostList :postList="postList.posts" :showCreatorStats="true" :showIfHidden="false" />
   </div>
 </template>
 

@@ -92,7 +92,6 @@ export default {
 </script>
 
 <template>
-
   <div class="px-3">
     <div class="col-md-10 offset-md-1 border-bottom border-2">
       <div class="input-group mb-3">
@@ -101,7 +100,9 @@ export default {
       </div>
     </div>
     <div class="mt-2">
-      <div><LoadingIcon :element="'h4'" element="h4" :style="{'opacity': (loading? 100: 0)}"></LoadingIcon></div>
+      <div>
+        <LoadingIcon :element="'h4'" element="h4" :style="{ 'opacity': (loading ? 100 : 0) }"></LoadingIcon>
+      </div>
       <div v-if="userList.count > 0" class="col-md-10 offset-md-1">
         <h5> Search Result </h5>
         <table class="table">
@@ -112,7 +113,7 @@ export default {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(user, index) in userList.users" class="">
+            <tr v-for="(user, index) in userList.users" :key="user.user_id">
               <td class="small-index"> {{ index + 1 }} </td>
               <td>
                 <UserTab :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="showingFollowing"

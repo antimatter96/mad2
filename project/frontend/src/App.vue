@@ -72,7 +72,7 @@ export default {
         <LoadingIcon element="h2" />
       </div>
       <div v-else>
-        <RouterView />
+        <RouterView :key="$route.fullPath"/>
       </div>
     </div>
 
