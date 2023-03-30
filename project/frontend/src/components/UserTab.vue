@@ -46,7 +46,6 @@ export default {
           params: { username: userData.user_id }
         }">{{ userData.name || userData.email }}
       </RouterLink>
-
     </h5>
     <div>
       <template v-if="showFollowing">
@@ -60,16 +59,6 @@ export default {
           <FollowAction :positive="true"></FollowAction>
         </button>
       </template>
-      <!-- <template v-if="showFollowers">
-          <button v-if="userData.follows_user" type="button" class="btn btn-outline-info px-3 mx-3 disabled" disabled>
-            Follows you
-            <FollowIndicator :positive="true"></FollowIndicator>
-          </button>
-          <button v-else type="button" class="btn px-3 mx-3 disabled" disabled>
-            Does not follow you
-            <FollowIndicator :positive="false"></FollowIndicator>
-          </button>
-        </template> -->
       <template v-if="showFollowers">
         <button class="btn disabled fw-light px-2"
           :class="{ 'bg-success': userData.follows_user, 'bg-warning': !userData.follows_user }">

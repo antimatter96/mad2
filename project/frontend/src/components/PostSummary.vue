@@ -20,7 +20,7 @@ export default {
   beforeMount() {
     console.log(FILENAME, this.postData);
   },
-   computed: {
+  computed: {
     ...mapState(userAuthStore, ['loggedIn']),
     hideNavBar() {
       return this.loading
@@ -47,7 +47,7 @@ export default {
         }
       }
       newSplit.push(running);
-      return newSplit.slice(0, 2);
+      return newSplit.slice(0, 1);
     },
 
     async followAction(mode, user_id) {
@@ -67,8 +67,8 @@ export default {
           {
             name: 'post',
             params: { post_id: postData.post_id }
-          }" replace class="text-decoration-none">{{ postData.title }}</RouterLink>
-
+          }" replace class="text-decoration-none">{{ postData.title }}
+        </RouterLink>
       </h3>
     </div>
     <div v-if="showCreatorStats" class="card-header px-0 py-0 mb-0 bg-white align-items-center d-flex">
