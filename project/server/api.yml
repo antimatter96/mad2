@@ -1,0 +1,201 @@
+openapi: 3.0.3
+info:
+  title: Kanban 1.0
+  description: KanBan API
+  version: 1.0.11
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: post
+    description: CRUD for Posts
+  - name: followers
+    description: Follow/Unfollow Users
+paths:
+  /post:
+    post:
+      tags:
+        - post
+      summary: Create post
+      operationId: CreatePost
+      requestBody:
+        $ref: "#/components/requestBodies/CreatePostBody"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "400":
+          description: Invalid Params
+        "401":
+          description: UnAuthorized
+      security:
+        - authToken: []
+  /post/{post_id}:
+    parameters:
+      - name: post_id
+        in: path
+        description: ID of Post that needs to be updated
+        required: true
+        schema:
+          type: integer
+          format: int64
+    put:
+      tags:
+        - post
+      summary: Update a post
+      operationId: UpdatePost
+      requestBody:
+        $ref: "#/components/requestBodies/CreatePostBody"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "400":
+          description: Invalid Params
+        "401":
+          description: UnAuthorized
+        "404":
+          description: Post not found
+      security:
+        - authToken: []
+    get:
+      tags:
+        - post
+      summary: Get Post
+      operationId: GetPost
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+        "401":
+          description: UnAuthorized
+        "404":
+          description: Post not found
+      security:
+        - authToken: []
+    delete:
+      tags:
+        - post
+      summary: Delere Post
+      operationId: DeletePost
+      responses:
+        "200":
+          description: Successful operation
+        "401":
+          description: UnAuthorized
+        "404":
+          description: Post not found
+      security:
+        - authToken: []
+  /followers/{user_id}:
+    parameters:
+      - name: user_id
+        in: path
+        description: ID of User that needs to be followed/unfollowed
+        required: true
+        schema:
+          type: integer
+          format: int64
+    post:
+      tags:
+        - followers
+      summary: Follow user
+      operationId: Follow
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid Params
+        "401":
+          description: UnAuthorized
+        "404":
+          description: Post not found
+      security:
+        - authToken: []
+    delete:
+      tags:
+        - followers
+      summary: Unfollow user
+      operationId: Unfollow
+      responses:
+        "200":
+          description: Successful operation
+        "401":
+          description: UnAuthorized
+        "404":
+          description: Post not found
+      security:
+        - authToken: []  
+components:
+  schemas:
+    PostRequest:
+      required:
+        - title
+        - content
+        - hidden
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        hidden:
+          type: boolean
+        img:
+          type: string
+          format: base64
+
+    Post:
+      allOf:
+        - $ref: '#/components/schemas/PostRequest'
+        - type: object
+          properties:
+            post_id:
+              type: integer
+              format: int64
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+
+  requestBodies:
+    UpdatePostBody:
+      description: Post object that needs to be updated
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PostRequest"
+    CreatePostBody:
+      description: Post object that needs to be added
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PostRequest"
+    UpdateListBody:
+      description: List object that needs to be updated
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PostRequest"
+    CreateListBody:
+      description: List object that needs to be added
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PostRequest"
+  securitySchemes:
+    authToken:
+      description: Can be found by logging in
+      type: apiKey
+      name: Authentication-Token
+      in: header
