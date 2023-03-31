@@ -11,28 +11,28 @@ tags:
   - name: followers
     description: Follow/Unfollow Users
 paths:
-  /post:
+  /api/post:
     post:
       tags:
         - post
       summary: Create post
       operationId: CreatePost
       requestBody:
-        $ref: "#/components/requestBodies/CreatePostBody"
+        $ref: '#/components/requestBodies/CreatePostBody'
       responses:
-        "200":
+        '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Post"
-        "400":
+                $ref: '#/components/schemas/Post'
+        '400':
           description: Invalid Params
-        "401":
+        '401':
           description: UnAuthorized
       security:
         - authToken: []
-  /post/{post_id}:
+  /api/post/{post_id}:
     parameters:
       - name: post_id
         in: path
@@ -47,19 +47,19 @@ paths:
       summary: Update a post
       operationId: UpdatePost
       requestBody:
-        $ref: "#/components/requestBodies/CreatePostBody"
+        $ref: '#/components/requestBodies/CreatePostBody'
       responses:
-        "200":
+        '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Post"
-        "400":
+                $ref: '#/components/schemas/Post'
+        '400':
           description: Invalid Params
-        "401":
+        '401':
           description: UnAuthorized
-        "404":
+        '404':
           description: Post not found
       security:
         - authToken: []
@@ -69,15 +69,15 @@ paths:
       summary: Get Post
       operationId: GetPost
       responses:
-        "200":
+        '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Post"
-        "401":
+                $ref: '#/components/schemas/Post'
+        '401':
           description: UnAuthorized
-        "404":
+        '404':
           description: Post not found
       security:
         - authToken: []
@@ -87,15 +87,15 @@ paths:
       summary: Delere Post
       operationId: DeletePost
       responses:
-        "200":
+        '200':
           description: Successful operation
-        "401":
+        '401':
           description: UnAuthorized
-        "404":
+        '404':
           description: Post not found
       security:
         - authToken: []
-  /followers/{user_id}:
+  /api/followers/{user_id}:
     parameters:
       - name: user_id
         in: path
@@ -110,13 +110,13 @@ paths:
       summary: Follow user
       operationId: Follow
       responses:
-        "200":
+        '200':
           description: Successful operation
-        "400":
-          description: Invalid Params
-        "401":
+        '304':
+          description: Already following
+        '401':
           description: UnAuthorized
-        "404":
+        '404':
           description: Post not found
       security:
         - authToken: []
@@ -126,14 +126,16 @@ paths:
       summary: Unfollow user
       operationId: Unfollow
       responses:
-        "200":
+        '200':
           description: Successful operation
-        "401":
+        '304':
+          description: Already not following
+        '401':
           description: UnAuthorized
-        "404":
+        '404':
           description: Post not found
       security:
-        - authToken: []  
+        - authToken: []
 components:
   schemas:
     PostRequest:
@@ -149,10 +151,12 @@ components:
           type: string
         hidden:
           type: boolean
-        img:
+        filename:
           type: string
           format: base64
-
+        coverImage:
+          type: string
+          format: base64
     Post:
       allOf:
         - $ref: '#/components/schemas/PostRequest'
@@ -167,32 +171,24 @@ components:
             updated_at:
               type: string
               format: date-time
-
+            creator_id:
+              type: integer
+              format: int64
+            img_url:
+              type: string
   requestBodies:
     UpdatePostBody:
       description: Post object that needs to be updated
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/PostRequest"
+            $ref: '#/components/schemas/PostRequest'
     CreatePostBody:
       description: Post object that needs to be added
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/PostRequest"
-    UpdateListBody:
-      description: List object that needs to be updated
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/PostRequest"
-    CreateListBody:
-      description: List object that needs to be added
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/PostRequest"
+            $ref: '#/components/schemas/PostRequest'
   securitySchemes:
     authToken:
       description: Can be found by logging in

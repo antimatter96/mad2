@@ -13,3 +13,5 @@ static/static/*.js
 static/*.css
 static/static/*.css
 static/index.html
+
+celerybeat-schedule
