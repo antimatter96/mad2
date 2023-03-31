@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: Kanban 1.0
-  description: KanBan API
+  title: microBlog 1.0
+  description: microBlog API
   version: 1.0.11
 servers:
   - url: http://localhost:8080
@@ -47,14 +47,10 @@ paths:
       summary: Update a post
       operationId: UpdatePost
       requestBody:
-        $ref: '#/components/requestBodies/CreatePostBody'
+        $ref: '#/components/requestBodies/UpdatePostBody'
       responses:
         '200':
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Post'
         '400':
           description: Invalid Params
         '401':
@@ -84,7 +80,7 @@ paths:
     delete:
       tags:
         - post
-      summary: Delere Post
+      summary: Delete Post
       operationId: DeletePost
       responses:
         '200':
@@ -151,6 +147,7 @@ components:
           type: string
         hidden:
           type: boolean
+          default: false
         filename:
           type: string
           format: base64
@@ -176,13 +173,21 @@ components:
               format: int64
             img_url:
               type: string
+            hidden:
+              type: boolean
   requestBodies:
     UpdatePostBody:
       description: Post object that needs to be updated
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/PostRequest'
+            allOf:
+              - $ref: '#/components/schemas/PostRequest'
+              - type: object
+                properties:
+                  deleteImage:
+                    type: boolean
+                    default: false
     CreatePostBody:
       description: Post object that needs to be added
       content:

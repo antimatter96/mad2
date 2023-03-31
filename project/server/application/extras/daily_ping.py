@@ -1,13 +1,9 @@
-import pdfkit
-from jinja2 import Template
 import datetime
-from sqlalchemy import text
 from sqlalchemy.orm import joinedload
 
 from application.database.index import db
 from application.database.models.user import User, UserLastSeen
 from application.database.models.post import Post
-from application.database.models.export_job import ExportJob
 
 def users_to_ping():
   current_time = datetime.datetime.utcnow()

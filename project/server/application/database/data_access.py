@@ -26,6 +26,7 @@ def _self_view(user_id):
     .first()
   return user.private_view(with_posts=True)
 
+@cache.memoize(timeout=120)
 def _feed(user_id, from_int, limit_int):
   user = db.session.query(User)\
     .where(User.user_id == user_id)\

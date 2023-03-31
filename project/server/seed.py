@@ -11,7 +11,7 @@ new_users = []
 
 for i in range(0, 20):
   email = fake.ascii_company_email()
-  user_datastore.create_user(email=email, password=hash_password('password' + str(i)))
+  user_datastore.create_user(email=email, password=hash_password('password'))
 
 db.session.commit()
 

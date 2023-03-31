@@ -11,7 +11,7 @@ from application.database.index import db
 import application.background_workers.tasks as tasks
 
 @app.route("/api/post/export/", methods=['POST'])
-@auth_required('token', 'session')
+@auth_required('token')
 def export_csv():
   job = tasks.export_csv.apply_async((current_user.user_id, ), countdown=5)
 
@@ -27,7 +27,7 @@ def export_csv():
   return jsonify(export_job.public_view())
 
 @app.route("/api/post/export/jobs", methods=['GET'])
-@auth_required('token', 'session')
+@auth_required('token')
 def list_jobs():
   export_jobs = ExportJob.query\
     .filter(ExportJob.creator_id == current_user.user_id)\
@@ -42,7 +42,7 @@ def list_jobs():
   return jsonify({ 'count': len(res), 'jobs': res})
 
 @app.route("/api/post/export/<job_id>", methods=['GET'])
-@auth_required('token', 'session')
+@auth_required('token')
 def download_and_delete_export_csv(job_id):
   export_job = ExportJob.query\
     .filter(ExportJob.creator_id == current_user.user_id)\

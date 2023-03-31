@@ -3,17 +3,17 @@
 ### Core Functionality
 
 
-- [🔘] Base requirements
+- [✅] Base requirements
   - [✅] User signup and login
-  - [🔘] User profile view with basic stats
-  - [🔘] Blog Post Management
-  - [🔘] Search and Follow / Unfollow Others
-  - [🔘] User’s Feed
+  - [✅] User profile view with basic stats
+  - [✅] Blog Post Management
+  - [✅] Search and Follow / Unfollow Others
+  - [✅] User’s Feed
 
-- [🔘] Backend Jobs
+- [✅] Backend Jobs
   - [✅]  Export Jobs
-  - [🔘]  Reporting Jobs
-  - [🔘]  Alert Jobs
+  - [✅]  Reporting Jobs
+  - [✅]  Alert Jobs
 
 - [🔘] Backend Performance
 
@@ -29,41 +29,41 @@
 ### Core - User's Profile
 
 
-- [🔘] Basic profile view for a user
+- [✅] Basic profile view for a user
 - [✅] Ability to view the number of blogs created
-- [🔘] Ability to view the number of followers and people you follow
+- [✅] Ability to view the number of followers and people you follow
 - [✅] Ability to view the list of posts created
 
 
 ### Core - Blog management
 
 
-- [🔘] Create a new blog
-  - [🔘]  Storage should handle multiple languages - usually UTF-8 encoding is sufficient for this
-  - [🔘]  Content should handle the safe HTML tags
+- [✅] Create a new blog
+  - [✅]  Storage should handle multiple languages - usually UTF-8 encoding is sufficient for this
+  - [✅]  Content should handle the safe HTML tags
 
-- [🔘] Edit a blog
-  - [🔘]  Change title/caption or image
+- [✅] Edit a blog
+  - [✅]  Change title/caption or image
 
-- [🔘] Remove a blog**
-  - [🔘]  With a confirmation from the user
+- [✅] Remove a blog**
+  - [✅]  With a confirmation from the user
 
-- [🔘] Export option is required
+- [✅] Export option is required
 
 
 ### Core - Search and Follow / Unfollow Others
 
 
 - [✅] Ability to search other users
-- [🔘] Ability to follow others
-- [🔘] Ability to unfollow others
+- [✅] Ability to follow others
+- [✅] Ability to unfollow others
 
 
 ### User’s Feed
 
 
-- [🔘] Show the blogs/posts created by other users
-- [🔘] Navigate to the user’s profile on clicking the username on the blog or post
+- [✅] Show the blogs/posts created by other users
+- [✅] Navigate to the user’s profile on clicking the username on the blog or post
 
 
 ### Core - Daily Reminder Jobs
@@ -109,7 +109,7 @@
 - [🔘] Backend Jobs
   - [🔘]  Import Jobs
 
-- [🔘] Well designed PDF reports (User can choose between HTML and PDF reports)
+- [✅] Well designed PDF reports (User can choose between HTML and PDF reports)
 
 - [🔘] Single Responsive UI for both Mobile and Desktop
   - [🔘]  Unified UI that works across devices

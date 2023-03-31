@@ -1,8 +1,7 @@
 import os
 
-from flask import render_template, send_from_directory, redirect, url_for
+from flask import render_template, send_from_directory
 from flask_sse import sse
-from flask_security import current_user, auth_required
 
 from app import app as app
 
@@ -17,7 +16,7 @@ def not_authorized(e):
 from application.controllers.feed import *
 from application.controllers.export import *
 from application.controllers.user_graph import *
-from application.background_workers.tasks import send_monthly_report
+from application.background_workers.tasks import send_monthly_report, send_daily_ping
 
 @app.route('/')
 @cache.cached(timeout=5000)
@@ -51,7 +50,12 @@ def add_header(response):
   response.headers['Access-Control-Allow-Credentials'] = 'true'
   return response
 
-@app.route('/extra')
-def extra_stuff():
+@app.route('/extra_monthly')
+def extra_monthly():
   send_monthly_report.delay()
+  return ""
+
+@app.route('/extra_daily')
+def extra_daily():
+  send_daily_ping.delay()
   return ""

@@ -1,6 +1,8 @@
 from datetime import datetime
 from sqlalchemy.orm import relationship
 
+from cache import cache
+
 from application.database.index import db
 
 class ExportJob(db.Model):
@@ -24,6 +26,7 @@ class ExportJob(db.Model):
     time_passed = datetime.now() - self.created_at
     return time_passed.seconds > 60 * 60    # 1 hour
 
+  @cache.memoize(timeout=60)
   def public_view(self):
     return {
         'job_id': getattr(self, 'job_id'),
