@@ -1,14 +1,14 @@
 <script setup>
 import { mapActions, mapState } from 'pinia'
 
-import { userAuthStore } from '../stores/userAuth'
-import { postStore } from '../stores/posts'
-import { graphStore } from '../stores/graph'
+import { userAuthStore } from '../../stores/userAuth'
+import { postStore } from '../../stores/posts'
+import { graphStore } from '../../stores/graph'
 
-import LoadingIcon from '../components/icons/Loading.vue'
-import UserTab from '../components/UserTab.vue'
-import PostSummary from '../components/PostSummary.vue'
-import PostList from '../components/PostList.vue'
+import LoadingIcon from '../../components/icons/Loading.vue'
+import UserTab from '../../components/UserTab.vue'
+import PostSummary from '../../components/PostSummary.vue'
+import PostList from '../../components/PostList.vue'
 
 </script>
 
@@ -22,7 +22,6 @@ export default {
   },
   async beforeMount() {
     console.log(FILENAME, "BEFORE MOUNTED START")
-    this.loading = true;
 
     console.log("DONE async");
 
@@ -33,10 +32,7 @@ export default {
     }
     if (!this.loggedIn) {
       console.log("LOGIN PAGE")
-      this.loading = false;
       this.$router.push('/login');
-      this.loading = false;
-
       return
     }
     console.log("App.vue", "BEFORE MOUNTED END")
@@ -45,23 +41,18 @@ export default {
     this.postList = await this.getFeed(0);
 
     console.log(FILENAME, this.postList.posts);
-    this.loading = false;
   },
   async mounted() {
   },
   // 
   data() {
     return {
-      loading: true,
       postList: null,
     }
   },
   // 
   computed: {
     ...mapState(userAuthStore, ['loggedIn']),
-    hideNavBar() {
-      return this.loading
-    },
   },
   methods: {
     ...mapActions(graphStore, { getFeed: 'getFeed', follow: 'follow', unfollow: 'unfollow' }),

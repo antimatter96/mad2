@@ -76,8 +76,10 @@ export default {
       <template v-if="postList.length > 0">
         <table class="table">
           <tbody>
-            <tr v-for="(post) in postList" :key="post.post_id">
-              <td :class="{ 'bg-danger': (showIfHidden && post.hidden) }">
+            <tr v-for="(post) in postList" :key="post.post_id"
+              :class="{ 'border-danger border-2 border my-1': (showIfHidden && post.hidden) }">
+              <td>
+                <span class="text-danger fw-bold" v-if="showIfHidden && post.hidden">Hidden</span>
                 <PostSummary :postData="post" :showCreatorStats="showCreatorStats" :followersUpdate="followersUpdate" />
               </td>
             </tr>

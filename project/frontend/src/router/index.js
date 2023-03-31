@@ -6,55 +6,61 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/Feed.vue')
+      component: () => import('../views/graph/Feed.vue')
     },
     {
       path: '/posts/new',
       name: 'newPost',
-      component: () => import('../views/NewPost.vue')
+      component: () => import('../views/posts/NewPost.vue')
     },
     {
       path: '/posts/:post_id',
       name: 'post',
       props: true,
-      component: () => import('../views/Post.vue')
+      component: () => import('../views/posts/Post.vue')
+    },
+    {
+      path: '/posts/edit/:post_id',
+      name: 'postEdit',
+      props: true,
+      component: () => import('../views/posts/EditPost.vue')
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/Login.vue')
+      component: () => import('../views/accounts/Login.vue')
     },
     {
       path: '/signup',
       name: 'signup',
-      component: () => import('../views/Register.vue')
+      component: () => import('../views/accounts/Register.vue')
     },
     {
       path: '/profile/:username',
       name: 'user_profile_page',
       props: true,
-      component: () => import('../views/UserProfile.vue')
+      component: () => import('../views/graph/UserProfile.vue')
     },
     {
       path: '/profile/search',
       name: 'user_search_page',
       props: true,
-      component: () => import('../views/UserSearch.vue')
+      component: () => import('../views/graph/UserSearch.vue')
     },
     {
       path: '/profile/me/followers',
       name: 'user_followers',
-      component: () => import('../views/GraphList.vue')
+      component: () => import('../views/graph/GraphList.vue')
     },
     {
       path: '/profile/me/following',
       name: 'user_follows',
-      component: () => import('../views/GraphList.vue')
+      component: () => import('../views/graph/GraphList.vue')
     },
     {
       path: '/profile/me/export',
       name: 'export_dashboard',
-      component: () => import('../views/ExportDashboard.vue')
+      component: () => import('../views/extras/ExportDashboard.vue')
     },
   ]
 })

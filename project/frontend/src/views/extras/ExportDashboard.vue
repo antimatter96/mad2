@@ -1,13 +1,13 @@
 <script setup>
 import { mapActions, mapState } from 'pinia'
 
-import { userAuthStore } from '../stores/userAuth'
-import { graphStore } from '../stores/graph'
-import { postStore } from '../stores/posts'
+import { userAuthStore } from '../../stores/userAuth'
+import { graphStore } from '../../stores/graph'
+import { postStore } from '../../stores/posts'
 
-import { SSE_BASE_PATH, EXPORT_CSV_BASE_PATH } from '../config'
+import { SSE_BASE_PATH, EXPORT_CSV_BASE_PATH } from '../../config'
 
-import LoadingIcon from '../components/icons/Loading.vue'
+import LoadingIcon from '../../components/icons/Loading.vue'
 
 </script>
 

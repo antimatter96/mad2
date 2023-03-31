@@ -1,10 +1,10 @@
 <script setup>
 import { mapActions, mapState } from 'pinia'
 
-import { userAuthStore } from '../stores/userAuth'
-import { postStore } from '../stores/posts'
+import { userAuthStore } from '../../stores/userAuth'
+import { postStore } from '../../stores/posts'
 
-import LoadingIcon from '../components/icons/Loading.vue'
+import LoadingIcon from '../../components/icons/Loading.vue'
 </script>
 
 <script>
@@ -134,11 +134,11 @@ export default {
           <label for="title" class="fw-bold">Post</label>
         </div>
         <div class="mb-4 row mx-0 custom-checkbox text-center">
-          <div class="col-md-3 d-flex flex-row justify-content-around align-items-center">
-            <label for="hidden" class="fw-bold mx-2">Hidden/Draft</label>
+          <div class="col-md-2 d-flex flex-row justify-content-around align-items-center">
             <input type="checkbox" class="form-check-input" id="hidden" v-model="hidden">
+            <label for="hidden" class="fw-bold mx-2">Hidden</label>
           </div>
-          <div class="col-md-9 d-flex flex-row justify-content-between align-items-center">
+          <div class="col-md-10 d-flex flex-row justify-content-between align-items-center">
             <label for="formFile" class="fw-light">Cover image:</label>
             <input type="file" class="form-control form-control-sm fw-light" style="width: 74%; display: inline-block;"
               id="formFile" accept="image/*" v-on:change="coverImageChange" required>

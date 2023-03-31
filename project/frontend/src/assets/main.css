@@ -131,3 +131,8 @@ header > h2 {
     width: 19.66666667%;
   }
 }
+
+.px-6 {
+  padding-right: 4rem !important;
+  padding-left: 4rem !important;
+}

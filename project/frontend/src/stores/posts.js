@@ -38,7 +38,7 @@ export const postStore = defineStore('post', {
 
           return r;
         } else {
-          return null;
+          return {};
         }
 
       } catch (error) {
@@ -67,6 +67,53 @@ export const postStore = defineStore('post', {
 
       } catch (error) {
         console.error(FILENAME, "createPost", error);
+        return null;
+      }
+    },
+
+    async editPost(post_id, body) {
+      try {
+        let response = await fetch(POST_API_BASE + '/' + post_id, {
+          method: 'PUT',
+          ...this._commonHeaders(),
+          body: JSON.stringify(body),
+        });
+
+        if (response.status == 200) {
+          let r = await response.json();
+
+          console.log(FILENAME, "editPost", r)
+
+          return r;
+        } else {
+          return null;
+        }
+
+      } catch (error) {
+        console.error(FILENAME, "editPost", error);
+        return null;
+      }
+    },
+
+    async deletePost(post_id) {
+      try {
+        let response = await fetch(POST_API_BASE + '/' + post_id, {
+          method: 'DELETE',
+          ...this._commonHeaders(),
+        });
+
+        if (response.status == 200) {
+          let r = await response.json();
+
+          console.log(FILENAME, "deletePost", r)
+
+          return r;
+        } else {
+          return null;
+        }
+
+      } catch (error) {
+        console.error(FILENAME, "deletePost", error);
         return null;
       }
     },

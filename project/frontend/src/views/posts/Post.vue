@@ -1,15 +1,16 @@
 <script setup>
 import { mapActions, mapState } from 'pinia'
+import { RouterLink } from 'vue-router'
 
 
-import { userAuthStore } from '../stores/userAuth'
-import { postStore } from '../stores/posts'
-import { graphStore } from '../stores/graph'
+import { userAuthStore } from '../../stores/userAuth'
+import { postStore } from '../../stores/posts'
+import { graphStore } from '../../stores/graph'
 
-import { UPLOADS_BASE_PATH } from '../config'
+import { UPLOADS_BASE_PATH } from '../../config'
 
-import LoadingIcon from '../components/icons/Loading.vue'
-import UserTab from '../components/UserTab.vue'
+import LoadingIcon from '../../components/icons/Loading.vue'
+import UserTab from '../../components/UserTab.vue'
 
 
 
@@ -44,13 +45,12 @@ export default {
     console.log("App.vue", "BEFORE MOUNTED END")
 
     this.loading = false;
-
-
-    this.mode = "edit"
   },
   async mounted() {
     this.loading = true;
     this.postData = await this.getPost(this.postId);
+
+    console.log("this.postData.hidden", this.postData.hidden == null || this.postData.hidden == false)
     this.loading = false;
   },
   // 
@@ -86,8 +86,8 @@ export default {
     },
 
     imageUrl() {
-      console.log(this.postData)
-      if (this.postData != null) {
+      console.log(this.postData.img_url)
+      if (this.postData.img_url != null) {
         return UPLOADS_BASE_PATH + '/' + this.postData.img_url;
       }
 
@@ -135,7 +135,7 @@ export default {
   <div v-if="postData == null" id="main-loading" class="h-100 w-100">
     <LoadingIcon element="h2" />
   </div>
-  <div v-else-if="Object.keys(postData).length > 0" class="col-md-12 px-5"
+  <div v-else-if="Object.keys(postData).length > 0" class="col-md-12 px-6"
     :style="{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),url(${imageUrl})` }">
     <div>
       <LoadingIcon :element="'h4'" element="h4" :style="{ 'opacity': (loading ? 100 : 0) }"
@@ -150,7 +150,20 @@ export default {
             @followAction="followersUpdate" class="fw-bold d-flex align-items-baseline" style="transform: scale(0.8)" />
         </template>
         <template v-else>
-          <h6 class="d-inline-block mb-0 fw-light text-end">Last updated at : {{ postData.updated_at }} <em>Edit</em></h6>
+          <h6 class="d-inline-block mb-0 fw-light text-end">Last updated at : {{ postData.updated_at }} <RouterLink
+              replace class="text-decoration-none fw-bold" :to="
+                {
+                  name: 'postEdit',
+                  params: { post_id: postId }
+                }"><em>Edit</em>
+            </RouterLink>
+          </h6>
+          <h6 class="d-inline-block mb-0 fw-bold text-success" v-if="postData.hidden == null || postData.hidden == false">
+            Visible
+          </h6>
+          <h6 class="d-inline-block mb-0 fw-bold text-danger" v-else>
+            Hidden
+          </h6>
           <h6 class="d-inline-block mb-0 fw-bold text-end">by you</h6>
         </template>
       </div>
@@ -170,11 +183,12 @@ export default {
 <style scoped>
 .subhead {
   font-family: serif;
+  font-size: 1.25rem;
 }
 
 .subhead::first-letter {
   initial-letter: 2 1;
   font-weight: bold;
-  margin-right: .75em;
+  margin-right: .5em;
 }
 </style>

@@ -4,7 +4,6 @@ import { ACCOUNTS_API_BASE } from '../config'
 
 const FILENAME = 'userAuth.js'
 
-
 export const userAuthStore = defineStore('userAuth', {
   state: () => {
     return {
@@ -35,6 +34,13 @@ export const userAuthStore = defineStore('userAuth', {
     setUserInfo(info) {
       this._userInfo = info;
       window.localStorage.setItem("user_info", JSON.stringify(this._userInfo));
+    },
+
+    logout() {
+      window.localStorage.setItem("user_info", null);
+      window.localStorage.setItem("auth_token", null);
+      this._loginToken = null;
+      this._userInfo = null;
     },
 
     async checkUserState(login, password) {

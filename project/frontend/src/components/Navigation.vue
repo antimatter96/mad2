@@ -1,5 +1,8 @@
 <script setup>
 import { RouterLink } from 'vue-router';
+import { mapActions, mapState } from 'pinia'
+
+import { userAuthStore } from '../stores/userAuth'
 
 import Loading from './icons/Loading.vue';
 </script>
@@ -10,6 +13,20 @@ export default {
   async mounted() {
     console.log(this.loggedIn)
   },
+  methods: {
+    ...mapActions(userAuthStore, { logout: 'logout' }),
+
+    async _logout() {
+      console.log("parent", "_logout");
+      let logoutUser = confirm("Do you want to logout ?");
+      if (logoutUser) {
+        this.logout();
+        this.$router.push({
+          name: 'login'
+        });
+      }
+    }
+  }
 }
 </script>
 
@@ -19,7 +36,7 @@ export default {
       <div class="container-fluid px-0">
 
         <RouterLink to="/" class="navbar-brand py-0">
-          <h1 class="mb-0">microBlog</h1>
+          <h1 class="mb-0 text-warning">microBlog</h1>
         </RouterLink>
 
         <div class="collapse navbar-collapse" id="navbarColor03">
@@ -28,11 +45,8 @@ export default {
               <Loading element="h4" />
             </div>
             <template v-else-if="loggedIn">
-              <li class="nav-item">
+              <li class="nav-item fw-bolder">
                 <RouterLink replace to="/" class="nav-link">Home</RouterLink>
-              </li>
-              <li class="nav-item">
-                <RouterLink replace to="/profile/me" class="nav-link">My Profile</RouterLink>
               </li>
               <li class="nav-item nav-item-btn">
                 <RouterLink :to="{ name: 'newPost' }" class="btn btn-primary">
@@ -45,7 +59,10 @@ export default {
                   </svg> New Post
                 </RouterLink>
               </li>
-              <li class="nav-item">
+              <li class="nav-item fw-bolder">
+                <RouterLink replace to="/profile/me" class="nav-link">My Profile</RouterLink>
+              </li>
+              <li class="nav-item fw-bolder">
                 <RouterLink :to="{ name: 'user_search_page' }" class="nav-link">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
                     viewBox="0 0 16 16">
@@ -55,7 +72,7 @@ export default {
                 </RouterLink>
               </li>
               <li class="nav-item nav-item-btn">
-                <RouterLink to="/logout" class="btn btn-danger">Logout</RouterLink>
+                <a class="btn btn-danger" v-on:click="_logout">Logout</a>
               </li>
             </template>
             <template v-else>
