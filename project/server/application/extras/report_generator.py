@@ -14,4 +14,3 @@ def create_pdf_report(content, out_file_location):
     raise e
   print("create_pdf_report error end")
   return True
-

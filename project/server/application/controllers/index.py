@@ -19,16 +19,15 @@ from application.controllers.export import *
 from application.controllers.user_graph import *
 from application.background_workers.tasks import send_monthly_report
 
-
 @app.route('/')
+@cache.cached(timeout=5000)
 def index():
   return send_from_directory(os.path.join(app.root_path, 'static'), 'index.html')
 
-
 @app.route('/favicon.ico')
+@cache.cached(timeout=5000)
 def favicon():
   return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico')
-
 
 # @sse.before_request
 # @auth_required('token', 'session')

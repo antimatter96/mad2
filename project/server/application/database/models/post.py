@@ -28,6 +28,7 @@ class Post(db.Model):
         'created_at': getattr(self, 'created_at'),
         'updated_at': getattr(self, 'updated_at'),
         'img_url': getattr(self, 'img_url'),
+        'hidden': getattr(self, 'hidden'),
     }
 
   def private_as_dict(self, current_user):

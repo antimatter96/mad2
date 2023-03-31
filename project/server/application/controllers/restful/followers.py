@@ -73,5 +73,4 @@ def _clear_graph_cache(user_id_1, user_id_2):
   cache.delete_memoized(_private_view_with_following, user_id_2)
   cache.delete_memoized(_self_view, user_id_1)
   cache.delete_memoized(_self_view, user_id_2)
-  # cache.delete_memoized(_feed, user_id_1, 0, 40)
-
+  cache.delete_memoized(_feed, user_id_1, 0, 40)

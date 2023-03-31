@@ -22,7 +22,7 @@ class ExportJob(db.Model):
 
   def deadline_passed(self):
     time_passed = datetime.now() - self.created_at
-    return time_passed.seconds > 60 * 60 # 1 hour
+    return time_passed.seconds > 60 * 60    # 1 hour
 
   def public_view(self):
     return {
@@ -30,7 +30,7 @@ class ExportJob(db.Model):
         'created_at': getattr(self, 'created_at'),
         'done': getattr(self, 'done', False),
         'error': getattr(self, 'error', False),
-        'expired' : self.deadline_passed(),
+        'expired': self.deadline_passed(),
         'deleted': getattr(self, 'deleted', False),
-        **({ 'file_path': getattr(self, 'file_path'), } if not self.deadline_passed() else {}),
+        **({ 'file_path': getattr(self, 'file_path')} if not self.deadline_passed() else {}),
     }

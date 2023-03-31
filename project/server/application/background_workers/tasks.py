@@ -6,7 +6,6 @@ from flask import current_app as app
 from flask_sse import sse
 from werkzeug.utils import secure_filename
 from celery.schedules import crontab
-
 from jinja2 import Template
 
 from application.background_workers.index import celery
@@ -16,7 +15,6 @@ from application.database.models.export_job import ExportJob
 from application.extras.report_generator import create_pdf_report
 from application.extras.daily_ping import users_to_ping as _users_to_ping
 from application.extras.monthly_data import _monthly_data
-
 from application.extras.emails import send_email
 
 EXPORT_CSV_KEYS = ['post_id', 'created_at', 'title', 'content', 'updated_at', 'hidden']
@@ -164,4 +162,16 @@ def send_daily_ping():
     raise e
 
   print("send_daily_ping", "end")
+  return True
+
+@celery.task()
+def delete_cover_image(full_file_path):
+
+  try:
+    if os.path.exists(full_file_path):
+      os.remove(full_file_path)
+  except Exception as e:
+    print(e)
+    raise e
+
   return True
