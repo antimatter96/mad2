@@ -1,14 +1,13 @@
 <script setup>
 import { mapActions, mapState } from 'pinia'
 
+import { SSE_BASE_PATH, EXPORT_CSV_BASE_PATH } from '../../config'
+
 import { userAuthStore } from '../../stores/userAuth'
 import { graphStore } from '../../stores/graph'
 import { postStore } from '../../stores/posts'
 
-import { SSE_BASE_PATH, EXPORT_CSV_BASE_PATH } from '../../config'
-
 import LoadingIcon from '../../components/icons/Loading.vue'
-
 </script>
 
 <script>
@@ -16,27 +15,23 @@ const FILENAME = "ExportDashboard"
 
 export default {
   async beforeMount() {
-    console.log(FILENAME, "BEFORE MOUNTED START")
     this.loading = true;
+    console.log(FILENAME, "beforeMount", "start")
 
-    if (!this.loggedIn) {
-      await this.checkUserState()
-    }
-    if (!this.loggedIn) {
-      console.log(FILENAME, "redirect to LOGIN PAGE")
-      this.loading = false;
-      this.$router.push('/login');
-      this.loading = false;
-    }
+    await this.checkUserState(this);
 
     this.jobs = await this.listExportJobs();
-    console.log(this.jobs)
-    this.loading = false;
+    console.log(FILENAME, "jobs", this.jobs);
 
-    console.log(FILENAME, "BEFORE MOUNTED END")
+    console.log(FILENAME, "beforeMount", "end")
+    this.loading = false;
   },
+
   async mounted() {
-    console.log(FILENAME, "MOUNTED START", this.userInfo)
+    this.loading = true;
+    console.log(FILENAME, "mounted", "start");
+
+    console.log(FILENAME, "mounted", this.userInfo);
 
     const channelId = `?channel=users.${this.userInfo['user_id']}`
     const source = new EventSource(SSE_BASE_PATH + channelId, { withCredentials: true });
@@ -44,7 +39,8 @@ export default {
     source.addEventListener('error', this.sseError);
     source.addEventListener('open', this.sseOpen);
 
-    console.log(FILENAME, "MOUNTED END")
+    console.log(FILENAME, "mounted", "end");
+    this.loading = false;
   },
 
   data() {
@@ -55,59 +51,66 @@ export default {
   },
 
   computed: {
-    ...mapState(userAuthStore, ['loggedIn', 'userInfo']),
-
+    ...mapState(userAuthStore, ['userInfo']),
   },
+
   methods: {
     ...mapActions(graphStore, { getList: 'getList', searchByPrefix: 'searchByPrefix' }),
     ...mapActions(postStore, { exportCSV: 'exportCSV', listExportJobs: 'listExportJobs' }),
-    ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
+    ...mapActions(userAuthStore, { checkUserState: 'checkUserState' }),
 
     async _export() {
       this.loading = true;
-      console.log("export", "called")
+      console.log(FILENAME, "_export", "start");
+
       let response = await this.exportCSV();
       if (response != null) {
         this.jobs.count++;
         this.jobs.jobs.unshift(response);
       }
+
+      console.log(FILENAME, "_export", "end");
       this.loading = false;
     },
 
-    async sseError(event, xxx) {
-      console.log(event, xxx);
-      console.error(event);
-      console.log("Failed to connect to event stream. Is Redis running?");
+    async sseError(err) {
+      console.log(FILENAME, "sseError", err);
+      console.error(err);
     },
     async sseOpen(event) {
-      console.log("open", event);
+      console.log(FILENAME, "sseOpen", event);
     },
     async sseMessage(event) {
-      console.log('event_received', event)
+      this.loading = true;
+      console.log(FILENAME, "sseMessage", "start");
+      console.log(FILENAME, "sseMessage", event);
+
       let data = JSON.parse(event.data);
-      console.log(data);
+      console.log(FILENAME, "sseMessage", data);
       if (data.message === 'done') {
         this.updateJobStatus(data.job_id);
       }
+
+      console.log(FILENAME, "sseMessage", "end");
+      this.loading = false;
     },
 
     updateJobStatus(job_id) {
-      this.loading = true;
+      console.log(FILENAME, "updateJobStatus", "start");
+      console.log("FILENAME", "updateJobStatus", job_id);
 
-      console.log("updateJobStatus", job_id);
-      if (this.jobs != null) {
-        if (this.jobs.jobs != null) {
-          let target = 0;
+      if (this.jobs == null || this.jobs.jobs == null) {
+        return
+      }
 
-          for (let i = 0; i < this.jobs.jobs.length; i++) {
-            if (this.jobs.jobs[i].job_id == job_id) {
-              this.jobs.jobs[i].done = true;
-            }
-          }
+      for (let i = 0; i < this.jobs.jobs.length; i++) {
+        if (this.jobs.jobs[i].job_id == job_id) {
+          this.jobs.jobs[i].done = true;
+          break;
         }
       }
-      this.loading = false;
 
+      console.log(FILENAME, "updateJobStatus", "end");
     },
 
     jobStatus(job) {
@@ -121,8 +124,6 @@ export default {
     }
   }
 }
-
-
 </script>
 
 <template>
@@ -132,6 +133,9 @@ export default {
   <div v-else class="px-3">
     <div class="col-md-10 offset-md-1 border-bottom border-2">
       <h5> Export all your posts <em>[Valid for 1 hour only]</em></h5>
+      <div>
+        <LoadingIcon :element="'h4'" element="h4" :style="{ 'opacity': (loading ? 100 : 0) }"></LoadingIcon>
+      </div>
       <div class="text-center mb-3">
         <button class="btn btn-primary fw-bold" type="button" v-on:click="_export">Export</button>
       </div>
@@ -156,8 +160,7 @@ export default {
               <td>
                 <span v-if="job.expired" class="fw-bold text-danger">Expired</span>
                 <span v-else-if="job.deleted">Deleted</span>
-                <span v-else-if="job.done"><a
-                    :href="EXPORT_CSV_BASE_PATH + '/' + job.job_id">Download</a></span>
+                <span v-else-if="job.done"><a :href="EXPORT_CSV_BASE_PATH + '/' + job.job_id">Download</a></span>
                 <span v-else-if="jobStatus(job) == 'Pending'">❌</span>
                 <span v-else-if="jobStatus(job) == 'Error'">❌</span>
                 <span v-else>??❌??</span>

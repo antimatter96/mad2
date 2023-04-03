@@ -8,20 +8,16 @@ import LoadingIcon from '../../components/icons/Loading.vue'
 
 </script>
 
-
 <script>
+const FILENAME = "Register";
 
 export default {
   async beforeMount() {
-    console.log("Register.vue", "BEFORECREATE START")
     this.loading = true;
-
-    if (!this.loggedIn) {
-      await this.checkUserState();
-    }
+    console.log(FILENAME, "beforeMount", "start")
 
     if (this.loggedIn) {
-      console.log("LOGIN PAGE")
+      console.log(FILENAME, "Already logged in")
       this.loading = false;
       this.$router.push('/');
       this.loading = false;
@@ -29,10 +25,10 @@ export default {
       return;
     }
 
+    console.log(FILENAME, "beforeMount", "end")
     this.loading = false;
-    console.log("Register.vue", "CREATE END")
-
   },
+
   data() {
     return {
       display_error: null,
@@ -43,25 +39,22 @@ export default {
     }
   },
 
-  // COMPUTED
   computed: {
     ...mapState(userAuthStore, ['loggedIn'])
-
   },
 
-
-  // METHODS
   methods: {
     ...mapActions(userAuthStore, { userAuthStoreRegister: 'signup', checkUserState: 'checkUserState' }),
 
     async signup(e) {
       e.preventDefault();
       this.loading = true;
-      console.log(e);
+      console.log(FILENAME, "signup", "start")
 
       this.display_error = null;
 
       let result = await this.userAuthStoreRegister(this.email, this.password)
+      console.log(FILENAME, "signup", "result", result);
 
       if (result.done) {
         this.$router.push('/login');
@@ -73,8 +66,8 @@ export default {
         }
       }
 
+      console.log(FILENAME, "signup", "end")
       this.loading = false;
-
     }
   }
 }
@@ -85,7 +78,9 @@ export default {
     <form action="" method="POST" v-on:submit="signup">
       <div>
         <br>
-        <div><LoadingIcon :element="'h4'" element="h4" :style="{'opacity': (loading? 100: 0)}"></LoadingIcon></div>
+        <div>
+          <LoadingIcon :element="'h4'" element="h4" :style="{ 'opacity': (loading ? 100 : 0) }"></LoadingIcon>
+        </div>
       </div>
       <div class="form-floating mb-2">
         <input type="text" name="name" class="form-control" required v-model="name">
@@ -102,20 +97,15 @@ export default {
       <div>
         <input type="submit" value="Signup" class="btn btn-primary btn-lg w-100">
       </div>
-
       <div class="mt-2 text-danger" v-if="display_error != null">
         <span class="fw-bold">Error : {{ display_error }}</span>
       </div>
-
     </form>
-
     <div class="mt-2 text-center">
-      <RouterLink to="/login" replace class="fw-bold">Sign In</RouterLink>
+      <RouterLink to="/login" class="fw-bold">Sign In</RouterLink>
     </div>
   </div>
-
-  <div class="col-md-4 py-2"></div>
 </template>
 
-<style>
+<style scoped>
 </style>

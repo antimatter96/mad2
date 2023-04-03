@@ -7,7 +7,7 @@ defineProps({
   },
   text: {
     type: String,
-    required: true,
+    required: false,
     value: "loading",
   },
 })
@@ -18,7 +18,6 @@ defineProps({
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
-
     <div class="loader mx-1">
       <h1 data-text="Loading..." v-if="element == 'h1'" class="loader_heading">Loading...</h1>
       <h2 data-text="Loading..." v-if="element == 'h2'" class="loader_heading">Loading...</h2>

@@ -17,38 +17,25 @@ import UserTab from '../../components/UserTab.vue'
 </script>
 
 <script>
+const FILENAME = "Post";
+
 export default {
   async beforeMount() {
-    console.log("App.vue", "BEFORE MOUNTED START")
     this.loading = true;
+    console.log(FILENAME, "beforeMount", "start")
 
-    console.log("DONE async");
-
-    console.log(this.$route);
+    await this.checkUserState(this);
 
     this.postId = this.$route.params.post_id;
 
-    if (!this.loggedIn) {
-      await this.checkUserState()
-    }
-    if (!this.loggedIn) {
-      console.log("LOGIN PAGE")
-      this.loading = false;
-      this.$router.push('/login');
-      this.loading = false;
-    }
-    console.log("App.vue", "BEFORE MOUNTED END")
-
-    this.loading = false;
-  },
-  async mounted() {
-    this.loading = true;
     this.postData = await this.getPost(this.postId);
 
     console.log("this.postData.hidden", this.postData.hidden == null || this.postData.hidden == false)
+
+    console.log(FILENAME, "mounted", "end")
     this.loading = false;
   },
-  // 
+
   data() {
     return {
       loading: true,
@@ -56,9 +43,8 @@ export default {
       postId: '',
     }
   },
-  //
+
   computed: {
-    ...mapState(userAuthStore, ['loggedIn']),
     splitText() {
       let split = this.postData.content.split('\n');
       let newSplit = [];
@@ -85,28 +71,24 @@ export default {
       return ''
     }
   },
+
   methods: {
     ...mapActions(postStore, { getPost: 'getPost' }),
     ...mapActions(graphStore, { follow: 'follow', unfollow: 'unfollow' }),
-    ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
+    ...mapActions(userAuthStore, { checkUserState: 'checkUserState' }),
 
     async followersUpdate(operation, user_id) {
       this.loading = true;
+      console.log(FILENAME, "followersUpdate", "start");
+      console.log(FILENAME, "followersUpdate", { operation, user_id });
 
-      console.log("parent", operation, user_id, "followersUpdate");
+      let action = operation == '+' ? this.follow : this.unfollow;
 
-      let res = null;
-      if (operation == '+') {
-        res = await this.follow(user_id);
-      } else {
-        res = await this.unfollow(user_id);
-      }
-
+      let res = await action(user_id);
       if (res == null) {
         this.loading = false;
         return;
       }
-
 
       if (operation == '+') {
         this.postData.creator.user_follows = true;
@@ -114,9 +96,8 @@ export default {
         this.postData.creator.user_follows = false;
       }
 
-
+      console.log(FILENAME, "followersUpdate", "start");
       this.loading = false;
-      console.log(res);
     },
   }
 }
@@ -142,7 +123,7 @@ export default {
         </template>
         <template v-else>
           <h6 class="d-inline-block mb-0 fw-light text-end">Last updated at : {{ postData.updated_at }} <RouterLink
-              replace class="text-decoration-none fw-bold" :to="
+              class="text-decoration-none fw-bold" :to="
                 {
                   name: 'postEdit',
                   params: { post_id: postId }

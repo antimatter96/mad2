@@ -9,16 +9,11 @@ const FILENAME = "stores/posts";
 export const postStore = defineStore('post', {
   state: () => {
     return {
-      _loginToken: window.localStorage.getItem("auth_token"),
       _authStore: userAuthStore()
     }
   },
 
   getters: {
-    loggedIn(state) {
-      console.log(FILENAME, state._loginToken, state._loginToken != null)
-      return state._loginToken != null;
-    },
     authToken(state) {
       return state._authStore.authToken
     },

@@ -9,22 +9,17 @@ const FILENAME = "stores/graph"
 export const graphStore = defineStore('graph', {
   state: () => {
     return {
-      _loginToken: window.localStorage.getItem("auth_token"),
       _authStore: userAuthStore()
     }
   },
 
   getters: {
-    loggedIn(state) {
-      return state._loginToken != null;
-    },
     authToken(state) {
       return state._authStore.authToken
     },
   },
 
   actions: {
-
     async follow(user_id) {
       try {
         let response = await fetch(FOLLOWERS_API_BASE + '/' + user_id, {

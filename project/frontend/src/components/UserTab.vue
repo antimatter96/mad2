@@ -7,7 +7,6 @@ import { graphStore } from '../stores/graph'
 import LoadingIcon from './icons/Loading.vue'
 import FollowIndicator from './icons/FollowIndicator.vue'
 import FollowAction from './icons/FollowAction.vue'
-
 </script>
 
 <script>
@@ -17,8 +16,9 @@ export default {
   async mounted() {
     console.log(FILENAME, "mounted", "user_id", this.userData.user_id);
   },
+
   props: ['user', 'userData', 'showFollowers', 'showFollowing', 'showSummary'],
-  computed: {},
+
   methods: {
     ...mapActions(graphStore, { follow: 'follow', unfollow: 'unfollow' }),
 
@@ -40,7 +40,7 @@ export default {
   </div>
   <div v-else>
     <h5 v-if="showSummary == true" class="mb-0 d-inline-block">
-      <RouterLink replace class="text-decoration-none" :to="
+      <RouterLink class="text-decoration-none" :to="
         {
           name: 'user_profile_page',
           params: { username: userData.user_id }

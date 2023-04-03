@@ -10,29 +10,19 @@ import { getBase64 } from '../../lib/fileUpload'
 </script>
 
 <script>
+const FILENAME = "NewPost";
+
 export default {
   async beforeMount() {
-    console.log("App.vue", "BEFORE MOUNTED START")
+    console.log(FILENAME, "BEFORE MOUNTED START")
     this.loading = true;
 
-    console.log("DONE async");
+    await this.checkUserState(this);
 
-    if (!this.loggedIn) {
-      await this.checkUserState()
-    }
-    if (!this.loggedIn) {
-      console.log("LOGIN PAGE")
-      this.loading = false;
-      this.$router.push('/login');
-      this.loading = false;
-    }
-    console.log("App.vue", "BEFORE MOUNTED END");
-
+    console.log(FILENAME, "BEFORE MOUNTED END");
     this.loading = false;
   },
-  async mounted() {
-  },
-  // 
+
   data() {
     return {
       loading: true,
@@ -43,13 +33,10 @@ export default {
       display_error: null,
     }
   },
-  // 
-  computed: {
-    ...mapState(userAuthStore, ['loggedIn']),
-  },
+
   methods: {
     ...mapActions(postStore, { createPost: 'createPost' }),
-    ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
+    ...mapActions(userAuthStore, { checkUserState: 'checkUserState' }),
 
     coverImageChange(fileInput) {
       this.display_error = null;
@@ -68,14 +55,12 @@ export default {
     async handleSubmit(e) {
       e.preventDefault();
       console.log(e);
-
       this.loading = true;
+      console.log(FILENAME, "handleSubmit", "start");
 
       this.display_error = null;
 
       let file = await getBase64(this.coverImage);
-
-      console.log(file)
 
       let result = await this.createPost({
         title: this.title,
@@ -87,8 +72,6 @@ export default {
 
       console.log(result);
 
-      this.loading = false;
-
       if (result != null) {
         this.$router.push({
           name: 'post',
@@ -97,6 +80,9 @@ export default {
       } else {
         this.display_error = "Something went wrong. Please try again later";
       }
+
+      console.log(FILENAME, "handleSubmit", "end");
+      this.loading = false;
     }
   }
 }

@@ -2,14 +2,10 @@
 import { mapActions, mapState } from 'pinia'
 
 import { userAuthStore } from '../../stores/userAuth'
-import { postStore } from '../../stores/posts'
 import { graphStore } from '../../stores/graph'
 
 import LoadingIcon from '../../components/icons/Loading.vue'
-import UserTab from '../../components/UserTab.vue'
-import PostSummary from '../../components/PostSummary.vue'
 import PostList from '../../components/PostList.vue'
-
 </script>
 
 <script>
@@ -19,15 +15,7 @@ export default {
   async beforeMount() {
     console.log(FILENAME, "beforeMount", "start")
 
-    if (!this.loggedIn) {
-      await this.checkUserState()
-    }
-    if (!this.loggedIn) {
-      console.log("LOGIN PAGE")
-      this.$router.push('/login');
-      return
-    }
-    console.log("App.vue", "BEFORE MOUNTED END")
+    await this.checkUserState(this);
 
     this.postList = await this.getFeed(0);
 
@@ -35,14 +23,13 @@ export default {
 
     console.log(FILENAME, "beforeMount", "end")
   },
+
   data() {
     return {
       postList: null,
     }
   },
-  computed: {
-    ...mapState(userAuthStore, ['loggedIn']),
-  },
+
   methods: {
     ...mapActions(graphStore, { getFeed: 'getFeed' }),
     ...mapActions(userAuthStore, { checkUserState: 'checkUserState' }),

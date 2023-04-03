@@ -10,37 +10,21 @@ import { getBase64 } from '../../lib/fileUpload'
 </script>
 
 <script>
-const FILENAME = "EditPost"
+const FILENAME = "EditPost";
 
 export default {
   async beforeMount() {
-    console.log(FILENAME, "BEFORE MOUNTED START")
     this.loading = true;
+    console.log(FILENAME, "beforeMount", "start");
 
-    console.log("DONE async");
+    await this.checkUserState(this);
 
-    if (!this.loggedIn) {
-      await this.checkUserState()
-    }
-    if (!this.loggedIn) {
-      console.log("LOGIN PAGE")
-      this.loading = false;
-      this.$router.push('/login');
-      this.loading = false;
-    }
-
-    console.log(this.$route);
+    console.log(FILENAME, "beforeMount", "this.$route", this.$route);
     this.postId = this.$route.params.post_id;
-
-    console.log(this.postData);
-    this.loading = false;
-    console.log(FILENAME, "BEFORE MOUNTED END");
-  },
-  async mounted() {
-    this.loading = true;
+    console.log(FILENAME, "beforeMount", "this.postId", this.postId);
 
     let tempPostData = await this.getPost(this.postId);
-    console.log(tempPostData, "tempPostData")
+    console.log(FILENAME, "beforeMount", "tempPostData", tempPostData);
 
     if (Object.keys(tempPostData).length > 0 && tempPostData.creator.user_id != this.userInfo['user_id']) {
       this.postData = {};
@@ -48,8 +32,10 @@ export default {
       this.postData = tempPostData;
     }
 
+    console.log(FILENAME, "beforeMount", "end");
     this.loading = false;
   },
+
   data() {
     return {
       loading: true,
@@ -59,13 +45,14 @@ export default {
       deleteImage: false,
     }
   },
-  // 
+
   computed: {
-    ...mapState(userAuthStore, ['loggedIn', 'userInfo']),
+    ...mapState(userAuthStore, ['userInfo']),
   },
+
   methods: {
     ...mapActions(postStore, { editPost: 'editPost', getPost: 'getPost', deletePost: 'deletePost' }),
-    ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
+    ...mapActions(userAuthStore, { checkUserState: 'checkUserState' }),
 
     coverImageChange(fileInput) {
       this.display_error = null;
@@ -83,19 +70,16 @@ export default {
 
     async handleDelete(e) {
       e.preventDefault();
-      console.log(FILENAME, "handleDelete", e);
+      this.loading = true;
+      console.log(FILENAME, "handleDelete", "start");
 
       let deletePost = window.confirm("Do you really want to delete this post ?");
-
-      this.loading = true;
-
       if (!deletePost) {
         return;
       }
 
       let result = await this.deletePost(this.postId);
-
-      this.loading = false;
+      console.log(FILENAME, "handleDelete", "result", result);
 
       if (result != null) {
         this.$router.push({
@@ -106,13 +90,14 @@ export default {
         this.display_error = "Something went wrong. Please try again later";
       }
 
+      console.log(FILENAME, "handleDelete", "end");
+      this.loading = false;
     },
 
     async handleEdit(e) {
       e.preventDefault();
-      console.log(FILENAME, "handleEdit", e);
-
       this.loading = true;
+      console.log(FILENAME, "handleEdit", "start");
 
       this.display_error = null;
 
@@ -120,7 +105,7 @@ export default {
       if (this.coverImage != null) {
         file = await getBase64(this.coverImage);
       }
-      console.log(file)
+      console.log(FILENAME, "handleEdit", "file", file);
 
       let result = await this.editPost(this.postId, {
         title: this.postData.title,
@@ -131,9 +116,7 @@ export default {
         deleteImage: this.deleteImage
       })
 
-      console.log(result);
-
-      this.loading = false;
+      console.log(FILENAME, "handleEdit", "result", result);
 
       if (result != null) {
         this.$router.push({
@@ -143,6 +126,9 @@ export default {
       } else {
         this.display_error = "Something went wrong. Please try again later";
       }
+
+      console.log(FILENAME, "handleEdit", "start");
+      this.loading = false;
     }
   }
 }
@@ -175,7 +161,6 @@ export default {
           <div class="col-md-10 d-flex flex-row justify-content-around align-items-center">
             <div>
               <input type="checkbox" class="form-check-input" id="deleteImage" v-model="deleteImage">
-
               <label for="deleteImage" class="fw-bold">Remove cover</label>
             </div>
             <label for="formFile" class="fw-bold">Cover image: <br><span class="fw-light">Leave blank if no
@@ -185,6 +170,7 @@ export default {
           </div>
         </div>
         <div class="text-center mb-1">
+          <input type="buttion" value="Discard" class="btn btn-warn btn-lg px-5">
           <input type="submit" value="Post" class="btn btn-primary btn-lg px-5">
           <input type="button" value="Delete" class="btn btn-danger btn-lg px-5 mx-4" v-on:click="handleDelete">
         </div>
@@ -192,7 +178,6 @@ export default {
           <span class="fw-bold">Error : {{ display_error }}</span>
         </div>
       </form>
-
     </div>
     <div v-else class="col-md-10 offset-md-1 text-center text-danger py-5">
       <h2 class="mt-5">Not Found</h2>

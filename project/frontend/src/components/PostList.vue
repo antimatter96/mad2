@@ -16,29 +16,27 @@ export default {
     console.log(FILENAME, "beforeMount", this.postList.length);
     console.log(FILENAME, "beforeMount", "end");
   },
+
   props: ['postList', 'showCreatorStats', 'showIfHidden'],
+
   data() {
     return {
       loading: false,
     }
   },
-  computed: {},
+
   methods: {
     ...mapActions(graphStore, { getFeed: 'getFeed', follow: 'follow', unfollow: 'unfollow' }),
 
     async followersUpdate(operation, user_id) {
+      this.loading = true;
       console.log(FILENAME, "followersUpdate", "start");
+
       console.log(FILENAME, "followersUpdate", operation, user_id);
 
-      this.loading = true;
+      let action = operation == '+' ? this.follow : this.unfollow;
 
-      let res = null;
-      if (operation == '+') {
-        res = await this.follow(user_id);
-      } else {
-        res = await this.unfollow(user_id);
-      }
-
+      let res = await action(user_id);
       if (res == null) {
         this.loading = false;
         console.log(FILENAME, "followersUpdate", "res is null");
@@ -52,11 +50,12 @@ export default {
           } else {
             this.postList[i].creator.user_follows = false;
           }
+          breakl
         }
       }
 
-      this.loading = false;
       console.log(FILENAME, "followersUpdate", "end");
+      this.loading = false;
     },
   }
 }

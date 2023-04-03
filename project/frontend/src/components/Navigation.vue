@@ -14,20 +14,25 @@ export default {
   async mounted() {
     console.log(FILENAME, "mounted")
   },
+
   props: ['loggedIn', 'loading'],
+
   methods: {
     ...mapActions(userAuthStore, { logout: 'logout' }),
 
     async _logout() {
-      console.log(FILENAME, "_logout");
-      let logoutUser = confirm("Do you want to logout ?");
+      console.log(FILENAME, "_logout", "start");
 
+      let logoutUser = window.confirm("Do you want to logout ?");
       if (!logoutUser) {
+        console.log(FILENAME, "_logout", "abandoned");
         return
       }
 
       this.logout();
       this.$router.push({ name: 'login' });
+
+      console.log(FILENAME, "_logout", "end");
     }
   }
 }
@@ -49,7 +54,7 @@ export default {
             </div>
             <template v-else-if="loggedIn">
               <li class="nav-item fw-bolder">
-                <RouterLink replace to="/" class="nav-link">Home</RouterLink>
+                <RouterLink to="/" class="nav-link">Home</RouterLink>
               </li>
               <li class="nav-item nav-item-btn">
                 <RouterLink :to="{ name: 'newPost' }" class="btn btn-primary">
@@ -63,7 +68,7 @@ export default {
                 </RouterLink>
               </li>
               <li class="nav-item fw-bolder">
-                <RouterLink replace to="/profile/me" class="nav-link">My Profile</RouterLink>
+                <RouterLink to="/profile/me" class="nav-link">My Profile</RouterLink>
               </li>
               <li class="nav-item fw-bolder">
                 <RouterLink :to="{ name: 'user_search_page' }" class="nav-link">

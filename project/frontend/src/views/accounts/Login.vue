@@ -7,21 +7,16 @@ import { userAuthStore } from '../../stores/userAuth'
 import LoadingIcon from '../../components/icons/Loading.vue'
 </script>
 
-
 <script>
+const FILENAME = "Login";
 
 export default {
   async beforeMount() {
-    console.log("Login.vue", "BEFORECREATE START")
     this.loading = true;
-
-    await this.checkUserState()
-
-    console.log("DONE async");
-    console.log("Login.vue", "CREATE END")
+    console.log(FILENAME, "beforeMount", "start")
 
     if (this.loggedIn) {
-      console.log("LOGIN PAGE")
+      console.log(FILENAME, "Already logged in")
       this.loading = false;
       this.$router.push('/');
       this.loading = false;
@@ -29,8 +24,10 @@ export default {
       return;
     }
 
+    console.log(FILENAME, "beforeMount", "end")
     this.loading = false;
   },
+
   data() {
     return {
       display_error: null,
@@ -40,23 +37,22 @@ export default {
     }
   },
 
-  // COMPUTED
   computed: {
     ...mapState(userAuthStore, ['loggedIn'])
   },
 
-  // METHODS
   methods: {
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
     async login(e) {
       e.preventDefault();
       this.loading = true;
-      console.log(e);
+      console.log(FILENAME, "login", "start");
 
       this.display_error = null;
 
       let result = await this.userAuthStoreLogin(this.email, this.password);
+      console.log(FILENAME, "login", "result", result);
 
       if (result.done) {
         this.$router.push('/');
@@ -68,6 +64,7 @@ export default {
         }
       }
 
+      console.log(FILENAME, "login", "end");
       this.loading = false;
     }
   }
@@ -94,20 +91,15 @@ export default {
       <div>
         <input type="submit" value="Login" class="btn btn-primary btn-lg w-100">
       </div>
-
       <div class="mt-2 text-danger" v-if="display_error != null">
         <span class="fw-bold">Error : {{ display_error }}</span>
       </div>
-
     </form>
-
     <div class="mt-2 text-center">
-      <RouterLink to="/signup" replace class="fw-bold">Sign Up</RouterLink>
+      <RouterLink to="/signup" class="fw-bold">Sign Up</RouterLink>
     </div>
   </div>
-
-  <div class="col-md-4 py-2"></div>
 </template>
 
-<style>
+<style scoped>
 </style>

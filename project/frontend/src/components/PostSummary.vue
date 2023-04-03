@@ -2,8 +2,6 @@
 import { RouterLink } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 
-import { userAuthStore } from '../stores/userAuth'
-import { postStore } from '../stores/posts'
 import { graphStore } from '../stores/graph'
 
 import LoadingIcon from './icons/Loading.vue'
@@ -16,18 +14,16 @@ const FILENAME = "PostSummary";
 export default {
   beforeMount() {
     console.log(FILENAME, "beforeMount", "start");
+
     console.log(FILENAME, "beforeMount", "post_id", this.postData.post_id);
+
     console.log(FILENAME, "beforeMount", "end");
   },
+
   props: ['postData', 'showCreatorStats', 'followersUpdate'],
-  data() { return {} },
-  computed: {
-    ...mapState(userAuthStore, ['loggedIn']),
-  },
+
   methods: {
-    ...mapActions(postStore, { getPost: 'getPost' }),
     ...mapActions(graphStore, { follow: 'follow', unfollow: 'unfollow' }),
-    ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
     splitText() {
       let split = this.postData.content.split('\n');
@@ -47,9 +43,13 @@ export default {
     },
 
     async followAction(mode, user_id) {
-      console.log("_followersUpdate", mode, user_id);
-      console.log(this.props);
+      console.log("FILENAME", "followAction", "start");
+
+      console.log("FILENAME", "followAction", mode, user_id);
+
       this.followersUpdate(mode, user_id);
+
+      console.log("FILENAME", "followAction", "end");
     }
   },
 }
@@ -63,7 +63,7 @@ export default {
           {
             name: 'post',
             params: { post_id: postData.post_id }
-          }" replace class="text-decoration-none">{{ postData.title }}
+          }" class="text-decoration-none">{{ postData.title }}
         </RouterLink>
       </h3>
     </div>

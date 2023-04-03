@@ -4,11 +4,15 @@ import { ACCOUNTS_API_BASE } from '../config'
 
 const FILENAME = "stores/userAuth";
 
+
+const AUTH_TOKEN = "auth_token";
+const USER_INFO = "user_info";
+
 export const userAuthStore = defineStore('userAuth', {
   state: () => {
     return {
-      _loginToken: window.localStorage.getItem("auth_token"),
-      _userInfo: window.localStorage.getItem("user_info") != null ? JSON.parse(window.localStorage.getItem("user_info")) : null,
+      _loginToken: window.localStorage.getItem(AUTH_TOKEN),
+      _userInfo: window.localStorage.getItem(USER_INFO) != null ? JSON.parse(window.localStorage.getItem(USER_INFO)) : null,
       _csrfToken: null,
     }
   },
@@ -28,44 +32,41 @@ export const userAuthStore = defineStore('userAuth', {
   actions: {
     setAuthToken(token) {
       this._loginToken = token;
-      window.localStorage.setItem("auth_token", token);
+      window.localStorage.setItem(AUTH_TOKEN, token);
     },
 
     setUserInfo(info) {
       this._userInfo = info;
-      window.localStorage.setItem("user_info", JSON.stringify(this._userInfo));
+      window.localStorage.setItem(USER_INFO, JSON.stringify(this._userInfo));
     },
 
     logout() {
-      window.localStorage.setItem("user_info", null);
-      window.localStorage.setItem("auth_token", null);
+      window.localStorage.removeItem(USER_INFO);
+      window.localStorage.removeItem(AUTH_TOKEN);
       this._loginToken = null;
       this._userInfo = null;
     },
 
-    async checkUserState(login, password) {
-      try {
-        console.log(FILENAME, "checkUserState start")
+    async checkUserState(component) {
+      console.log(FILENAME, "checkUserState", "start")
 
-        await new Promise((resolve, reject) => {
-          setTimeout(() => resolve(), 1000)
-        });
-
-        console.log(FILENAME, "checkUserState main stuff done")
-        // this.userData = await api.post({ login, password })
-        // showTooltip(`Welcome back ${this.userData.name}!`)
-
-        console.log(FILENAME, "checkUserState end")
-      } catch (error) {
-        // showTooltip(error)
-        // let the form component display the error
-        return error
+      if (component == null || component == undefined) {
+        return;
       }
+
+      if (!this.loggedIn) {
+        if (component.$router && component.$router.push) {
+          component.$router.push('/login');
+        }
+      }
+
+      console.log(FILENAME, "checkUserState", "end")
     },
 
     async getLoginToken() {
-      try {
+      console.log(FILENAME, "getLoginToken", "start")
 
+      try {
         let response = await fetch(ACCOUNTS_API_BASE + "/login", {
           ...this._commonHeaders(),
         });
@@ -79,8 +80,9 @@ export const userAuthStore = defineStore('userAuth', {
     },
 
     async getSignupToken() {
-      try {
+      console.log(FILENAME, "getSignupToken", "start")
 
+      try {
         let response = await fetch(ACCOUNTS_API_BASE + "/register", {
           ...this._commonHeaders(),
         });
@@ -94,6 +96,8 @@ export const userAuthStore = defineStore('userAuth', {
     },
 
     async login(email, password) {
+      console.log(FILENAME, "login", "start")
+
       if (this._csrfToken == null) {
         try {
           this._csrfToken = await this.getLoginToken()
@@ -128,6 +132,8 @@ export const userAuthStore = defineStore('userAuth', {
     },
 
     async signup(email, password) {
+      console.log(FILENAME, "signup", "start")
+
       if (this._csrfToken == null) {
         try {
           this._csrfToken = await this.getSignupToken();

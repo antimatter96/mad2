@@ -15,7 +15,7 @@
   - [✅]  Reporting Jobs
   - [✅]  Alert Jobs
 
-- [🔘] Backend Performance
+- [✅] Backend Performance
 
 
 ### Core - User Signup and Login
@@ -98,9 +98,9 @@
 ### Core - Performance and Caching
 
 
-- [🔘] Add caching where required to increase the performance
-- [🔘] Add cache expiry
-- [🔘] API Performance
+- [✅] Add caching where required to increase the performance
+- [✅] Add cache expiry
+- [??] API Performance
 
 
 ### Recommended (graded)

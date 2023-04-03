@@ -10,57 +10,34 @@ import UserTab from '../../components/UserTab.vue'
 </script>
 
 <script>
+const FILENAME = "UserSearch";
+
 export default {
   async beforeMount() {
-    console.log("App.vue", "BEFORE MOUNTED START")
     this.loading = true;
+    console.log(FILENAME, "beforeMount", "start")
 
-    console.log("DONE async");
+    await this.checkUserState(this);
 
-    console.log(this.$route);
-
-
-    this.mode = this.$route.name;
-    this.showingFollowers = this.mode == 'user_followers';
-    this.showingFollowing = this.mode != 'user_followers';
-
-    if (!this.loggedIn) {
-      await this.checkUserState()
-    }
-    if (!this.loggedIn) {
-      console.log("LOGIN PAGE")
-      this.loading = false;
-      this.$router.push('/login');
-      this.loading = false;
-    }
-    console.log("App.vue", "BEFORE MOUNTED END")
-
-    console.log("mode", this.mode);
-    this.userList = [];
-
+    console.log(FILENAME, "beforeMount", "end")
     this.loading = false;
   },
-  async mounted() {
-  },
-  // 
+
   data() {
     return {
       loading: true,
-      userList: null,
+      userList: [],
       mode: '',
-      searchText: null,
+      searchText: "",
       searching: false,
     }
   },
-  // 
-  computed: {
-    ...mapState(userAuthStore, ['loggedIn']),
-  },
+
   methods: {
     ...mapActions(graphStore, {
       getList: 'getList', searchByPrefix: 'searchByPrefix', follow: 'follow', unfollow: 'unfollow'
     }),
-    ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
+    ...mapActions(userAuthStore, { checkUserState: 'checkUserState' }),
 
     followersUpdate(a, b) {
       console.log("parent", a, b, followersUpdate);
@@ -68,15 +45,55 @@ export default {
 
     async search() {
       this.loading = true;
-      this.searching = true;
-      this.userList = [];
-      console.log(this.searchText, "<<<<<<<<<<")
+      console.log(FILENAME, "search", "start")
 
-      this.userList = await this.searchByPrefix(this.searchText);
+      console.log(FILENAME, "search", "searchText", this.searchText);
+      this.searchText = this.searchText.trim();
+      console.log(FILENAME, "search", "searchText trimmed", this.searchText);
 
+      if (this.searchText != "") {
+        this.searching = true;
+        this.userList = [];
+
+        this.userList = await this.searchByPrefix(this.searchText);
+
+        console.log(this.userList);
+      }
+
+      console.log(FILENAME, "search", "end")
       this.loading = false;
+    },
 
-      console.log(this.userList);
+    async followersUpdate(operation, user_id) {
+      this.loading = true;
+      console.log(FILENAME, "followersUpdate", "start")
+
+      console.log(FILENAME, "followersUpdate", { operation, user_id })
+
+      let action = operation == '+' ? this.follow : this.unfollow;
+
+      let res = await action(user_id);
+      if (res == null) {
+        this.loading = false;
+        return;
+      }
+
+      for (let i = 0; i < this.userList.users.length; i++) {
+        if (user_id == this.userList.users[i].user_id) {
+
+          if (operation == '+') {
+            this.userList.users[i].user_follows = true;
+          } else {
+            this.userList.users[i].user_follows = false;
+          }
+
+          console.log(this.userList.users[i]);
+          break;
+        }
+      }
+
+      console.log(FILENAME, "followersUpdate", "end")
+      this.loading = false;
     },
   }
 }
@@ -107,8 +124,8 @@ export default {
             <tr v-for="(user, index) in userList.users" :key="user.user_id">
               <td class="small-index"> {{ index + 1 }} </td>
               <td>
-                <UserTab :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="showingFollowing"
-                  class="d-flex align-items-center" />
+                <UserTab :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="true"
+                  class="d-flex align-items-center" @followAction="followersUpdate" />
               </td>
             </tr>
           </tbody>

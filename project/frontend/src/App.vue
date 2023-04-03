@@ -5,7 +5,6 @@ import { mapActions, mapState } from 'pinia'
 import Navigation from './components/Navigation.vue'
 import { userAuthStore } from './stores/userAuth'
 import LoadingIcon from './components/icons/Loading.vue'
-
 </script>
 
 <script>
@@ -13,55 +12,35 @@ const FILENAME = "App";
 
 export default {
   async beforeMount() {
-    console.log("App.vue", "BEFORE MOUNTED START")
-
     this.loading = true;
-    console.log("DONE async");
+    console.log(FILENAME, "beforeMount", "start")
 
-    console.log("loggedin", this.loggedIn)
-    if (!this.loggedIn) {
-      await this.checkUserState();
-    }
+    console.log(FILENAME, "loggedin", this.loggedIn)
+    await this.checkUserState(this);
 
-    if (!this.loggedIn) {
-      this.loading = false;
-
-      console.log("NEED TO LOGIN")
-      console.log("LOGIN PAGE")
-      this.$router.push('/login');
-      this.loading = false;
-
-      return;
-    }
-
+    console.log(FILENAME, "beforeMount", "end");
     this.loading = false;
-    console.log("App.vue", "BEFORE MOUNTED END")
   },
-  async mounted() {
 
-  },
-  // 
   data() {
     return {
       loading: true,
     }
   },
-  // 
+
   computed: {
     ...mapState(userAuthStore, { loggedIn: 'loggedIn' }),
-    hideNavBar() {
-      return this.loading
-    },
   },
+
   methods: {
-    ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
+    ...mapActions(userAuthStore, { checkUserState: 'checkUserState' }),
   }
 }
 </script>
 
 <template>
   <div class="container d-flex flex-column px-4">
-    <Navigation :loggedIn=loggedIn :loading=hideNavBar />
+    <Navigation :loggedIn=loggedIn :loading=loading />
 
 
     <div id="main" class="row py-2">
@@ -69,7 +48,7 @@ export default {
         <LoadingIcon element="h2" />
       </div>
       <div v-else>
-        <RouterView :key="$route.fullPath"/>
+        <RouterView :key="$route.fullPath" />
       </div>
     </div>
 

@@ -6,7 +6,6 @@ import { graphStore } from '../../stores/graph'
 
 import LoadingIcon from '../../components/icons/Loading.vue'
 import UserTab from '../../components/UserTab.vue'
-
 </script>
 
 <script>
@@ -14,40 +13,27 @@ const FILENAME = "GraphList";
 
 export default {
   async beforeMount() {
-    console.log("App.vue", "BEFORE MOUNTED START")
     this.loading = true;
+    console.log(FILENAME, "beforeMount", "start");
 
-    console.log("DONE async");
+    await this.checkUserState(this);
 
     console.log(this.$route);
-
 
     this.mode = this.$route.name;
     this.showingFollowers = this.mode == 'user_followers';
     this.showingFollowing = this.mode != 'user_followers';
 
-    if (!this.loggedIn) {
-      await this.checkUserState()
-    }
-    if (!this.loggedIn) {
-      console.log("LOGIN PAGE")
-      this.loading = false;
-      this.$router.push('/login');
-      this.loading = false;
-    }
-    console.log("App.vue", "BEFORE MOUNTED END")
-
     console.log("mode", this.mode);
+
     this.userList = await this.getList(this.showingFollowers);
 
     console.log("this.userList", this.userList);
 
-
+    console.log(FILENAME, "beforeMount", "end");
     this.loading = false;
   },
-  async mounted() {
-  },
-  // 
+
   data() {
     return {
       loading: true,
@@ -55,32 +41,24 @@ export default {
       mode: '',
     }
   },
-  // 
-  computed: {
-    ...mapState(userAuthStore, ['loggedIn']),
-  },
+
   methods: {
     ...mapActions(graphStore, { getList: 'getList', follow: 'follow', unfollow: 'unfollow' }),
-    ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
+    ...mapActions(userAuthStore, { checkUserState: 'checkUserState' }),
 
     async followersUpdate(operation, user_id) {
       this.loading = true;
+      console.log(FILENAME, "followersUpdate", "start");
 
-      console.log("parent", operation, user_id, "followersUpdate");
+      console.log(FILENAME, "followersUpdate", { operation, user_id });
 
-      let res = null;
-      if (operation == '+') {
-        res = await this.follow(user_id);
-      } else {
-        res = await this.unfollow(user_id);
-      }
+      let action = operation == '+' ? this.follow : this.unfollow;
 
+      let res = await action(user_id);
       if (res == null) {
         this.loading = false;
-
         return;
       }
-
 
       console.log(this.userList);
       for (let i = 0; i < this.userList.list.length; i++) {
@@ -110,8 +88,9 @@ export default {
           break;
         }
       }
+
+      console.log(FILENAME, "followersUpdate", "end");
       this.loading = false;
-      console.log(res);
     },
   }
 
