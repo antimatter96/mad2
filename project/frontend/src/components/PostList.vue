@@ -1,22 +1,18 @@
 <script setup>
 import { mapActions, mapState } from 'pinia'
 
-import { postStore } from '../stores/posts'
 import { graphStore } from '../stores/graph'
 
 import LoadingIcon from './icons/Loading.vue'
-import UserTab from './UserTab.vue'
 import PostSummary from './PostSummary.vue'
-
 </script>
 
 <script>
-const FILENAME = "PostList"
+const FILENAME = "PostList";
 
 export default {
   async beforeMount() {
     console.log(FILENAME, "beforeMount", "start");
-    //console.log("PostList", this.postList);
     console.log(FILENAME, "beforeMount", this.postList.length);
     console.log(FILENAME, "beforeMount", "end");
   },
@@ -49,7 +45,6 @@ export default {
         return;
       }
 
-      // console.log(this.postList.posts);
       for (let i = 0; i < this.postList.length; i++) {
         if (user_id == this.postList[i].creator.user_id) {
           if (operation == '+') {

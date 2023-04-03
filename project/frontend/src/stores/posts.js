@@ -4,7 +4,7 @@ import { POST_API_BASE } from '../config'
 
 import { userAuthStore } from './userAuth'
 
-const FILENAME = 'posts.js'
+const FILENAME = "stores/posts";
 
 export const postStore = defineStore('post', {
   state: () => {

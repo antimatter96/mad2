@@ -5,16 +5,16 @@ import { userAuthStore } from '../../stores/userAuth'
 import { postStore } from '../../stores/posts'
 
 import LoadingIcon from '../../components/icons/Loading.vue'
+
+import { getBase64 } from '../../lib/fileUpload'
 </script>
 
 <script>
+const FILENAME = "EditPost"
+
 export default {
-  created() {
-    console.log("App.vue", "CREATED START")
-    console.log("App.vue", "CREATED END")
-  },
-  async created() {
-    console.log("App.vue", "BEFORE MOUNTED START")
+  async beforeMount() {
+    console.log(FILENAME, "BEFORE MOUNTED START")
     this.loading = true;
 
     console.log("DONE async");
@@ -32,10 +32,9 @@ export default {
     console.log(this.$route);
     this.postId = this.$route.params.post_id;
 
-
     console.log(this.postData);
     this.loading = false;
-    console.log("App.vue", "BEFORE MOUNTED END");
+    console.log(FILENAME, "BEFORE MOUNTED END");
   },
   async mounted() {
     this.loading = true;
@@ -63,9 +62,6 @@ export default {
   // 
   computed: {
     ...mapState(userAuthStore, ['loggedIn', 'userInfo']),
-    hideNavBar() {
-      return this.loading
-    },
   },
   methods: {
     ...mapActions(postStore, { editPost: 'editPost', getPost: 'getPost', deletePost: 'deletePost' }),
@@ -87,9 +83,7 @@ export default {
 
     async handleDelete(e) {
       e.preventDefault();
-
-      console.log("handleDelete", e);
-
+      console.log(FILENAME, "handleDelete", e);
 
       let deletePost = window.confirm("Do you really want to delete this post ?");
 
@@ -116,20 +110,11 @@ export default {
 
     async handleEdit(e) {
       e.preventDefault();
-      console.log("handleEdit", e);
+      console.log(FILENAME, "handleEdit", e);
 
       this.loading = true;
 
       this.display_error = null;
-
-      function getBase64(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result.split(',').pop());
-          reader.onerror = error => reject(error);
-        });
-      }
 
       let file = null;
       if (this.coverImage != null) {

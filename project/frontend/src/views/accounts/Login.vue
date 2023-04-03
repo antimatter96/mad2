@@ -11,12 +11,7 @@ import LoadingIcon from '../../components/icons/Loading.vue'
 <script>
 
 export default {
-  // LIFECYCLE
-  beforeCreate() {
-    console.log("Login.vue", "CREATE START")
-    console.log("Login.vue", "CREATE END")
-  },
-  async created() {
+  async beforeMount() {
     console.log("Login.vue", "BEFORECREATE START")
     this.loading = true;
 
@@ -36,11 +31,6 @@ export default {
 
     this.loading = false;
   },
-  async beforeMount() {
-    console.log("Login.vue", "BEFORE MOUNT START")
-    console.log("Login.vue", "BEFORE MOUNT END")
-  },
-  // INTERNAL STATE
   data() {
     return {
       display_error: null,

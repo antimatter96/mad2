@@ -18,11 +18,6 @@ import UserTab from '../../components/UserTab.vue'
 
 <script>
 export default {
-  // 
-  created() {
-    console.log("App.vue", "CREATED START")
-    console.log("App.vue", "CREATED END")
-  },
   async beforeMount() {
     console.log("App.vue", "BEFORE MOUNTED START")
     this.loading = true;
@@ -56,7 +51,6 @@ export default {
   // 
   data() {
     return {
-      msg: "U did it",
       loading: true,
       postData: null,
       postId: '',
@@ -65,9 +59,6 @@ export default {
   //
   computed: {
     ...mapState(userAuthStore, ['loggedIn']),
-    hideNavBar() {
-      return this.loading
-    },
     splitText() {
       let split = this.postData.content.split('\n');
       let newSplit = [];

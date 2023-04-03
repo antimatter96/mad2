@@ -12,14 +12,11 @@ import PostList from '../../components/PostList.vue'
 </script>
 
 <script>
+const FILENAME = "UserProfile"
+
 export default {
-  // 
-  created() {
-    console.log("App.vue", "CREATED START")
-    console.log("App.vue", "CREATED END")
-  },
   async beforeMount() {
-    console.log("App.vue", "BEFORE MOUNTED START")
+    console.log(FILENAME, "BEFORE MOUNTED START")
     this.loading = true;
 
     console.log("DONE async");
@@ -50,7 +47,6 @@ export default {
   // 
   data() {
     return {
-      msg: "U did it",
       loading: true,
       userData: null,
       username: '',
@@ -90,8 +86,8 @@ export default {
         this.userData.followers.length--;
         this.userData.user_follows = false;
       }
-  
-     
+
+
       this.loading = false;
       console.log(res);
     },

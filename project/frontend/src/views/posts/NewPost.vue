@@ -5,15 +5,12 @@ import { userAuthStore } from '../../stores/userAuth'
 import { postStore } from '../../stores/posts'
 
 import LoadingIcon from '../../components/icons/Loading.vue'
+
+import { getBase64 } from '../../lib/fileUpload'
 </script>
 
 <script>
 export default {
-  // 
-  created() {
-    console.log("App.vue", "CREATED START")
-    console.log("App.vue", "CREATED END")
-  },
   async beforeMount() {
     console.log("App.vue", "BEFORE MOUNTED START")
     this.loading = true;
@@ -49,9 +46,6 @@ export default {
   // 
   computed: {
     ...mapState(userAuthStore, ['loggedIn']),
-    hideNavBar() {
-      return this.loading
-    },
   },
   methods: {
     ...mapActions(postStore, { createPost: 'createPost' }),
@@ -78,15 +72,6 @@ export default {
       this.loading = true;
 
       this.display_error = null;
-
-      function getBase64(file) {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result.split(',').pop());
-          reader.onerror = error => reject(error);
-        });
-      }
 
       let file = await getBase64(this.coverImage);
 

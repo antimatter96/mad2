@@ -9,12 +9,9 @@ import LoadingIcon from './components/icons/Loading.vue'
 </script>
 
 <script>
+const FILENAME = "App";
+
 export default {
-  // 
-  created() {
-    console.log("App.vue", "CREATED START")
-    console.log("App.vue", "CREATED END")
-  },
   async beforeMount() {
     console.log("App.vue", "BEFORE MOUNTED START")
 

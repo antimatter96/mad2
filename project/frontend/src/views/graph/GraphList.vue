@@ -10,12 +10,9 @@ import UserTab from '../../components/UserTab.vue'
 </script>
 
 <script>
+const FILENAME = "GraphList";
+
 export default {
-  // 
-  created() {
-    console.log("App.vue", "CREATED START")
-    console.log("App.vue", "CREATED END")
-  },
   async beforeMount() {
     console.log("App.vue", "BEFORE MOUNTED START")
     this.loading = true;
@@ -61,9 +58,6 @@ export default {
   // 
   computed: {
     ...mapState(userAuthStore, ['loggedIn']),
-    hideNavBar() {
-      return this.loading
-    },
   },
   methods: {
     ...mapActions(graphStore, { getList: 'getList', follow: 'follow', unfollow: 'unfollow' }),

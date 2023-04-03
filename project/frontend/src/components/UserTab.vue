@@ -11,25 +11,24 @@ import FollowAction from './icons/FollowAction.vue'
 </script>
 
 <script>
+const FILENAME = "UserTab";
+
 export default {
-  // 
   async mounted() {
-    // console.log(this.userData);
+    console.log(FILENAME, "mounted", "user_id", this.userData.user_id);
   },
-  //
   props: ['user', 'userData', 'showFollowers', 'showFollowing', 'showSummary'],
-  // 
   computed: {},
   methods: {
     ...mapActions(graphStore, { follow: 'follow', unfollow: 'unfollow' }),
 
     unfollow() {
+      console.log(FILENAME, "unfollow", "user_id", this.userData.user_id);
       this.$emit("followAction", "-", this.userData.user_id)
-      console.log("Here")
     },
     follow() {
+      console.log(FILENAME, "follow", "user_id", this.userData.user_id);
       this.$emit("followAction", "+", this.userData.user_id)
-      console.log("Here")
     }
   }
 }

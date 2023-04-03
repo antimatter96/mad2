@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router';
-import { mapActions, mapState } from 'pinia'
+import { mapActions } from 'pinia'
 
 import { userAuthStore } from '../stores/userAuth'
 
@@ -8,23 +8,26 @@ import Loading from './icons/Loading.vue';
 </script>
 
 <script>
+const FILENAME = "Navigation";
+
 export default {
-  props: ['loggedIn', 'loading'],
   async mounted() {
-    console.log(this.loggedIn)
+    console.log(FILENAME, "mounted")
   },
+  props: ['loggedIn', 'loading'],
   methods: {
     ...mapActions(userAuthStore, { logout: 'logout' }),
 
     async _logout() {
-      console.log("parent", "_logout");
+      console.log(FILENAME, "_logout");
       let logoutUser = confirm("Do you want to logout ?");
-      if (logoutUser) {
-        this.logout();
-        this.$router.push({
-          name: 'login'
-        });
+
+      if (!logoutUser) {
+        return
       }
+
+      this.logout();
+      this.$router.push({ name: 'login' });
     }
   }
 }

@@ -11,29 +11,25 @@ import UserTab from './UserTab.vue'
 </script>
 
 <script>
-const FILENAME = 'PostSummary';
+const FILENAME = "PostSummary";
+
 export default {
-  props: ['postData', 'showCreatorStats', 'followersUpdate'],
-  data() {
-    return {}
-  },
   beforeMount() {
-    console.log(FILENAME, this.postData);
+    console.log(FILENAME, "beforeMount", "start");
+    console.log(FILENAME, "beforeMount", "post_id", this.postData.post_id);
+    console.log(FILENAME, "beforeMount", "end");
   },
+  props: ['postData', 'showCreatorStats', 'followersUpdate'],
+  data() { return {} },
   computed: {
     ...mapState(userAuthStore, ['loggedIn']),
-    hideNavBar() {
-      return this.loading
-    },
   },
   methods: {
     ...mapActions(postStore, { getPost: 'getPost' }),
     ...mapActions(graphStore, { follow: 'follow', unfollow: 'unfollow' }),
     ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
 
-
     splitText() {
-
       let split = this.postData.content.split('\n');
       let newSplit = [];
       newSplit.push(split[0]);

@@ -4,7 +4,7 @@ import { FOLLOWERS_API_BASE, USER_API_BASE, FEED_API_BASE } from '../config'
 
 import { userAuthStore } from '../stores/userAuth'
 
-const FILENAME = 'graph.js'
+const FILENAME = "stores/graph"
 
 export const graphStore = defineStore('graph', {
   state: () => {

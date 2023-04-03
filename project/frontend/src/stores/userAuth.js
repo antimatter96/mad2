@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 import { ACCOUNTS_API_BASE } from '../config'
 
-const FILENAME = 'userAuth.js'
+const FILENAME = "stores/userAuth";
 
 export const userAuthStore = defineStore('userAuth', {
   state: () => {

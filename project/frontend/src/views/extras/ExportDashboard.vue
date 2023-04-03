@@ -15,10 +15,6 @@ import LoadingIcon from '../../components/icons/Loading.vue'
 const FILENAME = "ExportDashboard"
 
 export default {
-  created() {
-    console.log(FILENAME, "CREATED START")
-    console.log(FILENAME, "CREATED END")
-  },
   async beforeMount() {
     console.log(FILENAME, "BEFORE MOUNTED START")
     this.loading = true;
@@ -60,9 +56,7 @@ export default {
 
   computed: {
     ...mapState(userAuthStore, ['loggedIn', 'userInfo']),
-    hideNavBar() {
-      return this.loading
-    },
+
   },
   methods: {
     ...mapActions(graphStore, { getList: 'getList', searchByPrefix: 'searchByPrefix' }),

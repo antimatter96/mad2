@@ -13,19 +13,11 @@ import PostList from '../../components/PostList.vue'
 </script>
 
 <script>
-const FILENAME = 'Feed';
+const FILENAME = "Feed";
+
 export default {
-  // 
-  created() {
-    console.log(FILENAME, "CREATED START")
-    console.log(FILENAME, "CREATED END")
-  },
   async beforeMount() {
-    console.log(FILENAME, "BEFORE MOUNTED START")
-
-    console.log("DONE async");
-
-    console.log(this.$route, this.loggedIn);
+    console.log(FILENAME, "beforeMount", "start")
 
     if (!this.loggedIn) {
       await this.checkUserState()
@@ -37,26 +29,23 @@ export default {
     }
     console.log("App.vue", "BEFORE MOUNTED END")
 
-    console.log("mode", this.mode);
     this.postList = await this.getFeed(0);
 
     console.log(FILENAME, this.postList.posts);
+
+    console.log(FILENAME, "beforeMount", "end")
   },
-  async mounted() {
-  },
-  // 
   data() {
     return {
       postList: null,
     }
   },
-  // 
   computed: {
     ...mapState(userAuthStore, ['loggedIn']),
   },
   methods: {
-    ...mapActions(graphStore, { getFeed: 'getFeed', follow: 'follow', unfollow: 'unfollow' }),
-    ...mapActions(userAuthStore, { userAuthStoreLogin: 'login', checkUserState: 'checkUserState' }),
+    ...mapActions(graphStore, { getFeed: 'getFeed' }),
+    ...mapActions(userAuthStore, { checkUserState: 'checkUserState' }),
   }
 }
 </script>
