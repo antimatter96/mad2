@@ -5,7 +5,7 @@ import { userAuthStore } from '../../stores/userAuth'
 import { graphStore } from '../../stores/graph'
 
 import LoadingIcon from '../../components/icons/Loading.vue'
-import UserTab from '../../components/UserTab.vue'
+import UserSummary from '../../components/UserSummary.vue'
 
 </script>
 
@@ -124,7 +124,7 @@ export default {
             <tr v-for="(user, index) in userList.users" :key="user.user_id">
               <td class="small-index"> {{ index + 1 }} </td>
               <td>
-                <UserTab :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="true"
+                <UserSummary :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="true"
                   class="d-flex align-items-center" @followAction="followersUpdate" />
               </td>
             </tr>

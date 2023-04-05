@@ -10,7 +10,7 @@ import { graphStore } from '../../stores/graph'
 import { UPLOADS_BASE_PATH } from '../../config'
 
 import LoadingIcon from '../../components/icons/Loading.vue'
-import UserTab from '../../components/UserTab.vue'
+import UserSummary from '../../components/UserSummary.vue'
 
 
 
@@ -118,7 +118,7 @@ export default {
       <div class="align-items-center d-flex card-header px-0 py-0 mb-0 justify-content-between">
         <template v-if="!postData.creator.is_actually_user">
           <h6 class="d-inline-block mb-0 fw-light text-end">Created : {{ postData.created_at }}</h6>
-          <UserTab :showSummary="true" :userData="postData.creator" :showFollowing="true" :showFollowers="true"
+          <UserSummary :showSummary="true" :userData="postData.creator" :showFollowing="true" :showFollowers="true"
             @followAction="followersUpdate" class="fw-bold d-flex align-items-baseline" style="transform: scale(0.8)" />
         </template>
         <template v-else>

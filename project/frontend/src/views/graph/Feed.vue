@@ -44,7 +44,8 @@ export default {
   <div v-else class="px-3">
     <div class="col-md-10 offset-md-1 mt-2 border-bottom border-2">
       <h3 class="mb-3 text-center">
-        Your Feed
+        <template v-if="postList.following_count > 0">Your Feed</template>
+        <template v-else>Yesterday's top posts</template>
       </h3>
     </div>
     <PostList :postList="postList.posts" :showCreatorStats="true" :showIfHidden="false" />

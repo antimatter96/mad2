@@ -10,7 +10,7 @@ import FollowAction from './icons/FollowAction.vue'
 </script>
 
 <script>
-const FILENAME = "UserTab";
+const FILENAME = "UserSummary";
 
 export default {
   async mounted() {

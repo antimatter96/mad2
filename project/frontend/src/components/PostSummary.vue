@@ -5,7 +5,7 @@ import { mapActions, mapState } from 'pinia'
 import { graphStore } from '../stores/graph'
 
 import LoadingIcon from './icons/Loading.vue'
-import UserTab from './UserTab.vue'
+import UserSummary from './UserSummary.vue'
 </script>
 
 <script>
@@ -69,7 +69,7 @@ export default {
     </div>
     <div v-if="showCreatorStats" class="card-header px-0 py-0 mb-0 bg-white align-items-center d-flex">
       <h6 class="d-inline mb-0 fw-light text-end">{{ postData.created_at }}</h6>
-      <UserTab :showSummary="true" :userData="postData.creator" :showFollowing="true" :showFollowers="true"
+      <UserSummary :showSummary="true" :userData="postData.creator" :showFollowing="true" :showFollowers="true"
         class="d-inline-flex align-items-center" style="transform: scale(0.7);" @followAction="followAction" />
     </div>
     <div class="card-body px-4">

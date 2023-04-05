@@ -6,8 +6,7 @@ import { userAuthStore } from '../../stores/userAuth'
 import { graphStore } from '../../stores/graph'
 
 import LoadingIcon from '../../components/icons/Loading.vue'
-import UserTab from '../../components/UserTab.vue'
-import PostSummary from '../../components/PostSummary.vue'
+import UserSummary from '../../components/UserSummary.vue'
 import PostList from '../../components/PostList.vue'
 </script>
 
@@ -86,7 +85,7 @@ export default {
     <div class="px-3">
       <div>
         <h3 class="mb-0"> {{ userData.name || userData.email }} </h3>
-        <UserTab v-if="!isActuallyUser" showSummary="false" :userData="userData" :showFollowing="true"
+        <UserSummary v-if="!isActuallyUser" showSummary="false" :userData="userData" :showFollowing="true"
           :showFollowers="true" @followAction="followersUpdate" />
         <hr>
       </div>
