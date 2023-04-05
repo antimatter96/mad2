@@ -11,7 +11,7 @@ class Post(db.Model):
 
   img_url = db.Column(db.String, nullable=True)
 
-  hidden = db.Column(db.Boolean())
+  hidden = db.Column(db.Boolean(), default=False)
 
   creator_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
   creator = relationship("User", back_populates="posts")

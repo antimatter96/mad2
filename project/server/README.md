@@ -28,4 +28,6 @@ Specific Celery Task
 
 ```sh
 python3.9 -m celery -A app.celery call application.background_workers.tasks.export_csv --kwargs='{"user_id": 1}'
+
+python3.9 -m celery -A app.celery call application.background_workers.tasks.import_csv --kwargs='{"user_id": 12, "filename":"1_fab27440-bc18-4706-bc4d-5977ceeda8c4.csv"}'
 ```

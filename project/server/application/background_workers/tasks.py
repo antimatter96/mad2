@@ -11,6 +11,7 @@ from jinja2 import Template
 from application.background_workers.index import celery
 from application.database.index import db
 from application.database.models.user import User
+from application.database.models.post import Post
 from application.database.models.export_job import ExportJob
 from application.database.data_access.daily_ping import users_to_ping as _users_to_ping
 from application.database.data_access.monthly_data import _monthly_data
@@ -174,4 +175,53 @@ def delete_cover_image(full_file_path):
     print(e)
     raise e
 
+  return True
+
+@celery.task()
+def import_csv(filename, user_id):
+  print("started import_csv for", user_id)
+
+  user = User.query.filter(User.user_id == user_id).first()
+  if user == None:
+    print("user not found")
+    return None
+
+  posts = []
+  try:
+    with open(os.path.join(app.config['CSV_UPLOAD_FOLDER'], filename), "r") as f:
+      dict_reader = csv.DictReader(f, EXPORT_CSV_KEYS, delimiter=',')
+      i = 0
+      for row in dict_reader:
+        if i == 0:
+          i += 1
+          continue
+
+        hidden = row.get('hidden', False) == 'True'
+        try:
+          new_post = Post(
+              title=row.get('title', "__ no tile __").replace(" ⏎ ", '\n'),
+              content=row.get('content', "__ no content __").replace(" ⏎ ", '\n'),
+              hidden=hidden,
+              creator=user
+          )
+          posts.append(new_post)
+        except:
+          continue
+  except Exception as e:
+    print(e)
+    raise e
+
+  print("import_csv", "adding posts:", len(posts))
+
+  try:
+    for post in posts:
+      db.session.add(post)
+    db.session.commit()
+  except Exception as e:
+    print(e)
+    db.session.rollback()
+
+    return False
+
+  print("End import_csv", user_id)
   return True
