@@ -5,9 +5,10 @@ from flask_security import auth_required, current_user
 from cache import cache
 
 from application.database.models.user import User
-from application.database.data_access import _private_view_with_followers, _private_view_with_following, _self_view, _feed
-
 from application.database.index import db
+from application.database.data_access.feed import _feed
+from application.database.data_access.user_graph import _private_view_with_followers, _private_view_with_following, _self_view
+
 from application.controllers.restful.errors import NotFoundError, BusinessValidationError, InternalServerError, common_errors
 
 follower_api_errors = { "user_001": "User does not exist", "user_002": "User can't follow itself"}

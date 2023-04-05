@@ -12,9 +12,9 @@ from application.background_workers.index import celery
 from application.database.index import db
 from application.database.models.user import User
 from application.database.models.export_job import ExportJob
+from application.database.data_access.daily_ping import users_to_ping as _users_to_ping
+from application.database.data_access.monthly_data import _monthly_data
 from application.extras.report_generator import create_pdf_report
-from application.extras.daily_ping import users_to_ping as _users_to_ping
-from application.extras.monthly_data import _monthly_data
 from application.extras.emails import send_email
 
 EXPORT_CSV_KEYS = ['post_id', 'created_at', 'title', 'content', 'updated_at', 'hidden']

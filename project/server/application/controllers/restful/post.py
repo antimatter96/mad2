@@ -13,7 +13,7 @@ from application.database.models.post import Post
 from application.database.index import db
 from application.controllers.restful.utils import min_length
 from application.controllers.restful.errors import NotFoundError, InternalServerError, common_errors
-from application.database.data_access import _self_view
+from application.database.data_access.user_graph import _self_view
 from application.background_workers.tasks import delete_cover_image
 
 class SimpleDateTime(fields.Raw):

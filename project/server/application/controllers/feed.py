@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from flask_security import current_user, auth_required
 
-from application.database.data_access import _feed
+from application.database.data_access.feed import _feed
 
 from app import app as app
 
@@ -24,6 +24,6 @@ def feed():
   except:
     limit_int = 0
 
-  post_dicts = _feed(current_user.user_id, from_int, limit_int)
+  following_count, post_dicts = _feed(current_user.user_id, from_int, limit_int)
 
-  return jsonify({ 'count': len(post_dicts), 'posts': post_dicts})
+  return jsonify({ 'count': len(post_dicts), 'posts': post_dicts, 'following_count': following_count})

@@ -6,7 +6,7 @@ from app import app as app
 
 from application.database.index import db
 from application.database.models.user import User
-from application.database.data_access import _private_view_with_followers, _private_view_with_following, _self_view
+from application.database.data_access.user_graph import _private_view_with_followers, _private_view_with_following, _self_view
 
 @app.route("/api/users/search_by_prefix", methods=['GET'])
 @auth_required('token')

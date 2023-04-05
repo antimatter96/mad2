@@ -23,3 +23,9 @@ redis-server
 ./celery_periodic.sh
 ./celery_ondemand.sh
 ```
+
+Specific Celery Task
+
+```sh
+python3.9 -m celery -A app.celery call application.background_workers.tasks.export_csv --kwargs='{"user_id": 1}'
+```
