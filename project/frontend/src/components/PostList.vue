@@ -17,7 +17,7 @@ export default {
     console.log(FILENAME, "beforeMount", "end");
   },
 
-  props: ['postList', 'showCreatorStats', 'showIfHidden'],
+  props: ['postList', 'showCreatorStats', 'showIfHidden', 'followAction'],
 
   data() {
     return {
@@ -50,9 +50,11 @@ export default {
           } else {
             this.postList[i].creator.user_follows = false;
           }
-          breakl
+          break;
         }
       }
+
+      this.$emit("followAction", operation, user_id);
 
       console.log(FILENAME, "followersUpdate", "end");
       this.loading = false;

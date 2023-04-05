@@ -19,9 +19,8 @@ body {
 
   min-height: 98vh;
 
-  padding-top: 1em;
+  padding-top: 0.5em;
   padding-bottom: 1em;
-
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -38,10 +37,13 @@ input, label, button {
   max-width: 85em;
   margin-left: auto;
   margin-right: auto;
-  
+
   background: rgb(250, 250, 250);
 
   padding-top: 1em;
+
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid transparent !important;
 }
 
 nav h1 {
@@ -119,7 +121,6 @@ header > h2 {
 .w-85 {
   width: 85% !important;
 }
-
 
 .btn, .form-check-label {
   font-family: Verdana, Geneva, Tahoma, sans-serif;

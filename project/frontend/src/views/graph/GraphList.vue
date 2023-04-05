@@ -125,8 +125,8 @@ export default {
               <tr v-for="(user, index) in userList.list" class="">
                 <td class="small-index"> {{ index + 1 }} </td>
                 <td>
-                  <UserSummary :showSummary="true" :userData="user" :showFollowing="true" :showFollowers="showingFollowing"
-                    @followAction="followersUpdate" class="d-flex align-items-center" />
+                  <UserSummary :showSummary="true" :userData="user" :showFollowing="true"
+                    :showFollowers="showingFollowing" @followAction="followersUpdate" class="d-flex align-items-center" />
                 </td>
               </tr>
             </tbody>

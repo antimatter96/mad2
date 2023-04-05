@@ -33,6 +33,26 @@ export default {
   methods: {
     ...mapActions(graphStore, { getFeed: 'getFeed' }),
     ...mapActions(userAuthStore, { checkUserState: 'checkUserState' }),
+
+    followAction(mode, user_id) {
+      console.log(FILENAME, this.postList.posts, "start");
+
+      if (this.postList == null || this.postList.posts == null) {
+        return;
+      }
+
+      for (let i = 0; i < this.postList.posts.length; i++) {
+        if(this.postList.posts[i].creator['user_id'] == user_id) {
+          if (mode == '+') {
+            this.postList.posts[i].creator.user_follows = true;
+          } else {
+            this.postList.posts[i].creator.user_follows = false;
+          }
+        }
+      }
+
+      console.log(FILENAME, this.postList.posts, "end");
+    },
   }
 }
 </script>
@@ -48,7 +68,7 @@ export default {
         <template v-else>Yesterday's top posts</template>
       </h3>
     </div>
-    <PostList :postList="postList.posts" :showCreatorStats="true" :showIfHidden="false" />
+    <PostList :postList="postList.posts" :showCreatorStats="true" :showIfHidden="false" @followAction="followAction" />
   </div>
 </template>
 

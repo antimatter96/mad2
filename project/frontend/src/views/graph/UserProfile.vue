@@ -83,14 +83,12 @@ export default {
       <LoadingIcon :element="'h4'" element="h4" :style="{ 'opacity': (loading ? 100 : 0) }"></LoadingIcon>
     </div>
     <div class="px-3">
-      <div>
-        <h3 class="mb-0"> {{ userData.name || userData.email }} </h3>
-        <UserSummary v-if="!isActuallyUser" showSummary="false" :userData="userData" :showFollowing="true"
+      <div class="d-flex align-items-center mb-4 text-center justify-content-center border-bottom pb-2">
+        <h1 class="mb-0"> {{ userData.name || userData.email }} </h1>
+        <UserSummary v-if="!isActuallyUser" :showSummary="false" :userData="userData" :showFollowing="true"
           :showFollowers="true" @followAction="followersUpdate" />
-        <hr>
       </div>
-
-      <div class="d-flex px-2 text-center">
+      <div class="d-flex px-4 text-center justify-content-between">
         <div v-if="isActuallyUser" class="w-30">
           <RouterLink to="/profile/me/followers" class="fw-bold text-decoration-none">
             <h5>Followers</h5>

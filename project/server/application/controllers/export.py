@@ -1,7 +1,7 @@
 import os
 
 from sqlalchemy import desc
-from flask import jsonify, send_from_directory
+from flask import jsonify, send_from_directory, request
 from flask_security import current_user, auth_required
 
 from app import app as app
@@ -13,7 +13,7 @@ import application.background_workers.tasks as tasks
 @app.route("/api/post/export/", methods=['POST'])
 @auth_required('token')
 def export_csv():
-  job = tasks.export_csv.apply_async((current_user.user_id, ), countdown=5)
+  job = tasks.export_csv.apply_async((current_user.user_id, ), countdown=2)
 
   try:
     export_job = ExportJob(job_id=job.id, creator=current_user)
@@ -42,10 +42,20 @@ def list_jobs():
   return jsonify({ 'count': len(res), 'jobs': res})
 
 @app.route("/api/post/export/<job_id>", methods=['GET'])
-@auth_required('token')
 def download_and_delete_export_csv(job_id):
+  content = request.args
+  user_id = content.get("user_id", "-1").strip()
+
+  if user_id == "-1":
+    return '', 404
+
+  try:
+    user_id = int(user_id)
+  except:
+    return '', 404
+
   export_job = ExportJob.query\
-    .filter(ExportJob.creator_id == current_user.user_id)\
+    .filter(ExportJob.creator_id == user_id)\
     .filter(ExportJob.job_id == job_id)\
     .order_by(desc(ExportJob.created_at))\
     .first()

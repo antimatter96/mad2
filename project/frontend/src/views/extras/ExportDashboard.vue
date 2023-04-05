@@ -160,7 +160,7 @@ export default {
               <td>
                 <span v-if="job.expired" class="fw-bold text-danger">Expired</span>
                 <span v-else-if="job.deleted">Deleted</span>
-                <span v-else-if="job.done"><a :href="EXPORT_CSV_BASE_PATH + '/' + job.job_id">Download</a></span>
+                <span v-else-if="job.done"><a :href="EXPORT_CSV_BASE_PATH + '/' + job.job_id + '?user_id=' + this.userInfo['user_id']">Download</a></span>
                 <span v-else-if="jobStatus(job) == 'Pending'">❌</span>
                 <span v-else-if="jobStatus(job) == 'Error'">❌</span>
                 <span v-else>??❌??</span>
