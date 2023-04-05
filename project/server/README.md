@@ -9,6 +9,7 @@ pip install -r requirements.txt
 Migrate
 
 ```sh
+flask db upgrade
 flask db migrate
 flask db upgrade
 ```
