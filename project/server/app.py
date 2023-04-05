@@ -16,7 +16,7 @@ from application.database.index import db
 from application.background_workers.index import celery as celery_worker, TaskWithContext
 from cache import cache
 
-from application.extras.new_user_form import ExtendedRegisterForm
+from application.extras.new_user_form import ExtendedConfirmRegisterForm
 
 app = None
 config = None
@@ -51,7 +51,7 @@ def create_app():
   app.app_context().push()
 
   user_datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
-  app.security = Security(app, user_datastore, register_form=ExtendedRegisterForm)
+  app.security = Security(app, user_datastore, confirm_register_form=ExtendedConfirmRegisterForm)
   app.app_context().push()
 
   celery = celery_worker

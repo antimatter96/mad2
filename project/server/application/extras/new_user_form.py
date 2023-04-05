@@ -1,6 +1,6 @@
-from flask_security import RegisterForm
+from flask_security import ConfirmRegisterForm
 from wtforms import StringField
 from wtforms.validators import DataRequired
 
-class ExtendedRegisterForm(RegisterForm):
+class ExtendedConfirmRegisterForm(ConfirmRegisterForm):
   name = StringField('Full Name', [DataRequired()])

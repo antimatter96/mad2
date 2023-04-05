@@ -67,10 +67,11 @@ export default {
         </RouterLink>
       </h3>
     </div>
-    <div v-if="showCreatorStats" class="card-header px-0 py-0 mb-0 bg-white align-items-center d-flex">
-      <h6 class="d-inline mb-0 fw-light text-end">{{ postData.created_at }}</h6>
-      <UserSummary :showSummary="true" :userData="postData.creator" :showFollowing="true" :showFollowers="true"
-        class="d-inline-flex align-items-center" style="transform: scale(0.7);" @followAction="followAction" />
+    <div class="card-header px-0 py-0 mb-0 bg-white align-items-center d-flex">
+      <h6 class="d-inline mb-0 fw-light datetime" :class="{ 'w-100 text-center': !showCreatorStats, 'text-end': showCreatorStats }">{{ postData.created_at }}</h6>
+      <UserSummary v-if="showCreatorStats" :showSummary="true" :userData="postData.creator" :showFollowing="true"
+        :showFollowers="true" class="d-inline-flex align-items-center" style="transform: scale(0.7);"
+        @followAction="followAction" />
     </div>
     <div class="card-body px-4">
       <h6>{{ splitText()[0] }}</h6>
@@ -80,4 +81,7 @@ export default {
 </template>
 
 <style scoped>
+.datetime{
+  letter-spacing: -1px;
+}
 </style>

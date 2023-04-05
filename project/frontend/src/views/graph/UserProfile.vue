@@ -6,6 +6,8 @@ import { userAuthStore } from '../../stores/userAuth'
 import { graphStore } from '../../stores/graph'
 
 import LoadingIcon from '../../components/icons/Loading.vue'
+import NewPost from '../../components/icons/NewPost.vue';
+
 import UserSummary from '../../components/UserSummary.vue'
 import PostList from '../../components/PostList.vue'
 </script>
@@ -122,13 +124,28 @@ export default {
     <div class="px-3">
       <h3 class="text-center">Posts</h3>
 
-      <h4 v-if="isActuallyUser" class="text-center">
+      <h4 v-if="isActuallyUser && userData.posts.length > 0" class="text-center">
         <RouterLink to="/profile/me/export" class="fw-bold btn border border-info">
           Export all posts data
         </RouterLink>
       </h4>
 
-      <PostList :postList="userData.posts" :showCreatorStats="false" :showIfHidden="true" />
+      <template v-if="userData.posts.length == 0">
+        <template v-if="isActuallyUser">
+          <h4 class="text-center text-warning"> You have not created any post yet
+            <br>
+            <RouterLink :to="{ name: 'newPost' }" class="btn btn-primary mt-2">
+              <NewPost /> New Post
+            </RouterLink>
+          </h4>
+        </template>
+        <template v-else>
+          <h4 class="text-center text-info"> User has no posts </h4>
+        </template>
+      </template>
+
+      <PostList v-if="userData.posts.length > 0" :postList="userData.posts" :showCreatorStats="false"
+        :showIfHidden="true" />
     </div>
 
   </div>

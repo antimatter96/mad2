@@ -32,8 +32,8 @@ class UserLastSeen(db.Model):
 class User(db.Model, UserMixin):
   __tablename__ = 'user'
   user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-  email = db.Column(db.String, unique=True)
-  name = db.Column(db.String, unique=False)
+  email = db.Column(db.String, unique=True, index=True)
+  name = db.Column(db.String)
   password = db.Column(db.String(255))
 
   active = db.Column(db.Boolean())
@@ -72,7 +72,9 @@ class User(db.Model, UserMixin):
         'created_at': getattr(self, 'created_at'),
         'followers': { 'length': len(self.followers)},
         'following': { 'length': len(self.following)},
-        **({ 'posts': [post.simplified_public_view(current_user) for post in self.posts if post.hidden == False]} if with_posts else {}),
+         **({
+            'posts': sorted([post.simplified_public_view(current_user) for post in self.posts if post.hidden == False], key=lambda x: x['created_at'], reverse=True)
+        } if with_posts else {}),
     }
 
   def public_view_wrt(self, current_user, with_posts=False):

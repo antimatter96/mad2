@@ -5,8 +5,8 @@ import { mapActions } from 'pinia'
 import { userAuthStore } from '../stores/userAuth'
 
 import Loading from './icons/Loading.vue';
-import NewPostIcon from './icons/Search.vue';
-import SearchIcon from './icons/NewPost.vue';
+import SearchIcon from './icons/Search.vue';
+import NewPostIcon from './icons/NewPost.vue';
 </script>
 
 <script>

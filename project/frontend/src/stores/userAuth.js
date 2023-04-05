@@ -131,7 +131,7 @@ export const userAuthStore = defineStore('userAuth', {
       }
     },
 
-    async signup(email, password) {
+    async signup(email, password, name) {
       console.log(FILENAME, "signup", "start")
 
       if (this._csrfToken == null) {
@@ -149,6 +149,7 @@ export const userAuthStore = defineStore('userAuth', {
           body: JSON.stringify({
             "email": email,
             "password": password,
+            "name": name,
           })
         });
 

@@ -5,6 +5,7 @@ from application.database.index import db
 from application.database.models.user import User
 from application.database.models.post import Post
 from application.database.models.export_job import ExportJob
+from application.database.data_access.utils import new_entities
 
 def _monthly_data():
   current_time = datetime.datetime.utcnow()

@@ -56,21 +56,21 @@ class Config():
   CELERY_RESULT_BACKEND = _BASE_REDIS_URL + str(CELERY_RESULT_BACKEND_REDIS_DB)
 
   CSV_UPLOAD_FOLDER = os.path.join(basedir, "./static/export_reports")
+  SECURITY_PASSWORD_HASH = "bcrypt"
 
 class NonProdConfig(Config):
   DEBUG = True
+  SECURITY_PASSWORD_HASH_PASSLIB_OPTIONS = { "argon2__rounds": 10, "bcrypt__rounds": 4}
 
 class LocalDevelopmentConfig(NonProdConfig):
   SQLITE_DB_DIR = os.path.join(basedir, "./db_directory")
   SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(SQLITE_DB_DIR, "local.sqlite3")
   SECRET_KEY = "ash ah secet"
-  SECURITY_PASSWORD_HASH = "bcrypt"
-  SECURITY_PASSWORD_SALT = "really super secret"
+  SECURITY_PASSWORD_SALT = "70832620040865555562006080343330175209"
   SQLALCHEMY_ECHO = True
 
 class TestingConfig(NonProdConfig):
   SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
   SECRET_KEY = "ash ah secet"
-  SECURITY_PASSWORD_HASH = "bcrypt"
-  SECURITY_PASSWORD_SALT = "really super secret"
+  SECURITY_PASSWORD_SALT = "137484960623074822251971731746676321761"
   WTF_CSRF_ENABLED = False

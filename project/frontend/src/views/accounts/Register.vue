@@ -53,7 +53,7 @@ export default {
 
       this.display_error = null;
 
-      let result = await this.userAuthStoreRegister(this.email, this.password)
+      let result = await this.userAuthStoreRegister(this.email, this.password, this.name)
       console.log(FILENAME, "signup", "result", result);
 
       if (result.done) {
