@@ -60,7 +60,7 @@ export default {
               </li>
               <li class="nav-item nav-item-btn">
                 <RouterLink :to="{ name: 'newPost' }" class="btn btn-primary">
-                  <SearchIcon /> New Post
+                  <NewPostIcon /> New Post
                 </RouterLink>
               </li>
               <li class="nav-item fw-bolder">
@@ -68,7 +68,7 @@ export default {
               </li>
               <li class="nav-item fw-bolder">
                 <RouterLink :to="{ name: 'user_search_page' }" class="nav-link">
-                  <NewPostIcon /> Search
+                  <SearchIcon /> Search
                 </RouterLink>
               </li>
               <li class="nav-item nav-item-btn">

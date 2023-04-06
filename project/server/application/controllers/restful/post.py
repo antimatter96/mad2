@@ -73,7 +73,7 @@ class PostsAPI(Resource):
     if post is None:
       raise NotFoundError(error_code='post_009', error_message=post_errors['post_009'])
 
-    filename = post.filename
+    filename = post.img_url
     try:
       db.session.delete(post)
       db.session.commit()
